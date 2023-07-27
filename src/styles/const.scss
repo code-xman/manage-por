@@ -1,0 +1,44 @@
+:root {
+  --app-primary-color: #526aec;
+}
+
+// 全局样式抽取
+
+// 全局字号约定
+$fontSizeBase: 14px;
+$fontSizeSmall: 12px;
+$fontSizeLarge: 16px;
+
+// 间距，统一处理内外边距（margin、padding）
+$void: 10px;
+$voidSmall: 5px;
+$voidLarge: 20px;
+
+// 页面背景色
+$pageBg: #f6f9ff;
+
+// 其他配色
+// $colorPrimary: #526aec; // 主题色
+$colorPrimary: #409EFF; // 主题色
+$colorSecond: #f4b626; // 辅助色
+
+// 文本配色
+$colorText: #2a2a2a; // 默认文本色
+$colorTextLight: #939393; // 浅色文本
+$colorTextSecond: #545d66; // 次要文本色，用于提示消息
+$colorPlaceholder: #b7b7b7; // 表单提示文本色
+
+// 链接配色
+$colorLink: $colorPrimary; // 超链接文本色
+$colorLinkHover: lighten($colorPrimary, 5%); // 超链接高亮
+
+// 边框色，常规使用，如：分割线、输入框边框
+$colorBorder: #f1f3f7;
+
+// 情境配色
+$colorSitBlue: #526aec;
+$colorSitSuccess: #27ac3b;
+$colorSitDanger: #f12222;
+$colorSitWarning: #e57e12;
+$colorSitInfo: #39afe6;
+$colorSitBase: #f1f3f7;

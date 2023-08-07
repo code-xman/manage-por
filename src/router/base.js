@@ -1,34 +1,74 @@
 const routes = [
   {
-    path: "/",
+    path: '/',
     // 默认进入中转页，中转页的详见中转视图定义
-    redirect: { name: "Login" }
-  },
-   // 登录页
-   {
-    path: "/login",
-    name: "Login",
+    redirect: { name: 'Login' },
     meta: {
-      title: "登录"
+      menuHide: true,
     },
-    component: () => import("@/pages/login")
+  },
+  // 登录页
+  {
+    path: '/login',
+    name: 'Login',
+    meta: {
+      title: '登录',
+      menuHide: true,
+    },
+    component: () => import('@/pages/login'),
   },
   {
-    path: "/base",
-    name: "Base",
+    path: '/base',
+    name: 'Base',
     meta: {
-      title: "base"
+      title: '基础页面',
+      icon: 'icon-caidanguanli',
     },
-    component: () => import("@/layout/Main"),
+    component: () => import('@/layout/Main'),
+    children: [
+      {
+        path: '/BaseTable',
+        name: 'BaseTable',
+        meta: {
+          title: '基础列表',
+        },
+        component: () => import('@/components/BaseTable/Show.vue'),
+      },
+      {
+        path: '/baseFormPage',
+        name: 'BaseFormPage',
+        meta: {
+          title: '基础表单',
+        },
+        component: () => import('@/components/BaseForm/Show.vue'),
+      },
+      {
+        path: '/basePage',
+        name: 'BasePage',
+        meta: {
+          title: '基础列表页面',
+        },
+        component: () => import('@/components/BasePage/Show.vue'),
+      },
+    ],
+  },
+  {
+    path: '/stting',
+    name: 'Stting',
+    meta: {
+      title: '设置',
+      icon: 'icon-xitong',
+    },
+    component: () => import('@/layout/Main'),
     children: [
       // home
       {
-        path: "/home",
-        name: "Home",
+        path: '/home',
+        name: 'Home',
         meta: {
-          title: "home"
+          title: 'home',
         },
-        component: () => import("@/pages/home")
+        component: () => import('@/pages/home'),
       },
     ],
   },

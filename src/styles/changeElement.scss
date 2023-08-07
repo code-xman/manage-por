@@ -1,0 +1,94 @@
+.el-badge__content {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+.el-button {
+  font-size: 12px;
+  font-weight: bold;
+
+  // 字体图标无需加粗，否则会出现重影
+  .icon {
+    font-weight: normal;
+    margin-right: 4px;
+    margin-left: -4px;
+  }
+}
+
+.el-pagination {
+  --el-pagination-font-size: 13px;
+  padding: 0 16px;
+
+  button {
+    border-radius: 20px;
+    font-weight: bold;
+  }
+
+  .el-select .el-input {
+    width: 110px;
+  }
+
+  .el-input__wrapper {
+    border-radius: 20px;
+  }
+
+  .el-pager li {
+    border-radius: 20px;
+    padding: 0 12px;
+  }
+}
+
+.el-card {
+  --el-card-padding: 15px;
+  border-radius: 6px;
+}
+
+// 模态弹窗
+.el-dialog {
+  border-radius: 0;
+  box-shadow: 0 32px 64px fade-out(#000000, 0.7);
+
+  .el-dialog__body {
+    padding: 0;
+  }
+}
+
+// 抽屉
+.el-drawer {
+  .el-drawer__header {
+    border-bottom: 1px var(--el-border-color) solid;
+    margin-bottom: 0;
+    padding: 14px 18px;
+  }
+
+  .el-drawer__title {
+    color: var(--el-text-color-primary);
+    font-weight: bold;
+  }
+}
+
+// 侧边菜单
+.el-popper a.menu-link {
+  font-size: 12px !important;
+  font-weight: bold;
+}
+
+.el-menu--popup {
+  .menu-link {
+    display: block;
+  }
+
+  .el-menu-item {
+    height: unset !important;
+    line-height: unset !important;
+    padding: 12px 24px;
+
+    &.is-active {
+      background-color: var(--el-color-primary);
+
+      .menu-link {
+        color: #fff;
+      }
+    }
+  }
+}

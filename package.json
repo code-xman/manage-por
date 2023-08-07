@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "element-plus": "^2.3.8",
+    "lodash": "^4.17.21",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.1",
     "vue": "^3.3.4",

@@ -22,8 +22,8 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         charset: false,
+        // 全局样式
         additionalData: `
-          @import "@/styles/const.scss";
           @import "@/styles/index.scss";
         `,
       },

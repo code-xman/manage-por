@@ -1,28 +1,72 @@
 <template>
-  <div class="header">
-    <img class="logo" src="@/assets/vue.svg" />
-    <div class="home item">{{ APP_INFO.title }}</div>
-    <div v-if="route.meta.title" class="title">
-      {{ route.meta.title || '' }}
+  <div class="main">
+    <div class="header">
+      <img class="logo" src="@/assets/vue.svg" />
+      <div class="home item">{{ APP_INFO.title }}</div>
+      <div v-if="route.meta.title" class="title">
+        {{ route.meta.title || '' }}
+      </div>
+      <div class="flex-1"></div>
+      <div class="item">个人中心</div>
+      <el-dropdown class="item" @command="handleCommand">
+        操作
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="ModifyPassword">
+              修改密码
+            </el-dropdown-item>
+            <el-dropdown-item command="Logout">
+              <span class="color-red"> 退出登录 </span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
-    <div class="flex-1"></div>
-    <div class="item">个人中心</div>
-    <div class="item">操作</div>
-  </div>
-  <div>
-    <router-view></router-view>
+    <div class="content flex flex-1">
+      <Menu />
+      <div class="content-page flex-1">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { APP_INFO } from '@/config/base.js';
+import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
+import Menu from '@/components/menu/index.vue';
+import { removeCache } from '@/utils/common.js';
 
 const route = useRoute();
 const router = useRouter();
+
+// 处理操作
+const handleCommand = (command) => {
+  switch (command) {
+    case 'ModifyPassword':
+      break;
+
+    case 'Logout':
+      {
+        removeCache(`${CACHE_PREFIX}_logged_in`);
+        router.replace({ name: 'Login' });
+      }
+      break;
+
+    default:
+      break;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
+.main {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .header {
   display: flex;
   justify-content: space-between;
@@ -46,6 +90,10 @@ const router = useRouter();
   .item {
     padding: 0 16px;
     cursor: pointer;
+    font-size: 14px;
+    &.el-dropdown {
+      color: #fff;
+    }
   }
 
   .home {
@@ -55,7 +103,15 @@ const router = useRouter();
   .title {
     width: 140px;
     padding: 0 16px;
-    font-weight: 600;
+    font-weight: bold;
+  }
+}
+
+.content {
+  display: flex;
+  overflow: hidden;
+  .content-page {
+    padding: 8px;
   }
 }
 </style>

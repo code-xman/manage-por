@@ -1,5 +1,7 @@
-@import './layout.scss';
+// @import './layout.scss';
 @import './space.scss';
+@import './const.scss';
+// @import './changeElement.scss';
 
 .flex {
   display: flex;
@@ -35,6 +37,11 @@
 
 .flex-1 {
   flex: 1;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
 }
 
 .box-border {
@@ -73,4 +80,47 @@
   //   border-radius: 0;
   //   background: rgba(0, 0, 0, 0.1);
   // }
+}
+
+// 文本色
+.color {
+  &-red,
+  &-danger {
+    color: $colorSitDanger;
+  }
+
+  &-orange,
+  &-warning {
+    color: $colorSitWarning;
+  }
+
+  &-yellow {
+    color: #ecb601;
+  }
+
+  &-green,
+  &-success {
+    color: $colorSitSuccess;
+  }
+
+  &-blue,
+  &-info {
+    color: $colorSitInfo;
+  }
+
+  &-cyan {
+    color: #11adb3;
+  }
+
+  &-gray {
+    color: #999;
+  }
+
+  &-dark {
+    color: #111;
+  }
+
+  &-white {
+    color: white;
+  }
 }

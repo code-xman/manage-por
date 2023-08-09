@@ -7,6 +7,7 @@
         @on-search="onSearchFn"
       ></SearchForm>
     </div>
+    <BaseBtn :btns="btns" />
     <div class="page-table flex-1">
       <BaseTable
         ref="baseTableRef"
@@ -28,6 +29,7 @@ import { ref, watch } from 'vue';
 import { cloneDeep } from 'lodash';
 import SearchForm from '@/components/BasePage/SearchForm';
 import BaseTable from '@/components/BaseTable';
+import BaseBtn from '@/components/BaseBtn';
 
 const emit = defineEmits(['update:searchFormValue', 'on-search']);
 
@@ -41,6 +43,11 @@ const props = defineProps({
   searchFormValue: {
     type: Object,
     default: () => ({}),
+  },
+  /** 页面按钮 */
+  btns: {
+    type: Array,
+    default: () => [],
   },
   /** 表格列 */
   columns: {

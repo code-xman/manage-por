@@ -3,6 +3,7 @@
     <BasePage
       :searchFormItems="searchFormItems"
       v-model:searchFormValue="searchFormValue"
+      :btns="btns"
       :columns="columns"
       :list="() => list"
       :options-size="100"
@@ -20,7 +21,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import BasePage from './index.vue';
+import BasePage from '@/components/BasePage/index';
 import ShowModal from './ShowModal.vue';
 import { sexs } from './data';
 
@@ -151,6 +152,37 @@ const searchFormValue = ref({
   age: '',
   sex: '',
 });
+
+const btns = ref([
+  {
+    key: 'add',
+    name: '新增',
+    attrs: {
+      type: 'primary',
+    },
+    clickFn: () => addFn()
+  },
+  {
+    key: 'import',
+    name: '导入',
+    attrs: {
+      type: 'success',
+    },
+    clickFn: () => addFn()
+  },
+  {
+    key: 'export',
+    name: '导出',
+    attrs: {
+    },
+    clickFn: () => addFn()
+  },
+]);
+
+// 新增
+const addFn = () => {
+  console.log('新增');
+}
 
 const showModel = ref(false);
 const showModelRow = ref({});

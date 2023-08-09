@@ -22,7 +22,7 @@
         </div>
       </template>
     </BaseForm>
-    <el-button class="expandBtn" link @click="changeExpand">
+    <el-button v-if="needExpand" class="expandBtn" link @click="changeExpand">
       {{ isExpand ? '收起' : '展开' }}
     </el-button>
   </div>
@@ -55,10 +55,12 @@ const searchFormInit = ref(cloneDeep(props.searchFormValue));
 const searchFormVal = ref(cloneDeep(props.searchFormValue));
 /** 展示的搜索字段 */
 const searchFormItems_show = ref([]);
+/** 是否需要展开按钮 */
+const needExpand = ref(false);
 /** 是否展开 */
 const isExpand = ref(false);
 /** 搜索区域高度 */
-const searchHeight = ref(56);
+const searchHeight = ref(48);
 
 // 监听底层数据变化，同步更新给父级
 watch(
@@ -94,14 +96,18 @@ onMounted(() => {
   searchFormItems_show.value = props.searchFormItems.filter(
     (item) => !item.attrs?.initHide
   );
+  // 展示字段少于实际字段
+  if (searchFormItems_show.value.length < props.searchFormItems.length) {
+    needExpand.value = true;
+  }
 });
 </script>
 
 <style lang="scss" scoped>
 .search-form-box {
   position: relative;
-  margin-bottom: 16px;
-  transition: .3s;
+  margin-bottom: 8px;
+  transition: 0.3s;
   .expandBtn {
     position: absolute;
     left: 50%;
@@ -116,14 +122,14 @@ onMounted(() => {
   }
 }
 .search-form {
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   border-bottom: 1px solid $colorBorder;
   padding-bottom: 8px;
-  align-items: center; // 公共组件已有flex属性
+  // align-items: center; // 公共组件已有flex属性
 
   &.base-form {
     :deep(.form-item) {
-      margin: 8px 24px 8px 0;
+      margin: 0 24px 8px 0;
       width: 200px;
 
       .el-form-item__label-wrap {

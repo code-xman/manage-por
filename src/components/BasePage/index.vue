@@ -2,6 +2,7 @@
   <div class="base-page flex-all column">
     <div class="page-form">
       <SearchForm
+        v-if="!!searchFormItems && !!searchFormItems?.length"
         :searchFormItems="searchFormItems"
         v-model:searchFormValue="searchFormVal"
         @on-search="onSearchFn"
@@ -87,4 +88,8 @@ const onSearchFn = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.page-table {
+  height: calc(100% - 122px);
+}
+</style>

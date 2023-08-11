@@ -110,8 +110,11 @@ const handleCommand = (command) => {
 .content {
   display: flex;
   overflow: hidden;
+  height: calc(100% - 56px);
   .content-page {
-    padding: 8px;
+    width: calc(100% - 200px);
+    margin: 8px;
+    overflow: hidden;
   }
 }
 </style>

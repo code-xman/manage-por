@@ -16,7 +16,7 @@
         :prop="item.name"
         :label="item.label"
         class="form-item half-width"
-        :class="item.className"
+        :class="[`${item.className}`, widthAuto ? 'width_auto' : '']"
         :style="item.style || {}"
       >
         <el-select
@@ -81,6 +81,11 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  /** formItem 宽度是否自由 非50%100% */
+  widthAuto: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 // form的ref
@@ -118,7 +123,7 @@ defineExpose({
 .base-form {
   display: flex;
   flex-wrap: wrap;
-  .half-width {
+  .half-width:not(.width_auto) {
     width: 50%;
   }
   .full-width {

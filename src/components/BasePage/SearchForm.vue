@@ -10,6 +10,7 @@
       v-model:formValue="searchFormVal"
       :formItems="searchFormItems_show"
       :label-width="'auto'"
+      :widthAuto="true"
       labelPosition="left"
       class="search-form"
     >
@@ -130,10 +131,12 @@ onMounted(() => {
   &.base-form {
     :deep(.form-item) {
       margin: 0 24px 8px 0;
-      width: 200px;
-
       .el-form-item__label-wrap {
         margin-right: 0 !important;
+        width: auto;
+      }
+      .el-form-item__content {
+        width: 160px;
       }
     }
     // .el-button {

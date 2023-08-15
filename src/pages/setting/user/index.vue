@@ -31,11 +31,7 @@ defineOptions({
 
 const list = ref([{}]);
 
-const searchFormValue = ref({
-  name: '',
-  age: '',
-  sex: '',
-});
+const searchFormValue = ref({});
 
 const onSearchFn = () => {
   console.log('searchFormValue :>> ', searchFormValue.value);

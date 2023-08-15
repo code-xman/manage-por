@@ -15,7 +15,16 @@ export default [
           title: '机构管理',
         },
         component: () => import('@/pages/setting/organ/index.vue'),
-      },{
+      },
+      {
+        path: '/tenant',
+        name: 'Tenant',
+        meta: {
+          title: '租户管理',
+        },
+        component: () => import('@/pages/setting/tenant/index.vue'),
+      },
+      {
         path: '/department',
         name: 'Department',
         meta: {

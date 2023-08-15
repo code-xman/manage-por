@@ -26,6 +26,15 @@ const routes = [
     },
     component: () => import('@/layout/Main'),
     children: [
+      // home
+      {
+        path: '/home',
+        name: 'Home',
+        meta: {
+          title: 'home',
+        },
+        component: () => import('@/pages/home'),
+      },
       {
         path: '/BaseTable',
         name: 'BaseTable',
@@ -49,26 +58,6 @@ const routes = [
           title: '基础列表页面',
         },
         component: () => import('@/components/BasePage/Show.vue'),
-      },
-    ],
-  },
-  {
-    path: '/stting',
-    name: 'Stting',
-    meta: {
-      title: '设置',
-      icon: 'icon-xitong',
-    },
-    component: () => import('@/layout/Main'),
-    children: [
-      // home
-      {
-        path: '/home',
-        name: 'Home',
-        meta: {
-          title: 'home',
-        },
-        component: () => import('@/pages/home'),
       },
     ],
   },

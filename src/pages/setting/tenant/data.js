@@ -18,7 +18,7 @@ export const columns = [
   },
   {
     prop: 'creditCode',
-    label: '统一社会信用代码',
+    label: '社会统一信用代码',
     width: '180px',
     formatter(row) {
       return row.creditCode || '-';
@@ -96,7 +96,7 @@ export const formItems = [
   },
   {
     name: 'phone',
-    label: '统一社会信用代码',
+    label: '社会统一信用代码',
     attrs: {
       clearable: true,
     },

@@ -6,67 +6,80 @@ export const columns = [
     fixed: 'left',
   },
   {
-    prop: 'orgId',
+    prop: 'merchantId',
     label: '机构ID',
-    width: '140px',
+    width: '180px',
     formatter(row) {
-      return row.orgId || '-';
+      return row.merchantId || '-';
     },
   },
   {
-    prop: 'orgName',
+    prop: 'merchantName',
     label: '机构名称',
-    width: '220px',
+    minWidth: '220px',
     formatter(row) {
-      return row.orgName || '-';
+      return row.merchantName || '-';
+    },
+  },
+  {
+    prop: 'merchantShortName',
+    label: '机构简称',
+    width: '120px',
+    formatter(row) {
+      return row.merchantName || '-';
     },
   },
   {
     prop: 'creditCode',
-    label: '统一社会信用代码',
+    label: '社会统一信用代码',
     width: '180px',
     formatter(row) {
       return row.creditCode || '-';
     },
   },
+  // {
+  //   prop: 'contactsAddr',
+  //   label: '机构地址',
+  //   minWidth: '220px',
+  //   formatter(row) {
+  //     return row.contactsAddr || '-';
+  //   },
+  // },
   {
-    prop: 'address',
-    label: '机构地址',
-    minWidth: '220px',
-    formatter(row) {
-      return row.address || '-';
-    },
-  },
-  {
-    prop: 'name',
-    label: '联系人',
+    prop: 'operationUserName',
+    label: '联系人姓名',
     width: '140px',
     formatter(row) {
-      return row.name || '-';
+      return row.operationUserName || '-';
     },
   },
   {
-    prop: 'phone',
-    label: '联系电话',
+    prop: 'operationUserMobile',
+    label: '联系人手机号码',
     width: '140px',
     formatter(row) {
-      return row.phone || '-';
+      return row.operationUserMobile || '-';
     },
   },
-  {
-    prop: 'remark',
-    label: '备注',
-    minWidth: '220px',
-    formatter(row) {
-      return row.remark || '-';
-    },
-  },
+  // {
+  //   prop: 'merchantStatus',
+  //   label: '状态',
+  //   width: '140px',
+  //   formatter: (row) => {
+  //     const inner = () => row.merchantStatus || '-';
+  //     if (row.merchantStatus === '03')
+  //       return h(BTag, { type: 'success' }, inner);
+  //     if (row.merchantStatus === '04') return h(BTag, { type: 'danger' }, inner);
+  //     if (row.merchantStatus === '01') return h(BTag, { type: 'danger' }, inner);
+  //     return h(BTag, { type: 'info' }, inner);
+  //   },
+  // },
 ];
 
 /** 搜索字段 */
 export const searchFormItems = [
   {
-    name: 'orgName',
+    name: 'merchantName',
     label: '机构名称',
     style: {
       width: '300px',
@@ -75,53 +88,70 @@ export const searchFormItems = [
       clearable: true,
     },
   },
-  {
-    name: 'name',
-    label: '联系人',
-    attrs: {
-      clearable: true,
-    },
-  },
+  // {
+  //   name: 'operationUserName',
+  //   label: '联系人',
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
 ];
 
 /** 表单各项属性 */
 export const formItems = [
   {
-    name: 'orgName',
+    name: 'merchantName',
     label: '机构名称',
     attrs: {
       clearable: true,
     },
   },
   {
-    name: 'address',
-    label: '机构地址',
+    name: 'merchantShortName',
+    label: '机构简称',
     attrs: {
       clearable: true,
     },
   },
+  {
+    name: 'creditCode',
+    label: '社会统一信用代码',
+    attrs: {
+      clearable: true,
+      maxlength: 50,
+    },
+  },
+  // {
+  //   name: 'contactsAddr',
+  //   label: '机构地址',
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
   
   {
-    name: 'name',
+    name: 'operationUserName',
     label: '联系人',
     attrs: {
       clearable: true,
+      maxlength: 50,
     },
   },
   {
-    name: 'phone',
+    name: 'operationUserMobile',
     label: '联系电话',
     attrs: {
       clearable: true,
+      maxlength: 11,
     },
   },
-  {
-    name: 'remark',
-    label: '备注',
-    className: 'full-width',
-    attrs: {
-      type: 'textarea',
-      autosize: { minRows: 3, maxRows: 5 },
-    },
-  },
+  // {
+  //   name: 'remark',
+  //   label: '备注',
+  //   className: 'full-width',
+  //   attrs: {
+  //     type: 'textarea',
+  //     autosize: { minRows: 3, maxRows: 5 },
+  //   },
+  // },
 ];

@@ -19,8 +19,9 @@
         :class="[`${item.className}`, widthAuto ? 'width_auto' : '']"
         :style="item.style || {}"
       >
+        <div v-if="item.type === 'text'"> {{ formData[item.name] }} </div>
         <el-select
-          v-if="item.type === 'select'"
+          v-else-if="item.type === 'select'"
           :placeholder="`请选择${item.label}`"
           v-bind="item.attrs"
           :modelValue="formData[item.name]"

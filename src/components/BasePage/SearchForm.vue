@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, nextTick } from 'vue';
 import { cloneDeep } from 'lodash';
 import BaseForm from '@/components/BaseForm';
 
@@ -74,6 +74,9 @@ watch(
 // 清空
 const onClearFn = () => {
   searchFormVal.value = cloneDeep(searchFormInit.value);
+  nextTick(() => {
+    emit('on-search')
+  })
 };
 
 // 切换 展开/收起

@@ -31,6 +31,7 @@ import { cloneDeep } from 'lodash';
 import SearchForm from '@/components/BasePage/SearchForm';
 import BaseTable from '@/components/BaseTable';
 import BaseBtn from '@/components/BaseBtn';
+import { ElMessage } from 'element-plus';
 
 const emit = defineEmits(['update:searchFormValue', 'on-search']);
 
@@ -57,7 +58,7 @@ const props = defineProps({
   },
   /** 表格数据 */
   list: {
-    type: Function,
+    type: [Function, Array],
     default: () => [],
   },
   /** 行数据的 Key */
@@ -82,10 +83,24 @@ watch(
   }
 );
 
+// 刷新页面
+const refresh = () => {
+  try {
+    baseTableRef.value?.fetchData();
+  } catch (error) {
+    ElMessage.error(`${error}`)    
+  }
+};
+
 const onSearchFn = () => {
-  emit('on-search');
+  // 不再往上触发 on-search ，直接触发baseTable的刷新
+  // emit('on-search');
   baseTableRef.value?.fetchData();
 };
+
+defineExpose({
+  refresh,
+})
 </script>
 
 <style lang="scss" scoped>

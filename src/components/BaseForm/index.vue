@@ -7,7 +7,7 @@
     :label-width="labelWidth"
     :label-position="labelPosition"
     :style="{
-      paddingRight: `${labelWidth / 2}px`,
+      paddingRight: `${labelWidth * 0.4}px`,
     }"
     class="base-form flex-1"
   >
@@ -54,13 +54,13 @@ const emit = defineEmits(['update:formValue', 'formValue-change']);
 const props = defineProps({
   /** 验证规则 */
   rules: {
-    type: Array,
-    default: () => [],
+    type: Object,
+    default: () => ({}),
   },
   /** label的宽度 */
   labelWidth: {
     type: [String, Number],
-    default: 120,
+    default: 140,
   },
   labelPosition: {
     type: String,
@@ -85,7 +85,7 @@ const props = defineProps({
   widthAuto: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 // form的ref
@@ -109,13 +109,22 @@ watch(
     formData.value = cloneDeep(props.formValue);
   },
   {
-    immediate: true
+    immediate: true,
   }
 );
+
+const validate = async () => {
+  try {
+    await formRef.value?.validate();
+  } catch (error) {
+    throw 'cancel';
+  }
+};
 
 defineExpose({
   formRef,
   formData,
+  validate,
 });
 </script>
 

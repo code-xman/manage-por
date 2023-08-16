@@ -1,5 +1,5 @@
 <template>
-  <div class="base-table flex-all column">
+  <div v-loading="pending" class="base-table flex-all column">
     <el-table
       :data="listData"
       :row-key="rowKey"
@@ -78,7 +78,7 @@ const props = defineProps({
   },
   /** 表格数据 */
   list: {
-    type: Function,
+    type: [Function, Array],
     default: () => [],
   },
   /** 默认参数 */
@@ -102,6 +102,8 @@ const props = defineProps({
   },
 });
 
+const pending = ref(false);
+
 /** 表格数据 */
 const listData = ref([]);
 
@@ -122,18 +124,24 @@ const showColumns = computed(() => {
 
 // 加载列表数据
 const fetchData = async () => {
-  console.log('加载列表数据...');
   try {
+    pending.value = true;
     if (typeof props.list === 'function') {
-      listData.value = props.list({
+      const dataRes = await props.list({
         pageNum: pageNum.value,
         pageSize: pageSize.value,
         ...props.defaultParams,
         ...props.searchParams,
       });
+      listData.value = dataRes.list;
+    }
+    if (Array.isArray(props.list)) {
+      listData.value = props.list;
     }
   } catch (error) {
     ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
   }
 };
 

@@ -1,3 +1,5 @@
+import JSEncrypt from 'jsencrypt';
+
 /**
  * 本地缓存管理
  * 该缓存管理加入了缓存有效期的控制
@@ -59,4 +61,66 @@ export const getCache = (key) => {
 // 移除缓存
 export const removeCache = (key) => {
   localStorage.removeItem(key);
+};
+
+// 客户端信息处理
+export const getOSInfo = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  let name = 'Unknown';
+
+  if (userAgent.indexOf('win') > -1) {
+    name = 'Windows';
+  } else if (userAgent.indexOf('mac') > -1) {
+    name = 'Mac';
+  } else if (
+    userAgent.indexOf('x11') > -1 ||
+    userAgent.indexOf('unix') > -1 ||
+    userAgent.indexOf('sunname') > -1 ||
+    userAgent.indexOf('bsd') > -1
+  ) {
+    name = 'Unix';
+  } else if (userAgent.indexOf('linux') > -1) {
+    name = 'Linux';
+  } else {
+    name = 'Unknown';
+  }
+
+  return name;
+};
+
+// 获取客户端浏览器
+export const getBrowserInfo = () => {
+  const userAgent = navigator.userAgent;
+
+  const isOpera = userAgent.indexOf('Opera') > -1;
+
+  const isIE =
+    userAgent.indexOf('compatible') > -1 &&
+    userAgent.indexOf('MSIE') > -1 &&
+    !isOpera;
+
+  const isEdge = userAgent.indexOf('Edge') > -1;
+  const isFF = userAgent.indexOf('Firefox') > -1;
+  const isSafari =
+    userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') == -1;
+  const isChrome =
+    userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('Safari') > -1;
+
+  if (isIE) return 'IE';
+  if (isOpera) return 'Opera';
+  if (isEdge) return 'Edge';
+  if (isFF) return 'FF';
+  if (isSafari) return 'Safari';
+  if (isChrome) return 'Chrome';
+  return 'Unknown';
+};
+
+// JSEncrypt 加密
+export const encrypte = (value) => {
+  // 公钥
+  const RAS_PUBLIC_KEY = `MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDpBCiWlxxa2ewMSvsf6Y1up2BMfM8DdG92lEO2u3u6JskQEdStkfeuVegKq0cMfEkz/QxpnkRReqrqaj2IXofu5NgDuWmhBKzENHN8Za/EnRHYhtfIg/1AddGBjAyvTyafxU3PaJmYnzMF6znzJE/6kIa63rFQfhpiCUt+A7E1HwIDAQAB`;
+  const encryptor = new JSEncrypt();
+  encryptor.setPublicKey(RAS_PUBLIC_KEY);
+  return encryptor.encrypt(value) || '';
 };

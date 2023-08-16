@@ -36,6 +36,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
 import Menu from '@/components/menu/index.vue';
 import { removeCache } from '@/utils/common.js';
+import { removeAuthToken } from '@/utils/auth.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -48,7 +49,7 @@ const handleCommand = (command) => {
 
     case 'Logout':
       {
-        removeCache(`${CACHE_PREFIX}_logged_in`);
+        removeAuthToken();
         router.replace({ name: 'Login' });
       }
       break;

@@ -16,17 +16,25 @@
           :rules="formRules"
           label-width="0"
         >
-          <el-form-item prop="name">
+          <el-form-item prop="systemNo">
             <el-input
-              v-model="formVal.name"
+              v-model="formVal.systemNo"
+              maxlength="32"
+              placeholder="请输入系统编码"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="loginId">
+            <el-input
+              v-model="formVal.loginId"
               maxlength="50"
               placeholder="请输入登录名"
               clearable
             />
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="loginPwd">
             <el-input
-              v-model="formVal.password"
+              v-model="formVal.loginPwd"
               type="password"
               show-password
               maxlength="20"
@@ -48,30 +56,57 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
-import { setCache } from '@/utils/common';
+import { ApiLogin, ApiGetRules, ApiGetRegions, } from '@/http/common';
+import { setCache, getOSInfo, getBrowserInfo, encrypte } from '@/utils/common';
+import { setAuthUser, setAuthToken } from '@/utils/auth.js';
 
 const router = useRouter();
 
 const loading = ref(false);
 const formRef = ref(null);
 const formVal = ref({
-  name: '',
-  password: '',
+  systemNo: '00000',
+  loginId: 'sadmin',
+  loginPwd: 'Aa123456',
 });
 const formRules = ref({
-  name: [{ required: true, message: '请输入登录名' }],
-  password: [{ required: true, message: '请输入密码' }],
+  systemNo: [{ required: true, message: '请输入系统编码' }],
+  loginId: [{ required: true, message: '请输入登录名' }],
+  loginPwd: [{ required: true, message: '请输入密码' }],
 });
 
 const loginFn = async () => {
   try {
     loading.value = true;
     await formRef.value.validate();
-    console.log('formVal :>> ', formVal.value);
-    // TODO: handle login
-    setCache(`${CACHE_PREFIX}_logged_in`, true);
+    const params = {
+      ...formVal.value,
+      loginPwd: encrypte(formVal.value.loginPwd),
+      loginSys: getOSInfo(),
+      loginBrowser: getBrowserInfo(),
+    };
+    const userData = await ApiLogin(params);
+    const _user = {
+      ...userData,
+      systemNo: params.systemNo,
+    };
+    setAuthUser(_user); // 缓存账户信息
+    setAuthToken(_user.tokenId); // 缓存 token 信息
+
+    // 获取用户的权限信息
+    // const rules = await ApiGetRules(userData.userId);
+    // if (!rules.menu || !rules.menu.children.length)
+    //   throw '该用户没有可用权限，请联系管理员';
+    // TODO: 处理权限问题
+
+    // 初始化耗时数据
+    // await ApiGetRegions();
+
+    ElMessage.success('登录成功')
+    // 跳转页面
     router.replace({ name: 'Home' });
   } catch (error) {
+    console.log('error :>> ', error);
     if (typeof error === 'string') {
       ElMessage.error(error);
     }

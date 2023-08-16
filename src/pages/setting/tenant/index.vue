@@ -5,9 +5,8 @@
       v-model:searchFormValue="searchFormValue"
       :btns="btns"
       :columns="columns"
-      :list="() => list"
+      :list="ApiListTenantPage"
       :options-size="100"
-      @on-search="onSearchFn"
     >
       <template #options="{ row }">
         <el-button type="primary" link @click="() => editFn(row)">
@@ -22,6 +21,7 @@
 <script setup>
 import { ref } from 'vue';
 import BasePage from '@/components/BasePage/index';
+import { ApiListTenantPage } from '@/http/setting/tenant.js';
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
 
@@ -29,23 +29,17 @@ defineOptions({
   name: 'ShowBasePage',
 });
 
-const list = ref([{}]);
-
 const searchFormValue = ref({});
 
-const onSearchFn = () => {
-  console.log('searchFormValue :>> ', searchFormValue.value);
-};
-
 const btns = ref([
-  {
-    key: 'add',
-    name: '新增',
-    attrs: {
-      type: 'primary',
-    },
-    clickFn: () => addFn(),
-  },
+  // {
+  //   key: 'add',
+  //   name: '新增',
+  //   attrs: {
+  //     type: 'primary',
+  //   },
+  //   clickFn: () => addFn(),
+  // },
 ]);
 
 const modalType = ref('');

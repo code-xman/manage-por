@@ -8,13 +8,21 @@
     class="my-drawer"
     @close="onCloseFn"
   >
-    <div class="content">
-      <BaseForm :formItems="formItems" v-model:formValue="formValue" :labelWidth="150"></BaseForm>
+    <div v-loading="pending" class="content">
+      <BaseForm
+        ref="BaseFormRef"
+        :formItems="formItems"
+        v-model:formValue="formValue"
+        :labelWidth="150"
+        :rules="rules"
+      ></BaseForm>
     </div>
     <template #footer>
       <div style="flex: auto">
         <el-button @click="cancelClick">关闭</el-button>
-        <el-button type="primary" @click="confirmClick">确定</el-button>
+        <el-button :disabled="pending" type="primary" @click="confirmClick"
+          >确定</el-button
+        >
       </div>
     </template>
   </el-drawer>
@@ -22,11 +30,17 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { ElMessage } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
 import { modalTitleObj } from '@/data/common.js';
+import {
+  ApiOpenTenant,
+  ApiEditTenant,
+  ApiTenantInfo,
+} from '@/http/setting/tenant.js';
 import { formItems } from './data';
 
-defineOptions({ name: 'OrganModalEdit' });
+defineOptions({ name: 'TenantnModalEdit' });
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -46,26 +60,67 @@ const modal = ref(false);
 const modalTitle = computed(() => {
   return modalTitleObj[props.type];
 });
+
+const pending = ref(false);
+const BaseFormRef = ref(null);
 const formValue = ref({});
+
+const rules = ref({
+  sysName: [{ required: true, message: '请输入系统名称' }],
+});
 
 const cancelClick = () => {
   emit('update:modelValue', false);
 };
 
-const confirmClick = () => {
-  emit('update:modelValue', false);
+const confirmClick = async () => {
+  try {
+    pending.value = true;
+    await BaseFormRef.value?.validate();
+    // TODO: icon,color,logo
+    if (props.type === 'add') {
+      await ApiOpenTenant(formValue.value);
+    } else if (props.type === 'edit') {
+      await ApiEditTenant(formValue.value);
+    }
+    ElMessage.success('保存成功');
+    emit('update:modelValue', false);
+  } catch (error) {
+    if (error === 'cancel') return;
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
+  }
 };
 
 const onCloseFn = () => {
   emit('update:modelValue', false);
 };
 
+const init = async () => {
+  try {
+    // 获取租户详情
+    const res = await ApiTenantInfo({
+      merchantId: props.row.merchantId,
+      systemNo: props.row.systemNo,
+    });
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  }
+};
+
 watch(
   () => props.modelValue,
-  () => {
+  async () => {
     modal.value = props.modelValue;
     if (props.modelValue) {
-      formValue.value = props.row;
+      formValue.value = {
+        companyName: props.row.companyName,
+        creditCode: props.row.creditCode,
+        sysName: props.row.sysName,
+        systemNo: props.row.systemNo,
+      };
+      // await init();
     } else {
       formValue.value = {};
     }

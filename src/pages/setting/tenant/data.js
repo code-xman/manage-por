@@ -1,6 +1,17 @@
 import { h } from 'vue';
 import BTag from '@/components/baseCommon/BTag.vue';
 
+export const statusEnums = [
+  {
+    label: '正常',
+    value: '01',
+  },
+  {
+    label: '禁用',
+    value: '02',
+  },
+]
+
 /** 列表字段 */
 export const columns = [
   {
@@ -9,11 +20,19 @@ export const columns = [
     fixed: 'left',
   },
   {
-    prop: 'tenant',
+    prop: 'companyName',
     label: '租户名称',
     minWidth: '200px',
     formatter(row) {
-      return row.tenant || '-';
+      return row.companyName || '-';
+    },
+  },
+  {
+    prop: 'companyShortName',
+    label: '租户简称',
+    minWidth: '120px',
+    formatter(row) {
+      return row.companyShortName || '-';
     },
   },
   {
@@ -25,19 +44,19 @@ export const columns = [
     },
   },
   {
-    prop: 'orgName',
+    prop: 'sysName',
     label: '系统名称',
     minWidth: '200px',
     formatter(row) {
-      return row.orgName || '-';
+      return row.sysName || '-';
     },
   },
   {
-    prop: 'address',
+    prop: 'systemNo',
     label: '系统编码',
     width: '120px',
     formatter(row) {
-      return row.address || '-';
+      return row.systemNo || '-';
     },
   },
   {
@@ -45,11 +64,10 @@ export const columns = [
     label: '状态',
     width: '140px',
     formatter: (row) => {
-      const inner = () => row.statusLabel || '-';
-      if (row.status === '03')
+      const inner = () => row.status.label || '-';
+      if (row.status.value === '01')
         return h(BTag, { type: 'success' }, inner);
-      if (row.status === '04') return h(BTag, { type: 'danger' }, inner);
-      if (row.status === '01') return h(BTag, { type: 'danger' }, inner);
+      if (row.status.value === '02') return h(BTag, { type: 'danger' }, inner);
       return h(BTag, { type: 'info' }, inner);
     },
   },
@@ -58,7 +76,7 @@ export const columns = [
 /** 搜索字段 */
 export const searchFormItems = [
   {
-    name: 'orgName',
+    name: 'companyName',
     label: '租户名称',
     style: {
       width: '300px',
@@ -68,17 +86,17 @@ export const searchFormItems = [
     },
   },
   {
-    name: 'name',
+    name: 'sysName',
     label: '系统名称',
     attrs: {
       clearable: true,
     },
   },
   {
-    name: 'name1',
+    name: 'status',
     label: '租户状态',
     type: 'select',
-    options: [],
+    options: statusEnums,
     attrs: {
       clearable: true,
     },
@@ -88,31 +106,25 @@ export const searchFormItems = [
 /** 表单各项属性 */
 export const formItems = [
   {
-    name: 'address',
+    name: 'companyName',
     label: '租户名称',
-    attrs: {
-      clearable: true,
-    },
+    type: 'text',
   },
   {
-    name: 'phone',
+    name: 'creditCode',
     label: '社会统一信用代码',
-    attrs: {
-      clearable: true,
-    },
+    type: 'text',
   },
   {
-    name: 'name',
+    name: 'sysName',
     label: '系统名称',
     attrs: {
       clearable: true,
     },
   },
   {
-    name: 'phone',
+    name: 'systemNo',
     label: '系统编码',
-    attrs: {
-      clearable: true,
-    },
+    type: 'text',
   },
 ];

@@ -11,7 +11,7 @@
     }"
     class="base-form flex-1"
   >
-    <template v-for="item in formItems" :key="item.name">
+    <template v-for="item in newFormItems" :key="item.name">
       <el-form-item
         :prop="item.name"
         :label="item.label"
@@ -19,7 +19,7 @@
         :class="[`${item.className}`, widthAuto ? 'width_auto' : '']"
         :style="item.style || {}"
       >
-        <div v-if="item.type === 'text'"> {{ formData[item.name] }} </div>
+        <div v-if="item.type === 'text'">{{ formData[item.name] }}</div>
         <el-select
           v-else-if="item.type === 'select'"
           :placeholder="`请选择${item.label}`"
@@ -49,6 +49,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { cloneDeep } from 'lodash';
+import { ElMessage } from 'element-plus';
 
 const emit = defineEmits(['update:formValue', 'formValue-change']);
 
@@ -93,6 +94,31 @@ const props = defineProps({
 const formRef = ref(null);
 // form的当前组件的数据
 const formData = ref({});
+const newFormItems = ref([]);
+
+watch(
+  () => props.formItems,
+  async () => {
+    try {
+      // Promise.all map 处理循环里的请求
+      newFormItems.value = await Promise.all(props.formItems.map(async item => {
+        if (item.type === 'select' && typeof item.options === 'function') {
+          const options = await item.options();
+          return {
+            ...item,
+            options,
+          }
+        }
+        return item;
+      }))
+    } catch (error) {
+      ElMessage.error(`${error}`)      
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 // formitem的数据update触发此函数
 const formValueChange = (val, name) => {

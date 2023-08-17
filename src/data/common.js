@@ -6,3 +6,15 @@ export const modalTitleObj = {
   detail: '详情',
   '': '',
 };
+
+/** 是否枚举 */
+export const WHETHER_ENUM = [
+  {
+    label: '是',
+    value: '1',
+  },
+  {
+    label: '否',
+    value: '0',
+  },
+];

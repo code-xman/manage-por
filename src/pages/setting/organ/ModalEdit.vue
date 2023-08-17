@@ -54,6 +54,7 @@ const modal = ref(false);
 const modalTitle = computed(() => {
   return modalTitleObj[props.type];
 });
+
 const pending = ref(false);
 const BaseFormRef = ref(null);
 const formValue = ref({});

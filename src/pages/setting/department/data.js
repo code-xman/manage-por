@@ -1,3 +1,8 @@
+import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
+import { getAuthUser } from '@/utils/auth';
+
+const user = getAuthUser();
+
 /** 测试数据 */
 export const data_test = {
   success: true,
@@ -244,3 +249,52 @@ export const data_test = {
     },
   ],
 };
+
+/** 搜索字段 */
+export const searchFormItems = [
+  {
+    name: 'orgId',
+    label: '所属商户',
+    type: 'select',
+    options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'departmentName',
+    label: '部门名称',
+    attrs: {
+      clearable: true,
+    },
+  },
+];
+
+/** 表单各项属性 */
+export const formItems = [
+  {
+    name: 'orgId',
+    label: '所属商户',
+    type: 'select',
+    options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
+    attrs: {
+      disabled: true,
+    },
+  },
+  {
+    name: 'upDepartmentId',
+    label: '上级部门',
+    type: 'select',
+    options: [],
+    attrs: {
+      disabled: true,
+    },
+  },
+  {
+    name: 'departmentName',
+    label: '部门名称',
+    attrs: {
+      clearable: true,
+    },
+  },
+];

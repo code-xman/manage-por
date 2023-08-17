@@ -1,6 +1,7 @@
 <template>
   <div class="merchant full">
     <BasePage
+      ref="BasePageRef"
       :searchFormItems="searchFormItems"
       v-model:searchFormValue="searchFormValue"
       :btns="btns"
@@ -19,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, } from 'vue';
 import BasePage from '@/components/BasePage/index';
 import { ApiListTenantPage } from '@/http/setting/tenant.js';
 import ModalEdit from './ModalEdit.vue';
@@ -29,6 +30,7 @@ defineOptions({
   name: 'ShowBasePage',
 });
 
+const BasePageRef = ref(null);
 const searchFormValue = ref({});
 
 const btns = ref([
@@ -58,6 +60,14 @@ const editFn = (row) => {
   showModel.value = true;
 };
 
+watch(
+  () => showModel.value,
+  () => {
+    if (!showModel.value) {
+      BasePageRef.value?.refresh();
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>

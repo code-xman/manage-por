@@ -6,9 +6,27 @@ export const ApiListMerchantPage = async (params) => {
     pageNum: 1,
     pageSize: 20,
     ...params,
-  }
+  };
   const data = await post('/api/merchantFacade/listMerchantPage', _params);
-  return data || { list: [], total: 0 };;
+  return data || { list: [], total: 0 };
+};
+
+// 查询所有下级渠道商
+export const ApiQueryAllChildMerchant = async (params) => {
+  const data = await post('/api/merchantFacade/queryAllChildMerchant', params);
+  return data || [];
+};
+
+// 查询所有下级渠道商 LabelValue
+export const ApiQueryAllChildMerchantMini = async (params) => {
+  const data = await post('/api/merchantFacade/queryAllChildMerchant', params);
+  if (Array.isArray(data)) {
+    return data.map((item) => ({
+      label: item.label,
+      value: item.value,
+    }));
+  }
+  return [];
 };
 
 // 新增机构

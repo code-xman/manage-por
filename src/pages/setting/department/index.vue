@@ -1,10 +1,18 @@
 <template>
-  <div class="department full">
+  <div v-loading="pending" class="department full">
+    <SearchForm
+      :searchFormItems="searchFormItems"
+      v-model:searchFormValue="searchFormVal"
+      @on-search="onSearchFn"
+    ></SearchForm>
+    <!-- <div>
+      <el-button class="btn" type="primary" @click="handleAdd">
+        新增
+      </el-button>
+    </div> -->
     <el-table
-      v-loading="pending"
       :data="tree"
       row-key="departmentId"
-      size="small"
       stripe
       border
       default-expand-all
@@ -52,11 +60,13 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="165">
+      <el-table-column label="操作" align="center" fixed="right" width="180">
         <template #default="{ row }">
           <div class="flex main-start">
             <template v-if="row.departmentId !== '0000'">
-              <el-button link @click="handleEditRow(row)"> 编辑 </el-button>
+              <el-button type="primary" link @click="handleEditRow(row)">
+                编辑
+              </el-button>
 
               <template v-if="row.status">
                 <el-button
@@ -72,32 +82,139 @@
               </template>
             </template>
 
-            <el-button link @click="handleAddRow(row)"> 新增子级 </el-button>
+            <el-button type="primary" link @click="handleAddRow(row)">
+              新增子级
+            </el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
+    <ModalEdit
+      v-model="showModel"
+      :type="modalType"
+      :row="showModelRow"
+    ></ModalEdit>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import SearchForm from '@/components/BasePage/SearchForm';
 import BTag from '@/components/baseCommon/BTag';
-import { data_test } from './data';
+import {
+  ApiDepartmentTree,
+  ApiChangeStatus,
+} from '@/http/setting/department.js';
+import ModalEdit from './ModalEdit.vue';
+import { data_test, searchFormItems } from './data';
+import { getAuthUser } from '@/utils/auth';
+
+const user = getAuthUser();
 
 const pending = ref(false);
-const tree = ref([...data_test.data]);
+const searchFormVal = ref({});
+const tree = ref([]);
+
+const modalType = ref('');
+const showModel = ref(false);
+const showModelRow = ref({});
+
+const getData = async () => {
+  try {
+    pending.value = true;
+    tree.value = await ApiDepartmentTree({
+      ...searchFormVal.value,
+    });
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
+  }
+};
+
+const onSearchFn = () => {
+  getData();
+};
 
 /** 编辑 */
-const handleEditRow = (row) => {};
+const handleEditRow = (row) => {
+  modalType.value = 'edit';
+  showModelRow.value = row;
+  showModel.value = true;
+};
 /** 启用 / 禁用 */
-const handleToggleRow = (row) => {};
-/** 新增子级 */
-const handleAddRow = (row) => {};
+const handleToggleRow = async (row) => {
+  try {
+    pending.value = true;
+    await ElMessageBox.confirm(
+      `${row.status.value === '01' ? '禁用' : '启用'}${
+        row.departmentName || '此项'
+      }，确认是否继续？`,
+      {
+        type: 'warning',
+        title: '操作提示',
+        closeOnClickModal: false,
+      }
+    );
+
+    await ApiChangeStatus({
+      departmentId: row.departmentId,
+      // 01-正常,02-禁用
+      status: row.status.value === '01' ? '02' : '01',
+    });
+    getData();
+    ElMessage.success('操作成功');
+  } catch (error) {
+    if (error === 'cancel') return;
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
+  }
+};
+
+/** 新增根级部门 */
+const handleAdd = () => {
+  modalType.value = 'add';
+  showModelRow.value = {
+    orgId: searchFormVal.value.orgId || user.orgId,
+  };
+  showModel.value = true;
+};
+/** 新增子级部门 */
+const handleAddRow = (row) => {
+  modalType.value = 'addSon';
+  showModelRow.value = row;
+  showModel.value = true;
+};
+
+// 弹框关闭更新数据
+watch(
+  () => showModel.value,
+  () => {
+    if (!showModel.value) {
+      getData();
+    }
+  }
+);
+
+onMounted(() => {
+  getData();
+});
 </script>
 
 <style lang="scss" scoped>
-.el-table {
+.department {
   height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  .btn {
+    margin-bottom: 8px;
+  }
+  .el-table {
+    flex: 1;
+  }
 }
 </style>

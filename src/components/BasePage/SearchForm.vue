@@ -139,7 +139,7 @@ onMounted(() => {
         width: auto;
       }
       .el-form-item__content {
-        width: 160px;
+        width: 170px;
       }
     }
     // .el-button {

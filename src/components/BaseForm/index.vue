@@ -16,7 +16,7 @@
         :prop="item.name"
         :label="item.label"
         class="form-item half-width"
-        :class="[`${item.className}`, widthAuto ? 'width_auto' : '']"
+        :class="[`${item.className || ''}`, widthAuto ? 'width_auto' : '']"
         :style="item.style || {}"
       >
         <div v-if="item.type === 'text'">{{ formData[item.name] }}</div>
@@ -159,7 +159,7 @@ defineExpose({
 .base-form {
   display: flex;
   flex-wrap: wrap;
-  .half-width:not(.width_auto) {
+  .half-width:not(.width_auto, .full-width) {
     width: 50%;
   }
   .full-width {

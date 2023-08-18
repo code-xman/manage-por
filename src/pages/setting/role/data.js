@@ -1,3 +1,11 @@
+import { h } from 'vue';
+import BTag from '@/components/baseCommon/BTag.vue';
+import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
+import { ROLE_TYPE_ENUM, PlatformOrgId, } from '@/data/common.js';
+import { getAuthUser } from '@/utils/auth';
+
+const user = getAuthUser();
+
 /** 列表字段 */
 export const columns = [
   {
@@ -8,7 +16,7 @@ export const columns = [
   {
     prop: 'roleId',
     label: '岗位角色ID',
-    width: '160px',
+    width: '280px',
     formatter(row) {
       return row.roleId || '-';
     },
@@ -16,26 +24,31 @@ export const columns = [
   {
     prop: 'roleName',
     label: '岗位角色名称',
-    width: '160px',
+    width: '180px',
     formatter(row) {
       return row.roleName || '-';
     },
   },
   {
-    prop: 'orgName',
+    prop: 'orgId',
     label: '所属机构',
     minWidth: '220px',
     formatter(row) {
-      return row.orgName || '-';
+      return row.orgIdLV.label || '-';
     },
   },
   {
-    prop: 'status',
+    prop: 'roleStatus',
     label: '岗位角色状态',
     width: '140px',
     fixed: 'right',
     formatter(row) {
-      return row.status || '-';
+      const inner = () => row.roleStatus.label || '-';
+      if (row.roleStatus.value === '01')
+        return h(BTag, { type: 'success' }, inner);
+      if (row.roleStatus.value === '02')
+        return h(BTag, { type: 'danger' }, inner);
+      return h(BTag, { type: 'info' }, inner);
     },
   },
 ];
@@ -43,8 +56,10 @@ export const columns = [
 /** 搜索字段 */
 export const searchFormItems = [
   {
-    name: 'orgName',
+    name: 'orgId',
     label: '所属机构',
+    type: 'select',
+    options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
     style: {
       width: '300px',
     },
@@ -74,19 +89,23 @@ export const formItems = [
     },
   },
   {
-    name: 'orgName',
-    label: '所属机构',
+    name: 'roleType',
+    label: '岗位角色类型',
+    type: 'select',
+    options: [...ROLE_TYPE_ENUM],
     attrs: {
       clearable: true,
+      disabled: user.orgId !== PlatformOrgId,
     },
   },
   {
-    name: 'remark',
-    label: '备注',
+    name: 'orgId',
+    label: '所属机构',
+    type: 'select',
+    options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
     className: 'full-width',
     attrs: {
-      type: 'textarea',
-      autosize: { minRows: 3, maxRows: 5 },
+      clearable: true,
     },
   },
 ];

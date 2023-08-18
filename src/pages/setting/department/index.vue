@@ -35,7 +35,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="所属商户"
+        label="所属机构"
         align="center"
         width="220"
         show-overflow-tooltip

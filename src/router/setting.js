@@ -33,12 +33,12 @@ export default [
         component: () => import('@/pages/setting/department/index.vue'),
       },
       {
-        path: '/user',
-        name: 'User',
+        path: '/resource',
+        name: 'Resource',
         meta: {
-          title: '用户管理',
+          title: '权限管理',
         },
-        component: () => import('@/pages/setting/user/index.vue'),
+        component: () => import('@/pages/setting/resource/index.vue'),
       },
       {
         path: '/role',
@@ -47,6 +47,14 @@ export default [
           title: '角色管理',
         },
         component: () => import('@/pages/setting/role/index.vue'),
+      },
+      {
+        path: '/user',
+        name: 'User',
+        meta: {
+          title: '用户管理',
+        },
+        component: () => import('@/pages/setting/user/index.vue'),
       },
     ],
   },

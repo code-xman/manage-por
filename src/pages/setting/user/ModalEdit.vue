@@ -70,7 +70,7 @@ const mobileValidate = (rule, value, callback) => {
 };
 
 const rules = ref({
-  orgId: [{ required: true, message: '请选择所属商户' }],
+  orgId: [{ required: true, message: '请选择所属机构' }],
   departmentId: [{ required: true, message: '请选择职能部门' }],
   loginId: [{ required: true, message: '请输入登录ID' }],
   userName: [{ required: true, message: '请输入用户姓名' }],

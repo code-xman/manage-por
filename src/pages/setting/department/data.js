@@ -254,7 +254,7 @@ export const data_test = {
 export const searchFormItems = [
   {
     name: 'orgId',
-    label: '所属商户',
+    label: '所属机构',
     type: 'select',
     options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
     attrs: {
@@ -274,7 +274,7 @@ export const searchFormItems = [
 export const formItems = [
   {
     name: 'orgId',
-    label: '所属商户',
+    label: '所属机构',
     type: 'select',
     options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
     attrs: {

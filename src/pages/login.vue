@@ -56,9 +56,10 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
-import { ApiLogin, ApiGetRules, ApiGetRegions, } from '@/http/common';
+import { ApiLogin, ApiGetRules, ApiGetRegions } from '@/http/common';
 import { setCache, getOSInfo, getBrowserInfo, encrypte } from '@/utils/common';
-import { setAuthUser, setAuthToken } from '@/utils/auth.js';
+import { setAuthUser, setAuthToken, setAuthRole, } from '@/utils/auth.js';
+import { flattenTreeData } from '@/utils/array.js';
 
 const router = useRouter();
 
@@ -94,17 +95,19 @@ const loginFn = async () => {
     setAuthToken(_user.tokenId); // 缓存 token 信息
 
     // 获取用户的权限信息
-    // const rules = await ApiGetRules(userData.userId);
-    // if (!rules.menu || !rules.menu.children.length)
-    //   throw '该用户没有可用权限，请联系管理员';
-    // TODO: 处理权限问题
+    const rules = await ApiGetRules(userData.userId);
+    if (!rules.menu || !rules.menu.children.length)
+      throw '该用户没有可用权限，请联系管理员';
+    // 处理权限
+    const _menus = flattenTreeData(rules.menu?.children || []);
+    setAuthRole(_menus);
 
     // 初始化耗时数据
     // await ApiGetRegions();
 
-    ElMessage.success('登录成功')
+    ElMessage.success('登录成功');
     // 跳转页面
-    router.replace({ name: 'Home' });
+    router.replace({ name: 'Organ' });
   } catch (error) {
     console.log('error :>> ', error);
     if (typeof error === 'string') {

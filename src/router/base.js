@@ -23,6 +23,7 @@ const routes = [
     meta: {
       title: '基础页面',
       icon: 'icon-caidanguanli',
+      showType: 'development',
     },
     component: () => import('@/layout/Main'),
     children: [

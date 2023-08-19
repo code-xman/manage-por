@@ -61,3 +61,19 @@ export const ROLE_TYPE_ENUM = [
     value: '02',
   }
 ]
+
+/** 工作状态 */
+export const WORK_STATUS_ENUM = [
+  {
+    label: '在职',
+    value: '01',
+  },
+  {
+    label: '离职',
+    value: '02',
+  },
+  {
+    label: '休假',
+    value: '03',
+  },
+];

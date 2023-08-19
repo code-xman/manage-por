@@ -1,26 +1,10 @@
 import { h } from 'vue';
 import BTag from '@/components/baseCommon/BTag.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
+import { WHETHER_ENUM, WORK_STATUS_ENUM, } from '@/data/common';
 import { getAuthUser } from '@/utils/auth';
-import { WHETHER_ENUM } from '@/data/common';
 
 const user = getAuthUser();
-
-/** 工作状态 */
-export const WORK_STATUS = [
-  {
-    label: '在职',
-    value: '01',
-  },
-  {
-    label: '离职',
-    value: '02',
-  },
-  {
-    label: '休假',
-    value: '03',
-  },
-];
 
 /** 列表字段 */
 export const columns = [
@@ -30,11 +14,11 @@ export const columns = [
     fixed: 'left',
   },
   {
-    prop: 'userId',
-    label: '用户ID',
-    width: '240px',
+    prop: 'loginId',
+    label: '登录ID',
+    width: '160px',
     formatter(row) {
-      return row.userId || '-';
+      return row.loginId || '-';
     },
   },
   {
@@ -53,14 +37,14 @@ export const columns = [
       return row.orgName || '-';
     },
   },
-  {
-    prop: 'departmentName',
-    label: '所属部门',
-    width: '160px',
-    formatter(row) {
-      return row.departmentName || '-';
-    },
-  },
+  // {
+  //   prop: 'departmentName',
+  //   label: '所属部门',
+  //   width: '160px',
+  //   formatter(row) {
+  //     return row.departmentName || '-';
+  //   },
+  // },
   {
     prop: 'mobile',
     label: '联系电话',
@@ -72,7 +56,7 @@ export const columns = [
   {
     prop: 'enableRoles',
     label: '岗位角色',
-    width: '140px',
+    width: '220px',
     formatter(row) {
       return row.enableRoles || '-';
     },
@@ -134,7 +118,7 @@ export const formItems = [
     name: 'orgId',
     label: '所属机构',
     type: 'select',
-    options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
+    options: [],
     attrs: {
       clearable: true,
     },
@@ -146,6 +130,7 @@ export const formItems = [
     options: [],
     attrs: {
       clearable: true,
+      disabled: true,
     },
   },
   {
@@ -153,6 +138,7 @@ export const formItems = [
     label: '登录ID',
     attrs: {
       clearable: true,
+      maxlength: 11,
     },
   },
   {
@@ -160,13 +146,14 @@ export const formItems = [
     label: '用户姓名',
     attrs: {
       clearable: true,
+      maxlength: 100,
     },
   },
   {
     name: 'workStatus',
     label: '工作状态',
     type: 'select',
-    options: [...WORK_STATUS],
+    options: [...WORK_STATUS_ENUM],
     attrs: {
       clearable: true,
     },
@@ -180,15 +167,15 @@ export const formItems = [
       clearable: true,
     },
   },
-  {
-    name: 'isSalesMan',
-    label: '是否业务员',
-    type: 'select',
-    options: [...WHETHER_ENUM],
-    attrs: {
-      clearable: true,
-    },
-  },
+  // {
+  //   name: 'isSalesMan',
+  //   label: '是否业务员',
+  //   type: 'select',
+  //   options: [...WHETHER_ENUM],
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
   {
     name: 'mobile',
     label: '联系电话',
@@ -198,12 +185,21 @@ export const formItems = [
     },
   },
   {
-    name: 'enableRoles',
-    label: '岗位角色',
-    type: 'select',
-    options: [...WORK_STATUS],
+    name: 'idNo',
+    label: '身份证号码',
     attrs: {
       clearable: true,
+      maxlength: 18,
+    },
+  },
+  {
+    name: 'roleIds',
+    label: '岗位角色',
+    type: 'select',
+    options: [],
+    attrs: {
+      clearable: true,
+      multiple: true,
     },
   },
 ];

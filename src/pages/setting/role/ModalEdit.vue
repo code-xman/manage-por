@@ -150,6 +150,28 @@ const handleExpandToggle = (expand) => {
   }
 };
 
+// 取消所有选中的子孙级
+const deepUnChangeChild = (menu) => {
+  // 取消选择子级
+  const _deepEach = (node) => {
+    // 添加当前节点
+    roleTreeRef.value?.setChecked(node, false);
+
+    // 递归取消选择子级
+    if (Array.isArray(node.children)) {
+      node.children.forEach((sub) => {
+        _deepEach(sub);
+      });
+    }
+  };
+
+  // 执行递归选择父级
+  _deepEach(menu);
+
+  // 选中当前节点
+  menusChecked.value = roleTreeRef.value?.getCheckedKeys();
+};
+
 // 全选
 const handleSelectAll = () => {
   roleTreeRef.value?.setCheckedNodes(menusFlat.value);
@@ -274,13 +296,23 @@ const fetchMenuTree = async () => {
     pending.value = true;
 
     const { row } = props;
+    let params = {};
     let _menus = {};
 
+    if (props.type === 'add') {
+      params = {
+        roleId: '',
+        orgId: formValue.value.orgId,
+      };
+    } else {
+      params = {
+        roleId: row?.roleId,
+        orgId: formValue.value.orgId || props.row?.orgId,
+      }
+    }
+
     // 步客加载全量菜单
-    _menus = await ApiFindCanConfigMenuTree({
-      roleId: row?.roleId ? row.roleId : '',
-      orgId: row?.orgId ? row.orgId : formValue.value.orgId,
-    });
+    _menus = await ApiFindCanConfigMenuTree(params);
 
     menus.value = [_menus];
     menusFlat.value = flatMenu([_menus]);
@@ -346,10 +378,10 @@ watch(
           orgId: props.row.orgId,
         };
       }
-      if (formValue.value.orgId) {
-        // 获取菜单树
-        await fetchMenuTree();
-      }
+      // if (formValue.value.orgId) {
+      //   // 获取菜单树
+      //   await fetchMenuTree();
+      // }
       // 非平台
       if (user.orgId !== PlatformOrgId) {
         form.value.roleType = '02';

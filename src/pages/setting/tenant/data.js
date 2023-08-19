@@ -59,18 +59,18 @@ export const columns = [
       return row.systemNo || '-';
     },
   },
-  {
-    prop: 'status',
-    label: '状态',
-    width: '140px',
-    formatter: (row) => {
-      const inner = () => row.status.label || '-';
-      if (row.status.value === '01')
-        return h(BTag, { type: 'success' }, inner);
-      if (row.status.value === '02') return h(BTag, { type: 'danger' }, inner);
-      return h(BTag, { type: 'info' }, inner);
-    },
-  },
+  // {
+  //   prop: 'status',
+  //   label: '状态',
+  //   width: '140px',
+  //   formatter: (row) => {
+  //     const inner = () => row.status.label || '-';
+  //     if (row.status.value === '01')
+  //       return h(BTag, { type: 'success' }, inner);
+  //     if (row.status.value === '02') return h(BTag, { type: 'danger' }, inner);
+  //     return h(BTag, { type: 'info' }, inner);
+  //   },
+  // },
 ];
 
 /** 搜索字段 */
@@ -92,15 +92,15 @@ export const searchFormItems = [
       clearable: true,
     },
   },
-  {
-    name: 'status',
-    label: '租户状态',
-    type: 'select',
-    options: statusEnums,
-    attrs: {
-      clearable: true,
-    },
-  },
+  // {
+  //   name: 'status',
+  //   label: '租户状态',
+  //   type: 'select',
+  //   options: statusEnums,
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
 ];
 
 /** 表单各项属性 */

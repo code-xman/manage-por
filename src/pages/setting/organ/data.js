@@ -1,3 +1,6 @@
+import { h } from 'vue';
+import BTag from '@/components/baseCommon/BTag';
+
 /** 列表字段 */
 export const columns = [
   {
@@ -61,19 +64,18 @@ export const columns = [
       return row.operationUserMobile || '-';
     },
   },
-  // {
-  //   prop: 'merchantStatus',
-  //   label: '状态',
-  //   width: '140px',
-  //   formatter: (row) => {
-  //     const inner = () => row.merchantStatus || '-';
-  //     if (row.merchantStatus === '03')
-  //       return h(BTag, { type: 'success' }, inner);
-  //     if (row.merchantStatus === '04') return h(BTag, { type: 'danger' }, inner);
-  //     if (row.merchantStatus === '01') return h(BTag, { type: 'danger' }, inner);
-  //     return h(BTag, { type: 'info' }, inner);
-  //   },
-  // },
+  {
+    prop: 'merchantStatus',
+    label: '状态',
+    width: '140px',
+    formatter: (row) => {
+      const inner = () => row.merchantStatusLV.label || '-';
+      if (row.merchantStatus === '01')
+        return h(BTag, { type: 'success' }, inner);
+      if (row.merchantStatus === '02') return h(BTag, { type: 'danger' }, inner);
+      return h(BTag, { type: 'info' }, inner);
+    },
+  },
 ];
 
 /** 搜索字段 */

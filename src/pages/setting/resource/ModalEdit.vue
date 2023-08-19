@@ -176,7 +176,7 @@ export default defineComponent({
         authorityType: [{ required: true, message: '请选择权限类型' }],
         menuName: [{ required: true, message: '请填写权限名称' }],
         sort: [{ required: true, message: '请选择权限排序权重' }],
-        // useLevel: [{required: true, message: '请选择权限适用等级'}],
+        useLevel: [{required: true, message: '请选择权限适用等级'}],
       },
     };
   },

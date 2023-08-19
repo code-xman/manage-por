@@ -23,6 +23,12 @@ export const ApiUpdateUser = async (params) => {
   return data;
 };
 
+// 	详情 通过用户编号查询用户信息
+export const ApiFindUserByUserId = async (params) => {
+  const data = await post('/api/userFacade/findUserByUserId', params);
+  return data;
+};
+
 // 	禁用系统用户
 export const ApiDisableUser = async (params) => {
   const data = await post('/api/userFacade/disableUser', params);

@@ -77,11 +77,17 @@ const confirmClick = async () => {
   try {
     pending.value = true;
     await BaseFormRef.value?.validate();
-    // TODO: icon,color,logo
+    const params = {
+      ...formValue.value,
+      pkId: props.row.pkId,
+      logoFileName: '/vite.svg',
+      bgColor: '#000',
+      icon: '/src/assets/vue.svg',
+    };
     if (props.type === 'add') {
-      await ApiOpenTenant(formValue.value);
+      await ApiOpenTenant(params);
     } else if (props.type === 'edit') {
-      await ApiEditTenant(formValue.value);
+      await ApiEditTenant(params);
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);

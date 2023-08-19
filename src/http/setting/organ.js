@@ -38,5 +38,11 @@ export const ApiCreateMerchant = async (params) => {
 // 编辑机构
 export const ApiEditMerchant = async (params) => {
   const data = await post('/api/merchantFacade/editMerchant', params);
-  return data && data.merchantId ? data.merchantId : null;
+  return data;
+};
+
+// 解冻、冻结渠道商
+export const ApiChangeMerchantStatus = async (params) => {
+  const data = await post('/api/merchantFacade/ChangeMerchantStatus', params);
+  return data;
 };

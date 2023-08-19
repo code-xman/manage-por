@@ -214,6 +214,7 @@ watch(
           const detail = await ApiFindUserByUserId({
             userId: props.row.userId,
           });
+          const roleIds = detail?.checkedList.map((cl) => cl.value) || [];
           formValue.value = {
             ...defaultFormValue,
             orgId: detail?.orgId || '',
@@ -225,7 +226,7 @@ watch(
             isSalesMan: detail?.isSalesMan?.value || '',
             mobile: detail?.mobile || '',
             idNo: detail?.idNo || '',
-            roleIds: detail?.roleIds || [],
+            roleIds: roleIds,
           };
         }
       } else {

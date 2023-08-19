@@ -15,6 +15,7 @@
         :columns="columns"
         :list="list"
         :searchParams="searchFormVal"
+        :defaultParams="defaultParams"
         :options-size="optionsSize"
       >
         <template #options="{ row }">
@@ -43,6 +44,11 @@ const props = defineProps({
   },
   /** 搜索form数据 */
   searchFormValue: {
+    type: Object,
+    default: () => ({}),
+  },
+  /** 请求默认参数 */
+  defaultParams: {
     type: Object,
     default: () => ({}),
   },

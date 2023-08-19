@@ -4,6 +4,7 @@
       ref="BasePageRef"
       :searchFormItems="searchFormItems"
       v-model:searchFormValue="searchFormValue"
+      :defaultParams="defaultParams"
       :btns="btns"
       :columns="columns"
       :list="ApiPageUser"
@@ -49,6 +50,9 @@ import {
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
 
+import { getAuthUser } from '@/utils/auth';
+const user = getAuthUser();
+
 defineOptions({
   name: 'ShowBasePage',
 });
@@ -56,6 +60,9 @@ defineOptions({
 const pending = ref(false);
 const BasePageRef = ref({});
 const searchFormValue = ref({});
+const defaultParams = {
+  orgId: user.orgId,
+};
 
 const btns = ref([
   {

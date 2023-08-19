@@ -2,11 +2,7 @@
   <div class="login">
     <div class="login-box">
       <div class="img-box">
-        <el-image
-          class="img"
-          src="../../public/images/login.svg"
-          fit="fill"
-        ></el-image>
+        <el-image class="img" src="/images/login.svg" fit="fill"></el-image>
       </div>
       <div v-loading="loading" class="form-box">
         <p>{{ APP_INFO.title }}</p>
@@ -52,13 +48,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
 import { ApiLogin, ApiGetRules, ApiGetRegions } from '@/http/common';
 import { setCache, getOSInfo, getBrowserInfo, encrypte } from '@/utils/common';
-import { setAuthUser, setAuthToken, setAuthRole, } from '@/utils/auth.js';
+import { setAuthUser, setAuthToken, setAuthRole } from '@/utils/auth.js';
 import { flattenTreeData } from '@/utils/array.js';
 
 const router = useRouter();
@@ -105,9 +101,8 @@ const loginFn = async () => {
     // 初始化耗时数据
     // await ApiGetRegions();
 
-    ElMessage.success('登录成功');
     // 跳转页面
-    router.replace({ name: 'Organ' });
+    router.replace({ name: 'Logging' });
   } catch (error) {
     console.log('error :>> ', error);
     if (typeof error === 'string') {

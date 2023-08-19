@@ -1,6 +1,9 @@
 import { CACHE_AUTH_PREFIX, CACHE_PREFIX } from '@/config/base';
 import { getCache, removeCache, setCache } from '@/utils/common';
 
+// 登录标识
+const CACHE_FLAG_KEY = `${CACHE_AUTH_PREFIX}_flag`;
+
 // 用户信息缓存标识
 const CACHE_USER_KEY = `${CACHE_AUTH_PREFIX}_user`;
 
@@ -20,6 +23,23 @@ export const clearAuth = () => {
       removeCache(key);
     }
   });
+};
+
+///////////////////////////////////////////////////////////////
+
+// 设置标识
+export const setFlagUser = (flag) => {
+  setCache(CACHE_FLAG_KEY, flag);
+};
+
+// 获取标识
+export const getFlagUser = () => {
+  return getCache(CACHE_FLAG_KEY);
+};
+
+// 清除标识
+export const removeFlagUser = () => {
+  removeCache(CACHE_FLAG_KEY);
 };
 
 ////////////////////////////////////////////////////////////////

@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { getAuthRole } from '@/utils/auth.js';
+
 const roles = getAuthRole();
-const menuIds = roles.map((item) => item.menuId);
+const menuIds = roles?.map((item) => item.menuId) || [];
 
 const modules = import.meta.glob('./*.js', { eager: true });
 
@@ -15,16 +16,16 @@ const filterFn = (menus) => {
     return [];
   }
   res = menus.filter((menu) => menuIds.includes(menu.meta.id));
-  res.forEach(item => {
+  res.forEach((item) => {
     if (item.children && item.children.length > 0) {
       item.children = filterFn(item.children);
     }
-  })
+  });
   return res;
 };
 Object.keys(modules).forEach((filePath) => {
   const component = modules[filePath];
-  console.log(`${filePath} :>> `, component.default);
+  // console.log(`${filePath} :>> `, component.default);
   let routerData = component.default;
   // 非开发环境
   if (import.meta.env.VITE_FLAG !== 'development') {
@@ -32,11 +33,12 @@ Object.keys(modules).forEach((filePath) => {
     routerData = component.default.filter(
       (cd) => cd.meta.showType !== 'development'
     );
-    // 去掉无权限路由
-    if (filePath !== './base.js') {
-      routerData = filterFn(routerData);
-    }
   }
+  // 去掉无权限路由
+  if (filePath !== './base.js') {
+    routerData = filterFn(routerData);
+  }
+  console.log(`${filePath} :>> `, routerData);
   routes.push.apply(routes, routerData);
 });
 

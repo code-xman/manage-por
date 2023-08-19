@@ -17,6 +17,16 @@ const routes = [
     },
     component: () => import('@/pages/login'),
   },
+  // 登录中
+  {
+    path: '/logging',
+    name: 'Logging',
+    meta: {
+      title: '登录中',
+      menuHide: true,
+    },
+    component: () => import('@/pages/logging'),
+  },
   {
     path: '/base',
     name: 'Base',

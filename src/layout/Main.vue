@@ -7,14 +7,14 @@
         {{ route.meta.title || '' }}
       </div>
       <div class="flex-1"></div>
-      <div class="item">个人中心</div>
+      <!-- <div class="item">个人中心</div> -->
       <el-dropdown class="item" @command="handleCommand">
         操作
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="ModifyPassword">
+            <!-- <el-dropdown-item command="ModifyPassword">
               修改密码
-            </el-dropdown-item>
+            </el-dropdown-item> -->
             <el-dropdown-item command="Logout">
               <span class="color-red"> 退出登录 </span>
             </el-dropdown-item>
@@ -36,21 +36,34 @@ import { useRoute, useRouter } from 'vue-router';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
 import Menu from '@/components/menu/index.vue';
 import { removeCache } from '@/utils/common.js';
-import { removeAuthToken } from '@/utils/auth.js';
+import { removeAuthToken, clearAuth } from '@/utils/auth.js';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const route = useRoute();
 const router = useRouter();
 
 // 处理操作
-const handleCommand = (command) => {
+const handleCommand = async (command) => {
   switch (command) {
     case 'ModifyPassword':
       break;
 
     case 'Logout':
       {
-        removeAuthToken();
-        router.replace({ name: 'Login' });
+        try {
+          await ElMessageBox.confirm('确定退出登录？', {
+            title: '操作提示',
+            type: 'warning',
+            closeOnClickModal: false,
+          });
+          // removeAuthToken();
+          clearAuth();
+          ElMessage.success('退出登录成功');
+          router.replace({ name: 'Login' });
+        } catch (error) {
+          if (error === 'cancel') return;
+          ElMessage.error(`${error}`);
+        }
       }
       break;
 

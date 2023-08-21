@@ -134,6 +134,7 @@ const fetchData = async () => {
         ...props.searchParams,
       });
       listData.value = dataRes.list;
+      total.value = dataRes.total;
     }
     if (Array.isArray(props.list)) {
       listData.value = props.list;

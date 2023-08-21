@@ -365,12 +365,4 @@ export default defineComponent({
   }
 }
 
-.modal-footer {
-  border-top: 1px $colorBorder solid;
-  display: flex;
-  flex-shrink: 0;
-  justify-content: flex-end;
-  padding: $void;
-  position: relative;
-}
 </style>

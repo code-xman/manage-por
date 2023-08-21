@@ -64,7 +64,7 @@ const formRef = ref(null);
 const formVal = ref({
   systemNo: '00000',
   loginId: 'sadmin',
-  loginPwd: 'Aa123456',
+  loginPwd: '123456',
 });
 const formRules = ref({
   systemNo: [{ required: true, message: '请输入系统编码' }],

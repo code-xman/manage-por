@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "28627463",
+      "name": "角色管理",
+      "font_class": "jiaoseguanli",
+      "unicode": "e756",
+      "unicode_decimal": 59222
+    },
+    {
+      "icon_id": "28627470",
+      "name": "用户管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e757",
+      "unicode_decimal": 59223
+    },
+    {
+      "icon_id": "28700633",
+      "name": "圆圈疑问",
+      "font_class": "yuanquanyiwen",
+      "unicode": "e758",
+      "unicode_decimal": 59224
+    },
+    {
+      "icon_id": "29195665",
+      "name": "知识",
+      "font_class": "zhishi",
+      "unicode": "e759",
+      "unicode_decimal": 59225
+    },
+    {
+      "icon_id": "30758914",
+      "name": "门户",
+      "font_class": "menhu",
+      "unicode": "e76a",
+      "unicode_decimal": 59242
+    },
+    {
+      "icon_id": "30920053",
+      "name": "预约记录",
+      "font_class": "yuyuejilu",
+      "unicode": "e76d",
+      "unicode_decimal": 59245
+    },
+    {
       "icon_id": "28627453",
       "name": "日志",
       "font_class": "rizhi",

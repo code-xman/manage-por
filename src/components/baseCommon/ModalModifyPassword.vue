@@ -80,7 +80,7 @@ const pending = ref(false);
 const formRef = ref(null);
 const form = ref({});
 const rules = ref({
-  oldPwd: [{ required: true, message: '请输入旧密码' }, _passwordRule],
+  oldPwd: [{ required: true, message: '请输入旧密码' }, ],
   newPwd: [{ required: true, message: '请输入新密码' }, _passwordRule],
   confirmPwd: [{ required: true, message: '请再次输入新密码' }, _passwordRule],
 });
@@ -100,9 +100,10 @@ const handleSubmit = async () => {
 
     pending.value = true;
 
+    const user = getAuthUser();
     // 加密处理
     const _params = {
-      ...form.value,
+      userId: user.userId,
       oldPwd: encrypte(form.value.oldPwd),
       newPwd: encrypte(form.value.newPwd),
       confirmPwd: encrypte(form.value.confirmPwd),
@@ -115,7 +116,7 @@ const handleSubmit = async () => {
       message: '密码更新成功，请重新登录',
       duration: 1000,
       onClose: async () => {
-        ApiLogout();
+        // ApiLogout();
         clearAuth();
         await new Promise((resolve) => {
           setTimeout(() => {
@@ -142,13 +143,8 @@ watch(
 
 watch(
   () => modal,
-  () => {
-    if (value) {
-      const user = getAuthUser();
-      form.value.userId = user.userId;
-    } else {
-      form.value = {};
-    }
+  (value) => {
+    form.value = {};
     emit('update:modelValue', value);
   }
 );

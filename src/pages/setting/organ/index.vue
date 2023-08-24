@@ -46,7 +46,7 @@ import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
 
 defineOptions({
-  name: 'ShowBasePage',
+  name: 'Organ',
 });
 
 const pending = ref(false);

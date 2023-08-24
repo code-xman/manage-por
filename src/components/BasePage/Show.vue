@@ -1,13 +1,13 @@
 <template>
-  <div class="show-base-page full">
+  <div v-loading="pending" class="show-base-page full">
     <BasePage
+      ref="BasePageRef"
       :searchFormItems="searchFormItems"
       v-model:searchFormValue="searchFormValue"
       :btns="btns"
       :columns="columns"
       :list="() => list"
       :options-size="100"
-      @on-search="onSearchFn"
     >
       <template #options="{ row }">
         <el-button type="primary" link @click="() => detailFn(row)">
@@ -153,6 +153,9 @@ const searchFormValue = ref({
   sex: '',
 });
 
+const pending = ref(false);
+const BasePageRef = ref(null);
+
 const btns = ref([
   {
     key: 'add',
@@ -187,9 +190,6 @@ const addFn = () => {
 const showModel = ref(false);
 const showModelRow = ref({});
 
-const onSearchFn = () => {
-  console.log('searchFormValue :>> ', searchFormValue.value);
-};
 
 const detailFn = (row) => {
   showModelRow.value = row;

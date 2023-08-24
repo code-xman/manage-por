@@ -1,6 +1,6 @@
-:root {
-  --app-primary-color: #526aec;
-}
+// :root {
+//   --app-primary-color: #526aec;
+// }
 
 // 全局样式抽取
 
@@ -18,8 +18,9 @@ $voidLarge: 20px;
 $pageBg: #f6f9ff;
 
 // 其他配色
-// $colorPrimary: #526aec; // 主题色
-$colorPrimary: #409EFF; // 主题色
+// $colorPrimary: #526aec; // 主题色 紫
+// $colorPrimary: #1964e7; // 主题色 宝蓝
+$colorPrimary: var(--el-color-primary);
 $colorSecond: #f4b626; // 辅助色
 
 // 文本配色
@@ -29,8 +30,8 @@ $colorTextSecond: #545d66; // 次要文本色，用于提示消息
 $colorPlaceholder: #b7b7b7; // 表单提示文本色
 
 // 链接配色
-$colorLink: $colorPrimary; // 超链接文本色
-$colorLinkHover: lighten($colorPrimary, 5%); // 超链接高亮
+$colorLink: var(--el-color-primary); // 超链接文本色
+// $colorLinkHover: lighten($colorPrimary, 5%); // 超链接高亮
 
 // 边框色，常规使用，如：分割线、输入框边框
 $colorBorder: #f1f3f7;

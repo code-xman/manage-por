@@ -105,7 +105,7 @@ const handleCommand = async (command) => {
   color: #fff;
   font-size: 16px;
   line-height: 56px;
-  background-color: $colorPrimary;
+  background-color: var(--el-color-primary);
   background-image: linear-gradient(
     to left,
     rgba(0, 0, 0, 0.4),

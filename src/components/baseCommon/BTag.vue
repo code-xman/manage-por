@@ -44,7 +44,7 @@ export default defineComponent({
   }
 
   &::before {
-    background-color: darken($colorBorder, 5%);
+    background-color: var(--el-fill-color-lighter);
     border-radius: 50%;
     content: '';
     height: 8px;
@@ -56,31 +56,31 @@ export default defineComponent({
   }
 
   &__primary::before {
-    background-color: fade-out($colorPrimary, 0.5);
+    background-color: var(--el-color-primary);
   }
 
   &__success::before {
-    background-color: fade-out($colorSitSuccess, 0.5);
+    background-color: var(--el-color-success);
   }
 
   &__danger::before {
-    background-color: fade-out($colorSitDanger, 0.5);
+    background-color: var(--el-color-error);
   }
 
   &__warning::before {
-    background-color: fade-out($colorSitWarning, 0.5);
+    background-color: var(--el-color-warning);
   }
 
   &__info::before {
-    background-color: fade-out($colorSitInfo, 0.5);
+    background-color: var(--el-border-color-light);
   }
 
   &.is__border {
-    color: $colorTextLight;
-    background-color: $colorBorder;
-    border: 1px darken($colorBorder, 5%) solid;
+    color: var(--el-color-text);
+    background-color: var(--el-fill-color-lighter);
+    border: 1px var(--el-fill-color-light) solid;
     border-radius: 32px;
-    padding: 3px 12px;
+    padding: 2px 12px;
 
     &::before {
       content: unset;
@@ -89,33 +89,33 @@ export default defineComponent({
   }
 
   &__primary.is__border {
-    color: $colorPrimary;
-    border-color: fade-out($colorPrimary, 0.7);
-    background-color: fade-out($colorPrimary, 0.9);
+    color: var(--el-color-primary);
+    border-color: var(--el-color-primary-light-7);
+    background-color: var(--el-color-primary-light-9);
   }
 
   &__success.is__border {
-    color: $colorSitSuccess;
-    border-color: fade-out($colorSitSuccess, 0.7);
-    background-color: fade-out($colorSitSuccess, 0.9);
+    color: var(--el-color-success);
+    border-color: var(--el-color-success-light-7);
+    background-color: var(--el-color-success-light-9);
   }
 
   &__danger.is__border {
-    color: $colorSitDanger;
-    border-color: fade-out($colorSitDanger, 0.7);
-    background-color: fade-out($colorSitDanger, 0.9);
+    color: var(--el-color-error);
+    border-color: var(--el-color-error-light-7);
+    background-color: var(--el-color-error-light-9);
   }
 
   &__warning.is__border {
-    color: $colorSitWarning;
-    border-color: fade-out($colorSitWarning, 0.7);
-    background-color: fade-out($colorSitWarning, 0.9);
+    color: var(--el-color-warning);
+    border-color: var(--el-color-warning-light-7);
+    background-color: var(--el-color-warning-light-9);
   }
 
   &__info.is__border {
-    color: $colorSitInfo;
-    border-color: fade-out($colorSitWarning, 0.7);
-    background-color: fade-out($colorSitWarning, 0.9);
+    color: var(--el-color-info);
+    border-color: var(--el-border-color-light);
+    background-color: var(--el-border-color-extra-light);
   }
 }
 </style>

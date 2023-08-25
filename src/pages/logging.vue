@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="pending" class="logging flex-all center">登录中...</div>
+  <div v-loading="true" class="logging flex-all center">登录中...</div>
 </template>
 
 <script setup>
@@ -10,12 +10,8 @@ import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 
-const pending = ref(false);
-
 onMounted(() => {
   try {
-    pending.value = true;
-
     const flag = getFlagUser();
     // 跳转页面
     if (!flag) {
@@ -28,8 +24,6 @@ onMounted(() => {
     }
   } catch (error) {
     ElMessage.error(`${error}`);
-  } finally {
-    pending.value = false;
   }
 });
 </script>

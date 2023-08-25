@@ -35,7 +35,7 @@
         min-width="180"
         show-overflow-tooltip
       />
-      <el-table-column prop="menuId" label="权限ID" align="center" width="290">
+      <el-table-column prop="menuId" label="权限ID" align="center" width="320">
         <template #default="{ row }">
           <template v-if="row.menuId === '0000'">-</template>
           <template v-else>

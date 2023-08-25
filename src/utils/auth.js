@@ -13,6 +13,12 @@ const CACHE_TOKEN_KEY = `${CACHE_AUTH_PREFIX}_token`;
 // 用户角色信息
 const CACHE_ROLE_KEY = `${CACHE_AUTH_PREFIX}_role`;
 
+// 用户菜单信息
+const CACHE_MENU_KEY = `${CACHE_AUTH_PREFIX}_menu`;
+
+// 用户按钮信息
+const CACHE_BTN_KEY = `${CACHE_AUTH_PREFIX}_btn`;
+
 ////////////////////////////////////////////////////////////////
 
 // 清除所有敏感信息
@@ -91,4 +97,38 @@ export const getAuthRole = () => {
 // 清除角色信息
 export const removeAuthRole = () => {
   removeCache(CACHE_ROLE_KEY);
+};
+
+////////////////////////////////////////////////////////////////
+
+// 设置角色信息
+export const setAuthMenu = (menus) => {
+  setCache(CACHE_MENU_KEY, menus);
+};
+
+// 获取角色信息
+export const getAuthMenu = () => {
+  return getCache(CACHE_MENU_KEY);
+};
+
+// 清除角色信息
+export const removeAuthMenu = () => {
+  removeCache(CACHE_MENU_KEY);
+};
+
+////////////////////////////////////////////////////////////////
+
+// 设置角色信息
+export const setAuthBtn = (btns) => {
+  setCache(CACHE_BTN_KEY, btns);
+};
+
+// 获取角色信息
+export const getAuthBtn = () => {
+  return getCache(CACHE_BTN_KEY);
+};
+
+// 清除角色信息
+export const removeAuthBtn = () => {
+  removeCache(CACHE_BTN_KEY);
 };

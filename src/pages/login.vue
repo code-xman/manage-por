@@ -54,7 +54,12 @@ import { ElMessage } from 'element-plus';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
 import { ApiLogin, ApiGetRules, ApiGetRegions } from '@/http/common';
 import { setCache, getOSInfo, getBrowserInfo, encrypte } from '@/utils/common';
-import { setAuthUser, setAuthToken, setAuthRole } from '@/utils/auth.js';
+import {
+  setAuthUser,
+  setAuthToken,
+  setAuthMenu,
+  setAuthBtn,
+} from '@/utils/auth.js';
 import { flattenTreeData } from '@/utils/array.js';
 
 const router = useRouter();
@@ -95,8 +100,12 @@ const loginFn = async () => {
     if (!rules.menu || !rules.menu.children.length)
       throw '该用户没有可用权限，请联系管理员';
     // 处理权限
-    const _menus = flattenTreeData(rules.menu?.children || []);
-    setAuthRole(_menus);
+    const _actions = flattenTreeData(rules.menu?.children || []);
+    const _menus = _actions.filter((a) => a.authorityType === '1');
+    const _btns = _actions.filter((a) => a.authorityType === '2');
+
+    setAuthMenu(_menus);
+    setAuthBtn(_btns);
 
     // 初始化耗时数据
     // await ApiGetRegions();

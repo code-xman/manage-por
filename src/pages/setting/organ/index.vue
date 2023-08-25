@@ -10,18 +10,29 @@
       :options-size="140"
     >
       <template #options="{ row }">
-        <el-button type="primary" link @click="() => editFn(row)">
+        <el-button
+          v-allow="'ecb5b9ba43db4c50bf21851724a354bf'"
+          type="primary"
+          link
+          @click="() => editFn(row)"
+        >
           编辑
         </el-button>
         <template v-if="row.merchantStatus">
           <el-button
             v-if="row.merchantStatus === '02'"
+            v-allow="'ed4f78d7c1034d56b05be0bcc1aca929'"
             link
             @click="handleToggleRow(row)"
           >
             <span class="color-success">启用</span>
           </el-button>
-          <el-button v-else link @click="handleToggleRow(row)">
+          <el-button
+            v-else
+            v-allow="'88073957b3364adb8e3d8486b8e9b52b'"
+            link
+            @click="handleToggleRow(row)"
+          >
             <span class="color-danger">禁用</span>
           </el-button>
         </template>
@@ -57,6 +68,7 @@ const btns = ref([
   {
     key: 'add',
     name: '新增',
+    allow: '52c2fc52713a4ddcb0c278375b292138',
     attrs: {
       type: 'primary',
     },

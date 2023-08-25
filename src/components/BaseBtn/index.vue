@@ -3,6 +3,7 @@
     <el-button
       v-for="btn in btns"
       :key="btn.key"
+      v-allow="btn.allow"
       v-bind="btn.attrs"
       @click="btn.clickFn"
     >

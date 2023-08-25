@@ -1,21 +1,21 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
-import { getAuthRole } from '@/utils/auth.js';
+import { getAuthMenu } from '@/utils/auth.js';
 
-const roles = getAuthRole();
-const menuIds = roles?.map((item) => item.menuId) || [];
+const menus = getAuthMenu();
+const menuIds = menus?.map((item) => item.menuId) || [];
 
 const modules = import.meta.glob('./*.js', { eager: true });
 
 console.groupCollapsed('自动注册的路由');
 
 const routes = [];
-const filterFn = (menus) => {
+const filterFn = (routers) => {
   let res = [];
-  if (menus?.length === 0) {
+  if (routers?.length === 0) {
     return [];
   }
-  res = menus.filter((menu) => menuIds.includes(menu.meta.id));
+  res = routers.filter((r) => menuIds.includes(r.meta.id));
   res.forEach((item) => {
     if (item.children && item.children.length > 0) {
       item.children = filterFn(item.children);

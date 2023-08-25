@@ -10,7 +10,7 @@
       :options-size="100"
     >
       <template #options="{ row }">
-        <el-button type="primary" link @click="() => editFn(row)">
+        <el-button v-allow="'44a40b80ef7f44adae870f6fc8eae165'" type="primary" link @click="() => editFn(row)">
           编辑
         </el-button>
       </template>

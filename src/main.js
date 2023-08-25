@@ -18,6 +18,9 @@ import App from './App.vue';
 // 路由
 import router from '@/router';
 
-createApp(App)
-  .use(router)
-  .mount('#app');
+import { allowDirective } from '@/utils/instruct.js';
+
+const app = createApp(App);
+app.use(router);
+app.mount('#app');
+app.directive('allow', allowDirective);

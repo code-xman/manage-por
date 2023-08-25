@@ -8,7 +8,7 @@
         @on-search="onSearchFn"
       ></SearchForm>
     </div>
-    <BaseBtn :btns="btns" />
+    <BaseBtn v-if="!!btns?.length" :btns="btns" />
     <div class="page-table flex-1">
       <BaseTable
         ref="baseTableRef"

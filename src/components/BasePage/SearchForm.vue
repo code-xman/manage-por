@@ -110,7 +110,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .search-form-box {
   position: relative;
-  margin-bottom: 8px;
+  // margin-bottom: 8px;
   transition: 0.3s;
   .expandBtn {
     position: absolute;
@@ -128,7 +128,7 @@ onMounted(() => {
 .search-form {
   // margin-bottom: 16px;
   border-bottom: 1px solid $colorBorder;
-  padding-bottom: 8px;
+  // padding-bottom: 8px;
   // align-items: center; // 公共组件已有flex属性
 
   &.base-form {

@@ -1,5 +1,5 @@
 <template>
-  <el-menu class="menu scroll_thin" :unique-opened="true">
+  <el-menu class="menu scroll_thin" :unique-opened="true" :default-active="defaultActive">
     <MenuSub v-for="(item, index) in menuList" :key="item.index" v-bind="item">
     </MenuSub>
   </el-menu>
@@ -7,13 +7,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import MenuSub from './MenuSub.vue';
 
 // 路由
+const route = useRoute();
 const router = useRouter();
 
 const menuList = ref([]);
+
+// 默认激活菜单的 index
+const defaultActive = ref(route.name);
 
 const handleMenuData = (data) => {
   if (!data) return [];

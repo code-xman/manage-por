@@ -10,7 +10,7 @@ export const statusEnums = [
     label: '禁用',
     value: '02',
   },
-]
+];
 
 /** 列表字段 */
 export const columns = [
@@ -126,5 +126,23 @@ export const formItems = [
     name: 'systemNo',
     label: '系统编码',
     type: 'text',
+  },
+  {
+    name: 'bgColor',
+    label: '主题颜色',
+    type: 'radio',
+    options: [
+      {
+        label: 'red',
+        value: '#c45656',
+        slot: `<span 
+                style="
+                  height: 20px; 
+                  width: 20px; 
+                  background: #c45656; 
+                "
+              ></span>`,
+      },
+    ],
   },
 ];

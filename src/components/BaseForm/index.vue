@@ -33,6 +33,19 @@
             :value="option.value"
           />
         </el-select>
+        <el-radio-group
+          v-else-if="item.type === 'radio'"
+          v-bind="item.attrs"
+          :modelValue="formData[item.name]"
+          @update:modelValue="(val) => formValueChange(val, item.name)"
+        >
+          <el-radio v-for="option in item.options" :label="option.value">
+            <template #default>
+              <div v-if="option.slot" v-html="option.slot" class="radio-slot"></div>
+              <span v-else>{{ option.label }}</span>
+            </template>
+          </el-radio>
+        </el-radio-group>
         <el-input
           v-else
           :placeholder="`请输入${item.label}`"
@@ -101,18 +114,20 @@ watch(
   async () => {
     try {
       // Promise.all map 处理循环里的请求
-      newFormItems.value = await Promise.all(props.formItems.map(async item => {
-        if (item.type === 'select' && typeof item.options === 'function') {
-          const options = await item.options();
-          return {
-            ...item,
-            options,
+      newFormItems.value = await Promise.all(
+        props.formItems.map(async (item) => {
+          if (item.type === 'select' && typeof item.options === 'function') {
+            const options = await item.options();
+            return {
+              ...item,
+              options,
+            };
           }
-        }
-        return item;
-      }))
+          return item;
+        })
+      );
     } catch (error) {
-      ElMessage.error(`${error}`)      
+      ElMessage.error(`${error}`);
     }
   },
   {

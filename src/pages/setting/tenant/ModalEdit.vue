@@ -20,9 +20,9 @@
     <template #footer>
       <div style="flex: auto">
         <el-button @click="cancelClick">关闭</el-button>
-        <el-button :disabled="pending" type="primary" @click="confirmClick"
-          >确定</el-button
-        >
+        <el-button :disabled="pending" type="primary" @click="confirmClick">
+          确定
+        </el-button>
       </div>
     </template>
   </el-drawer>
@@ -134,4 +134,11 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.base-form) {
+  
+  .radio-slot {
+    display: flex;
+  }
+}
+</style>

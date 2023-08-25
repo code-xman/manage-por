@@ -44,6 +44,11 @@
 <script setup>
 import { useAttrs, computed } from 'vue';
 import { useRouter } from 'vue-router';
+
+defineOptions({
+  name: 'MenuSub',
+});
+
 const props = defineProps({
   index: String,
   title: String,

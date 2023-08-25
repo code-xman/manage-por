@@ -37,11 +37,11 @@ const changeTheme = () => {
     :root {
       --el-color-primary: ${colorPrimary};
       --el-color-primary-dark-2: ${Color(colorPrimary).darken(0.2).hex()};
-      --el-color-primary-light-3: ${Color(colorPrimary).lighten(0.3).hex()};
-      --el-color-primary-light-5: ${Color(colorPrimary).lighten(0.5).hex()};
-      --el-color-primary-light-7: ${Color(colorPrimary).lighten(0.7).hex()};
-      --el-color-primary-light-8: ${Color(colorPrimary).lighten(0.8).hex()};
-      --el-color-primary-light-9: ${Color(colorPrimary).lighten(0.9).hex()};
+      --el-color-primary-light-3: ${Color(colorPrimary).darken(0.2).lighten(0.3).hex()};
+      --el-color-primary-light-5: ${Color(colorPrimary).darken(0.2).lighten(0.5).hex()};
+      --el-color-primary-light-7: ${Color(colorPrimary).darken(0.2).lighten(0.7).hex()};
+      --el-color-primary-light-8: ${Color(colorPrimary).darken(0.2).lighten(0.8).hex()};
+      --el-color-primary-light-9: ${Color(colorPrimary).darken(0.2).lighten(0.9).hex()};
     }
     `;
   document.body.appendChild(style);

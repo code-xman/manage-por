@@ -165,6 +165,8 @@ const loginFn = async () => {
       .btn {
         width: 90%;
         height: 40px;
+        background: #409EFF;
+        border-color: #409EFF;
       }
     }
   }

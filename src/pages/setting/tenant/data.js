@@ -143,6 +143,50 @@ export const formItems = [
                 "
               ></span>`,
       },
+      {
+        label: 'purple',
+        value: '#526aec',
+        slot: `<span 
+                style="
+                  height: 20px; 
+                  width: 20px; 
+                  background: #526aec; 
+                "
+              ></span>`,
+      },
+      {
+        label: 'darkBlue',
+        value: '#1964e7',
+        slot: `<span 
+                style="
+                  height: 20px; 
+                  width: 20px; 
+                  background: #1964e7; 
+                "
+              ></span>`,
+      },
+      {
+        label: 'blue',
+        value: '#409EFF',
+        slot: `<span 
+                style="
+                  height: 20px; 
+                  width: 20px; 
+                  background: #409EFF; 
+                "
+              ></span>`,
+      },
+      {
+        label: 'orange',
+        value: '#E6A23C',
+        slot: `<span 
+                style="
+                  height: 20px; 
+                  width: 20px; 
+                  background: #E6A23C; 
+                "
+              ></span>`,
+      },
     ],
   },
 ];

@@ -78,10 +78,10 @@ const confirmClick = async () => {
     pending.value = true;
     await BaseFormRef.value?.validate();
     const params = {
+      bgColor: '#409EFF',
       ...formValue.value,
       pkId: props.row.pkId,
       logoFileName: '/vite.svg',
-      bgColor: '#000',
       icon: '/src/assets/vue.svg',
     };
     if (props.type === 'add') {
@@ -125,6 +125,7 @@ watch(
         creditCode: props.row.creditCode,
         sysName: props.row.sysName,
         systemNo: props.row.systemNo,
+        bgColor: props.row.bgColor,
       };
       // await init();
     } else {

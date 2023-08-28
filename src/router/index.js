@@ -12,10 +12,10 @@ console.groupCollapsed('自动注册的路由');
 const routes = [];
 const filterFn = (routers) => {
   let res = [];
-  if (routers?.length === 0) {
+  if (!routers?.length) {
     return [];
   }
-  res = routers.filter((r) => menuIds.includes(r.meta.id));
+  res = routers?.filter((r) => menuIds.includes(r.meta.id));
   res.forEach((item) => {
     if (item.children && item.children.length > 0) {
       item.children = filterFn(item.children);

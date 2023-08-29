@@ -14,7 +14,7 @@ export default [
         name: 'ContractManagement',
         meta: {
           id: '220f9fa80ec34495ad5fbc751d198f59',
-          title: '机构管理',
+          title: '合同管理',
         },
         component: () => import('@/pages/contract/contractManagement/index.vue'),
       },

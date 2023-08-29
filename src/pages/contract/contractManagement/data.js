@@ -1,9 +1,9 @@
 import { h } from 'vue';
 import BTag from '@/components/baseCommon/BTag.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
-import { ROLE_TYPE_ENUM, PlatformOrgId, } from '@/data/common.js';
+import { ApiDeptList } from '@/http/setting/department.js';
 import { getAuthUser } from '@/utils/auth';
-import { formatAmount, parseToDatetime, } from '@/utils/string';
+import { formatAmount, parseToDatetime } from '@/utils/string';
 
 const user = getAuthUser();
 
@@ -20,10 +20,8 @@ export const columns = [
     width: '180px',
     formatter(row) {
       const inner = () => row.contractName || '-';
-      if (row.contractName.value === '01')
-        return h(BTag, { type: 'success' }, inner);
-      if (row.contractName.value === '02')
-        return h(BTag, { type: 'danger' }, inner);
+      if (row.contractName === '01') return h(BTag, { type: 'success' }, inner);
+      if (row.contractName === '02') return h(BTag, { type: 'danger' }, inner);
       return h(BTag, { type: 'info' }, inner);
     },
   },
@@ -62,7 +60,7 @@ export const columns = [
   {
     prop: 'describe',
     label: '基本描述',
-    minWidth: '200px',
+    minWidth: '220px',
     formatter(row) {
       return row.describe || '-';
     },
@@ -84,8 +82,18 @@ export const searchFormItems = [
     },
   },
   {
-    name: 'roleName',
-    label: '岗位角色名称',
+    name: 'contractName',
+    label: '合同名称',
+    style: {
+      width: '250px',
+    },
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'benchmarkingCompany',
+    label: '合同对标公司',
     style: {
       width: '250px',
     },
@@ -98,30 +106,85 @@ export const searchFormItems = [
 /** 表单各项属性 */
 export const formItems = [
   {
-    name: 'roleName',
-    label: '岗位角色名称',
+    name: 'contractName',
+    label: '合同名称',
     attrs: {
       clearable: true,
     },
   },
   {
-    name: 'roleType',
-    label: '岗位角色类型',
+    name: 'department',
+    label: '合同所属部门',
     type: 'select',
-    options: [...ROLE_TYPE_ENUM],
+    options: () =>
+      ApiDeptList({
+        orgId: user.orgId,
+      }),
     attrs: {
       clearable: true,
-      disabled: user.orgId !== PlatformOrgId,
     },
   },
   {
-    name: 'orgId',
-    label: '所属机构',
-    type: 'select',
-    options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
+    name: 'signingTime',
+    label: '签订时间',
+    type: 'dateTime',
+    attrs: {
+      clearable: true,
+    },
+  },
+
+  {
+    name: 'oppositeUnit',
+    label: '对方单位',
+    attrs: {
+      clearable: true,
+    },
+  },
+
+  {
+    name: 'mainTerms',
+    label: '合同主要条款',
+    attrs: {
+      clearable: true,
+    },
+  },
+
+  {
+    name: 'contractAmount',
+    label: '合同金额',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'contractPeriod',
+    label: '合同期限',
+    type: 'dateTime',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'responsibleDepartment',
+    label: '合同责任部门',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'personResponsible',
+    label: '责任人',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'remark',
+    label: '备注',
     className: 'full-width',
     attrs: {
-      clearable: true,
+      type: 'textarea',
+      autosize: { minRows: 3, maxRows: 5 },
     },
   },
 ];

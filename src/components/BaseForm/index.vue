@@ -33,6 +33,12 @@
             :value="option.value"
           />
         </el-select>
+        <el-date-picker
+          v-else-if="item.type === 'dateTime'"
+          v-model="formData[item.name]"
+          :placeholder="`请选择${item.label}`"
+          v-bind="{ type: 'date', ...item.attrs }"
+        />
         <el-radio-group
           v-else-if="item.type === 'radio'"
           v-bind="item.attrs"
@@ -41,7 +47,11 @@
         >
           <el-radio v-for="option in item.options" :label="option.value">
             <template #default>
-              <div v-if="option.slot" v-html="option.slot" class="radio-slot"></div>
+              <div
+                v-if="option.slot"
+                v-html="option.slot"
+                class="radio-slot"
+              ></div>
               <span v-else>{{ option.label }}</span>
             </template>
           </el-radio>
@@ -181,7 +191,7 @@ defineExpose({
     width: 100%;
   }
 
-  .el-select {
+  .el-select, :deep(.el-input) {
     width: 100%;
   }
 }

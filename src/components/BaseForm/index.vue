@@ -38,6 +38,7 @@
           v-model="formData[item.name]"
           :placeholder="`请选择${item.label}`"
           v-bind="{ type: 'date', ...item.attrs }"
+          @update:modelValue="(val) => formValueChange(val, item.name)"
         />
         <el-radio-group
           v-else-if="item.type === 'radio'"

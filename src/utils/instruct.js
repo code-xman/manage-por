@@ -2,6 +2,7 @@ import { getAuthBtn } from '@/utils/auth.js';
 
 const btns = getAuthBtn();
 
+// 自定义指令 v-allow
 export const allowDirective = {
   mounted: (el, bind) => {
     const flag = !!btns?.map((b) => b.menuId)?.includes(bind.value);

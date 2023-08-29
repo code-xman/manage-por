@@ -187,6 +187,17 @@ export const formItems = [
                 "
               ></span>`,
       },
+      {
+        label: 'green',
+        value: '#529b2e',
+        slot: `<span 
+                style="
+                  height: 20px; 
+                  width: 20px; 
+                  background: #529b2e; 
+                "
+              ></span>`,
+      },
     ],
   },
 ];

@@ -144,14 +144,17 @@ export const formItems = [
   {
     name: 'mainTerms',
     label: '合同主要条款',
+    className: 'full-width',
     attrs: {
-      clearable: true,
+      type: 'textarea',
+      autosize: { minRows: 3, maxRows: 5 },
     },
   },
 
   {
     name: 'contractAmount',
     label: '合同金额',
+    type: 'number',
     attrs: {
       clearable: true,
     },
@@ -167,6 +170,11 @@ export const formItems = [
   {
     name: 'responsibleDepartment',
     label: '合同责任部门',
+    type: 'select',
+    options: () =>
+      ApiDeptList({
+        orgId: user.orgId,
+      }),
     attrs: {
       clearable: true,
     },
@@ -174,8 +182,14 @@ export const formItems = [
   {
     name: 'personResponsible',
     label: '责任人',
+    type: 'select',
+    options: [],
     attrs: {
       clearable: true,
+      multiple: true,
+      'collapse-tags': true,
+      'collapse-tags-tooltip': true,
+      'max-collapse-tags': 4,
     },
   },
   {

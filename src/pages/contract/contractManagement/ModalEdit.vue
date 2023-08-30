@@ -93,6 +93,7 @@ const cancelClick = () => {
 };
 
 const confirmClick = async () => {
+  console.log('formValue.value :>> ', formValue.value);
   try {
     pending.value = true;
     await BaseFormRef.value?.validate();

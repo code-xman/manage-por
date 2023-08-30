@@ -57,6 +57,16 @@
             </template>
           </el-radio>
         </el-radio-group>
+        <el-input-number
+          v-else-if="item.type === 'number'"
+          :placeholder="`请输入${item.label}`"
+          v-bind="{
+            controls: false,
+            ...item.attrs,
+          }"
+          :modelValue="formData[item.name]"
+          @update:modelValue="(val) => formValueChange(val, item.name)"
+        />
         <el-input
           v-else
           :placeholder="`请输入${item.label}`"
@@ -192,8 +202,20 @@ defineExpose({
     width: 100%;
   }
 
-  .el-select, :deep(.el-input) {
+  .el-select,
+  :deep(.el-input),
+  .el-input-number {
     width: 100%;
+  }
+  .el-input-number {
+    :deep(.el-input) {
+      .el-input__wrapper {
+        padding: 1px 11px;
+        .el-input__inner {
+          text-align: left;
+        }
+      }
+    }
   }
 }
 </style>

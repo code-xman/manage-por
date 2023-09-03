@@ -7,6 +7,30 @@ import { formatAmount, parseToDatetime } from '@/utils/string';
 
 const user = getAuthUser();
 
+/** 合同签订履行记录名称类型 */
+export const signNames = [
+  {
+    label: '合同原件',
+    value: '1',
+  },
+  {
+    label: '添加支付进度款',
+    value: '2',
+  },
+  {
+    label: '添加补充条款',
+    value: '3',
+  },
+  {
+    label: '收到保证金',
+    value: '4',
+  },
+  {
+    label: '打出去保证金',
+    value: '5',
+  },
+];
+
 /** 列表字段 */
 export const columns = [
   {

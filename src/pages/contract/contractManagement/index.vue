@@ -60,11 +60,10 @@ const btns = ref([
 
 const modalType = ref('');
 const showModel = ref(false);
-const showModelRow = ref({});
+const showModelRow = ref();
 
 const addFn = () => {
   modalType.value = 'add';
-  showModelRow.value = {};
   showModel.value = true;
 };
 

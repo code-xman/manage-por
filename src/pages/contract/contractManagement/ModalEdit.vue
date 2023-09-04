@@ -91,22 +91,40 @@
               width="120"
             >
               <template #default="{ row }">
-                <el-button
-                  link
-                  type="primary"
-                  size="small"
-                  @click="() => handleUpload(row)"
-                >
-                  上传
-                </el-button>
-                <el-button
-                  link
-                  type="danger"
-                  size="small"
-                  @click="() => handleDelete(row)"
-                >
-                  删除
-                </el-button>
+                <div class="operate">
+                  <el-upload
+                    class="upload"
+                    :action="uploadAction"
+                    :headers="uploadHeaders"
+                    :show-file-list="false"
+                    :on-success="
+                      (response, file, fileList) =>
+                        handleSuccess(row, response, file, fileList)
+                    "
+                    :on-error="
+                      (error, file, fileList) =>
+                        handleError(row, error, file, fileList)
+                    "
+                    :on-exceed="
+                      (file, fileList) => handleExceed(row, file, fileList)
+                    "
+                    :on-remove="
+                      (file, fileList) => handleRemove(row, file, fileList)
+                    "
+                  >
+                    <el-button link type="primary" size="small">
+                      上传
+                    </el-button>
+                  </el-upload>
+                  <el-button
+                    link
+                    type="danger"
+                    size="small"
+                    @click="() => handleDelete(row)"
+                  >
+                    删除
+                  </el-button>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -128,6 +146,7 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
+import { uploadAction, uploadHeaders } from '@/config/base';
 import { ApiCreateMerchant, ApiEditMerchant } from '@/http/setting/organ.js';
 import { modalTitleObj } from '@/data/common.js';
 import { isMobile, isCreditCode } from '@/utils/validate.js';
@@ -195,8 +214,13 @@ const handleAdd = () => {
     files: [],
   });
 };
-/** 上传 */
-const handleUpload = (row) => {};
+/** 上传成功 */
+const handleSuccess = (row, response, file, fileList) => {
+  console.log('row :>> ', row);
+};
+const handleError = (row, error, file, fileList) => {};
+const handleExceed = (row, file, fileList) => {};
+const handleRemove = (row, file, fileList) => {};
 /** 删除 */
 const handleDelete = (row) => {};
 
@@ -234,7 +258,6 @@ watch(
   () => {
     modal.value = props.modelValue;
     if (props.modelValue) {
-      console.log('props.row :>> ', props.row);
       formValue.value = props.row || { tableData: [] };
     } else {
       formValue.value = { tableData: [] };
@@ -246,28 +269,40 @@ watch(
 <style lang="scss" scoped>
 .content {
   padding-bottom: 8px;
-}
-.formAfterTitle {
-  border-bottom: 1px solid $colorBorder;
-  width: 100%;
-  padding-bottom: 10px;
-  font-size: 14px;
-  font-weight: bold;
 
-  display: flex;
-  justify-content: space-between;
+  .formAfterTitle {
+    border-bottom: 1px solid $colorBorder;
+    width: 100%;
+    padding-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
 
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  z-index: 9;
-  background: #fff;
-  span {
-    height: 32px;
-    line-height: 32px;
+    display: flex;
+    justify-content: space-between;
+
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 9;
+    background: #fff;
+    span {
+      height: 32px;
+      line-height: 32px;
+    }
   }
-}
-:deep(.el-select) {
-  width: 100%;
+
+  :deep(.el-select) {
+    width: 100%;
+  }
+
+  .operate {
+    display: flex;
+    & > * {
+      padding: 4px 8px;
+    }
+    .upload {
+      display: flex;
+    }
+  }
 }
 </style>

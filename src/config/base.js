@@ -9,6 +9,10 @@ export const HTTP_CONFIG = {
   timeout: 1000 * 60 * 15, // 接口请求超时时间，默认 15分钟，该参数可在具体的 http 请求方法中定义覆盖
 };
 
+// 文件上传配置
+export const uploadAction = `${HTTP_CONFIG.baseUrl}/fileUpload/uploads`;
+export const uploadHeaders = new Headers({});
+
 // 默认缓存前缀，用户退出登录时不会被清除
 export const CACHE_PREFIX = '__manage_saas';
 

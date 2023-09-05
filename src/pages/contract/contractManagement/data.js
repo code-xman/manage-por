@@ -44,49 +44,51 @@ export const columns = [
     width: '180px',
     formatter(row) {
       const inner = () => row.contractName || '-';
-      if (row.contractName === '01') return h(BTag, { type: 'success' }, inner);
-      if (row.contractName === '02') return h(BTag, { type: 'danger' }, inner);
+      if (row.Urgency === 'NORMAL') return h(BTag, { type: 'success' }, inner);
+      if (row.Urgency === 'HALF') return h(BTag, { type: 'success' }, inner);
+      if (row.Urgency === 'THIRD') return h(BTag, { type: 'warning' }, inner);
+      if (row.Urgency === 'ONE_FIFTH') return h(BTag, { type: 'danger' }, inner);
       return h(BTag, { type: 'info' }, inner);
     },
   },
   {
-    prop: 'contracAmount',
+    prop: 'contractAmt',
     label: '合同金额',
     width: '180px',
     formatter(row) {
-      return formatAmount(row.contracAmount) || '-';
+      return formatAmount(row.contractAmt) || '-';
     },
   },
   {
-    prop: 'benchmarkingCompany',
+    prop: 'partyB',
     label: '合同对标公司',
     minWidth: '220px',
     formatter(row) {
-      return row.benchmarkingCompany || '-';
+      return row.partyB || '-';
     },
   },
   {
-    prop: 'signingTime',
+    prop: 'signDate',
     label: '合同签订时间',
     minWidth: '160px',
     formatter(row) {
-      return parseToDatetime(row.signingTime) || '-';
+      return parseToDatetime(row.signDate) || '-';
     },
   },
   {
-    prop: 'endTime',
+    prop: 'contractEndDate',
     label: '合同到期期限',
     minWidth: '160px',
     formatter(row) {
-      return parseToDatetime(row.endTime) || '-';
+      return parseToDatetime(row.contractEndDate) || '-';
     },
   },
   {
-    prop: 'describe',
+    prop: 'remark',
     label: '基本描述',
     minWidth: '220px',
     formatter(row) {
-      return row.describe || '-';
+      return row.remark || '-';
     },
   },
 ];
@@ -94,7 +96,7 @@ export const columns = [
 /** 搜索字段 */
 export const searchFormItems = [
   {
-    name: 'orgId',
+    name: 'merchantId',
     label: '所属机构',
     type: 'select',
     options: () => ApiQueryAllChildMerchantMini({ merchantId: user.orgId }),
@@ -105,26 +107,26 @@ export const searchFormItems = [
       clearable: true,
     },
   },
-  {
-    name: 'contractName',
-    label: '合同名称',
-    style: {
-      width: '250px',
-    },
-    attrs: {
-      clearable: true,
-    },
-  },
-  {
-    name: 'benchmarkingCompany',
-    label: '合同对标公司',
-    style: {
-      width: '250px',
-    },
-    attrs: {
-      clearable: true,
-    },
-  },
+  // {
+  //   name: 'contractName',
+  //   label: '合同名称',
+  //   style: {
+  //     width: '250px',
+  //   },
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
+  // {
+  //   name: 'partyB',
+  //   label: '合同对标公司',
+  //   style: {
+  //     width: '250px',
+  //   },
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
 ];
 
 /** 表单各项属性 */
@@ -137,7 +139,7 @@ export const formItems = [
     },
   },
   {
-    name: 'department',
+    name: 'deptIds',
     label: '合同所属部门',
     type: 'select',
     options: () =>
@@ -149,7 +151,7 @@ export const formItems = [
     },
   },
   {
-    name: 'signingTime',
+    name: 'signDate',
     label: '签订时间',
     type: 'dateTime',
     attrs: {
@@ -158,7 +160,7 @@ export const formItems = [
   },
 
   {
-    name: 'oppositeUnit',
+    name: 'partyB',
     label: '对方单位',
     attrs: {
       clearable: true,
@@ -166,7 +168,7 @@ export const formItems = [
   },
 
   {
-    name: 'mainTerms',
+    name: 'contractTerms',
     label: '合同主要条款',
     className: 'full-width',
     attrs: {
@@ -176,7 +178,7 @@ export const formItems = [
   },
 
   {
-    name: 'contractAmount',
+    name: 'contractAmt',
     label: '合同金额',
     type: 'number',
     attrs: {
@@ -184,7 +186,7 @@ export const formItems = [
     },
   },
   {
-    name: 'contractPeriod',
+    name: 'contractEndDate',
     label: '合同期限',
     type: 'dateTime',
     attrs: {
@@ -192,7 +194,7 @@ export const formItems = [
     },
   },
   {
-    name: 'responsibleDepartment',
+    name: 'responsibleDeptId',
     label: '合同责任部门',
     type: 'select',
     options: () =>
@@ -204,7 +206,7 @@ export const formItems = [
     },
   },
   {
-    name: 'personResponsible',
+    name: 'personIds',
     label: '责任人',
     type: 'select',
     options: [],

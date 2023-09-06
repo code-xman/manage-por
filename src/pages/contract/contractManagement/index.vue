@@ -6,7 +6,7 @@
       v-model:searchFormValue="searchFormValue"
       :btns="btns"
       :columns="columns"
-      :list="ApiPageRole"
+      :list="ApiListContractPage"
       :options-size="120"
     >
       <template #options="{ row }">
@@ -31,11 +31,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import BasePage from '@/components/BasePage/index';
-import {
-  ApiPageRole,
-  ApiEnableRole,
-  ApiDisableRole,
-} from '@/http/setting/role.js';
+import { ApiListContractPage } from '@/http/contract/contractManagement.js';
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
 

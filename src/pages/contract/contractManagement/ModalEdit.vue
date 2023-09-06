@@ -79,9 +79,16 @@
             </el-table-column>
             <el-table-column prop="files" label="附件" width="160">
               <template #default="{ row }">
-                <div v-for="file in row.files" :key="file.key">
+                <el-tag
+                  v-for="file in row.files"
+                  :key="file.key"
+                  class="mx-1"
+                  closable
+                  @click="() => handlePreview(file)"
+                  @close="() => handleClose(row, file)"
+                >
                   {{ file.name }}
-                </div>
+                </el-tag>
               </template>
             </el-table-column>
             <el-table-column
@@ -148,9 +155,11 @@ import { ElMessage } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
 import { uploadAction, uploadHeaders } from '@/config/base';
 import { ApiCreateMerchant, ApiEditMerchant } from '@/http/setting/organ.js';
+import { ApiListUser } from '@/http/setting/user.js';
 import { modalTitleObj } from '@/data/common.js';
+import { getAuthUser } from '@/utils/auth';
 import { isMobile, isCreditCode } from '@/utils/validate.js';
-import { formItems, signNames } from './data';
+import { formItems as formItemsData, signNames } from './data';
 
 defineOptions({ name: 'OrganModalEdit' });
 
@@ -167,6 +176,8 @@ const props = defineProps({
   },
 });
 
+const user = getAuthUser();
+
 const modal = ref(false);
 const modalTitle = computed(() => {
   return modalTitleObj[props.type];
@@ -175,6 +186,7 @@ const modalTitle = computed(() => {
 const pending = ref(false);
 const BaseFormRef = ref(null);
 const formValue = ref({});
+const formItems = ref([...formItemsData]);
 
 const creditCodeValidate = (rule, value, callback) => {
   if (isCreditCode(value)) {
@@ -183,26 +195,18 @@ const creditCodeValidate = (rule, value, callback) => {
     callback(new Error('请输入正确的社会统一信用代码'));
   }
 };
-const mobileValidate = (rule, value, callback) => {
-  if (isMobile(value)) {
-    callback();
-  } else {
-    callback(new Error('请输入正确的手机号'));
-  }
-};
 
 const rules = ref({
-  merchantName: [{ required: true, message: '请输入机构名称' }],
-  merchantShortName: [{ required: true, message: '请输入机构简称' }],
-  creditCode: [
-    { required: true, message: '请输入社会统一信用代码' },
-    { validator: creditCodeValidate },
-  ],
-  operationUserName: [{ required: true, message: '请输入联系人' }],
-  operationUserMobile: [
-    { required: true, message: '请输入联系电话' },
-    { validator: mobileValidate },
-  ],
+  contractName: [{ required: true, message: '请输入合同名称' }],
+  deptIds: [{ required: true, message: '请选择合同所属部门' }],
+  signDate: [{ required: true, message: '请选择签订时间' }],
+  partyB: [{ required: true, message: '请输入对方单位' }],
+  contractTerms: [{ required: true, message: '请输入合同主要条款' }],
+  contractAmt: [{ required: true, message: '请输入合同金额' }],
+  contractEndDate: [{ required: true, message: '请选择合同期限' }],
+  responsibleDeptId: [{ required: true, message: '请选择合同责任部门' }],
+  personIds: [{ required: true, message: '请选择责任人' }],
+  remark: [{ required: true, message: '请输入备注' }],
 });
 
 /** 新增一行 */
@@ -216,13 +220,33 @@ const handleAdd = () => {
 };
 /** 上传成功 */
 const handleSuccess = (row, response, file, fileList) => {
-  console.log('row :>> ', row);
+  console.log('response :>> ', response);
+  try {
+    if (!response.success) throw '上传失败';
+    row.files.push({
+      key: response.data?.[0]?.fileName || '',
+      name: file.name,
+      fileUrl: response.data?.[0]?.fileUrl || '',
+    });
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  }
 };
 const handleError = (row, error, file, fileList) => {};
 const handleExceed = (row, file, fileList) => {};
 const handleRemove = (row, file, fileList) => {};
 /** 删除 */
 const handleDelete = (row) => {};
+
+/** 预览 */
+const handlePreview = (file) => {
+  window.open(file.fileUrl);
+};
+/** 删除 */
+const handleClose = (row, file) => {
+  const index = row.files.findIndex((rf) => rf.key === file.key);
+  row.files.splice(index, 1);
+};
 
 const cancelClick = () => {
   emit('update:modelValue', false);
@@ -258,9 +282,32 @@ watch(
   () => {
     modal.value = props.modelValue;
     if (props.modelValue) {
-      formValue.value = props.row || { tableData: [] };
+      formValue.value = props.row || { personIds: [], tableData: [] };
     } else {
-      formValue.value = { tableData: [] };
+      formValue.value = { personIds: [], tableData: [] };
+    }
+  }
+);
+
+watch(
+  () => formValue.value.responsibleDeptId,
+  async (value) => {
+    const item_personIds = formItems.value.find(
+      (item) => item.name === 'personIds'
+    );
+    if (!item_personIds) return;
+
+    if (!value) {
+      item_personIds.options = [];
+    } else {
+      const res = await ApiListUser({
+        orgId: user.orgId,
+        deptId: value,
+      });
+      item_personIds.options = res.map((item) => ({
+        label: item.userName,
+        value: item.userId,
+      }));
     }
   }
 );

@@ -46,3 +46,9 @@ export const ApiResetPwd = async (params) => {
   const data = await post('/api/userFacade/resetPwd', params);
   return data;
 };
+
+// 	查询用户列表-下拉
+export const ApiListUser = async (params) => {
+  const data = await post('/api/userFacade/listUser', params);
+  return data;
+};

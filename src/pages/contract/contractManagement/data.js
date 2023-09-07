@@ -197,10 +197,7 @@ export const formItems = [
     name: 'responsibleDeptId',
     label: '合同责任部门',
     type: 'select',
-    options: () =>
-      ApiDeptList({
-        orgId: user.orgId,
-      }),
+    options: [],
     attrs: {
       clearable: true,
     },

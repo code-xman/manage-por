@@ -18,10 +18,10 @@
         <template #formAfter>
           <div class="formAfterTitle">
             <span>合同签订及履约记录</span>
-            <el-button type="primary" @click="handleAdd"> 新增一行 </el-button>
+            <el-button type="primary" @click="handleAdd"> 新增记录 </el-button>
           </div>
           <el-table
-            :data="formValue.tableData"
+            :data="formValue.contractRecords"
             style="width: 100%"
             stripe
             border
@@ -29,20 +29,19 @@
             <el-table-column
               fixed
               type="index"
-              prop="date"
               label="#"
               align="center"
               width="60"
             />
             <el-table-column
-              prop="name"
+              prop="ContractRecordName"
               label="合同签订履行记录名称"
               width="260"
               align="center"
             >
               <template #default="{ row }">
                 <el-select
-                  v-model="row.name"
+                  v-model="row.ContractRecordName"
                   placeholder="请选择合同签订履行记录名称"
                   clearable
                 >
@@ -64,31 +63,33 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="date"
+              prop="recordDate"
               label="时间"
               align="center"
               width="140"
             >
               <template #default="{ row }">
                 <el-date-picker
-                  v-model="row.date"
+                  v-model="row.recordDate"
                   placeholder="请选择时间"
                   clearable
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="files" label="附件" width="160">
+            <el-table-column prop="annexes" label="附件" width="220">
               <template #default="{ row }">
-                <el-tag
-                  v-for="file in row.files"
-                  :key="file.key"
-                  class="mx-1"
-                  closable
-                  @click="() => handlePreview(file)"
-                  @close="() => handleClose(row, file)"
-                >
-                  {{ file.name }}
-                </el-tag>
+                <div class="filesCol">
+                  <el-tag
+                    v-for="file in row.annexes"
+                    :key="file.key"
+                    class="mx-1"
+                    closable
+                    @click="() => handlePreview(file)"
+                    @close="() => handleClose(row, file)"
+                  >
+                    {{ file.name }}
+                  </el-tag>
+                </div>
               </template>
             </el-table-column>
             <el-table-column
@@ -150,15 +151,20 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
 import { uploadAction, uploadHeaders } from '@/config/base';
-import { ApiCreateMerchant, ApiEditMerchant } from '@/http/setting/organ.js';
 import { ApiListUser } from '@/http/setting/user.js';
+import { ApiDeptList } from '@/http/setting/department.js';
+import {
+  ApiCreateContract,
+  ApiEditContract,
+  ApiContractDetail,
+} from '@/http/contract/contractManagement';
 import { modalTitleObj } from '@/data/common.js';
 import { getAuthUser } from '@/utils/auth';
-import { isMobile, isCreditCode } from '@/utils/validate.js';
+import { parseToDate } from '@/utils/string';
 import { formItems as formItemsData, signNames } from './data';
 
 defineOptions({ name: 'OrganModalEdit' });
@@ -184,6 +190,8 @@ const modalTitle = computed(() => {
 });
 
 const pending = ref(false);
+/** 责任部门选项 */
+const responsibleDepts = ref([]);
 const BaseFormRef = ref(null);
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
@@ -209,21 +217,21 @@ const rules = ref({
   remark: [{ required: true, message: '请输入备注' }],
 });
 
-/** 新增一行 */
+/** 新增记录 */
 const handleAdd = () => {
-  formValue.value?.tableData?.push({
-    name: '',
+  formValue.value?.contractRecords?.push({
+    key: Date.now(),
+    ContractRecordName: '',
     content: '',
-    date: '',
-    files: [],
+    recordDate: '',
+    annexes: [],
   });
 };
 /** 上传成功 */
 const handleSuccess = (row, response, file, fileList) => {
-  console.log('response :>> ', response);
   try {
     if (!response.success) throw '上传失败';
-    row.files.push({
+    row.annexes.push({
       key: response.data?.[0]?.fileName || '',
       name: file.name,
       fileUrl: response.data?.[0]?.fileUrl || '',
@@ -235,33 +243,61 @@ const handleSuccess = (row, response, file, fileList) => {
 const handleError = (row, error, file, fileList) => {};
 const handleExceed = (row, file, fileList) => {};
 const handleRemove = (row, file, fileList) => {};
-/** 删除 */
-const handleDelete = (row) => {};
+/** 删除记录 */
+const handleDelete = (row) => {
+  const index = formValue.value?.contractRecords.findIndex(
+    (ft) => ft.key === row.key
+  );
+  formValue.value?.contractRecords.splice(index, 1);
+};
 
-/** 预览 */
+/** 预览文件 */
 const handlePreview = (file) => {
   window.open(file.fileUrl);
 };
-/** 删除 */
+/** 删除文件 */
 const handleClose = (row, file) => {
-  const index = row.files.findIndex((rf) => rf.key === file.key);
-  row.files.splice(index, 1);
+  const index = row.annexes.findIndex((rf) => rf.key === file.key);
+  row.annexes.splice(index, 1);
 };
 
 const cancelClick = () => {
   emit('update:modelValue', false);
 };
 
+// 保存处理表单数据
+const handleFormValue = () => {
+  formValue.value.signDate = parseToDate(formValue.value.signDate);
+  formValue.value.contractEndDate = parseToDate(
+    formValue.value.contractEndDate
+  );
+  formValue.value.responsibleDeptName =
+    responsibleDepts.value.find(
+      (r) => r.value === formValue.value.responsibleDeptId
+    )?.label || '';
+  formValue.value.personNames = formValue.value.personIds.join(',');
+  formValue.value.contractRecords = formValue.value.contractRecords.map(
+    (item) => {
+      return {
+        ContractRecordName: item.ContractRecordName,
+        content: item.content,
+        recordDate: parseToDate(item.recordDate),
+        annexes: item.annexes.map((annex) => annex.key).join(','),
+      };
+    }
+  );
+};
+
 const confirmClick = async () => {
-  console.log('formValue.value :>> ', formValue.value);
-  return;
   try {
     pending.value = true;
     await BaseFormRef.value?.validate();
+    console.log('formValue.value :>> ', formValue.value);
+    handleFormValue();
     if (props.type === 'add') {
-      await ApiCreateMerchant(formValue.value);
+      await ApiCreateContract(formValue.value);
     } else if (props.type === 'edit') {
-      await ApiEditMerchant(formValue.value);
+      await ApiEditContract(formValue.value);
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);
@@ -282,16 +318,18 @@ watch(
   () => {
     modal.value = props.modelValue;
     if (props.modelValue) {
-      formValue.value = props.row || { personIds: [], tableData: [] };
+      formValue.value = props.row || { personIds: [], contractRecords: [] };
     } else {
-      formValue.value = { personIds: [], tableData: [] };
+      formValue.value = { personIds: [], contractRecords: [] };
     }
   }
 );
 
+// 监听合同责任部门
 watch(
   () => formValue.value.responsibleDeptId,
   async (value) => {
+    // 责任人
     const item_personIds = formItems.value.find(
       (item) => item.name === 'personIds'
     );
@@ -304,13 +342,31 @@ watch(
         orgId: user.orgId,
         deptId: value,
       });
-      item_personIds.options = res.map((item) => ({
-        label: item.userName,
-        value: item.userId,
-      }));
+      if (item_personIds) {
+        item_personIds.options =
+          res?.map((item) => ({
+            label: item.userName,
+            value: item.userId,
+          })) || [];
+      }
     }
+
+    formValue.value = {
+      ...formValue.value,
+      personIds: [],
+    };
   }
 );
+
+onMounted(async () => {
+  const Item_responsibleDeptId = formItems.value.find(
+    (item) => item.name === 'responsibleDeptId'
+  );
+  responsibleDepts.value = await ApiDeptList({
+    orgId: user.orgId,
+  });
+  Item_responsibleDeptId.options = responsibleDepts.value;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -340,6 +396,20 @@ watch(
 
   :deep(.el-select) {
     width: 100%;
+  }
+
+  .filesCol {
+    .el-tag {
+      max-width: 100%;
+      overflow: hidden;
+      cursor: pointer;
+      :deep(.el-tag__content) {
+        max-width: calc(100% - 20px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
 
   .operate {

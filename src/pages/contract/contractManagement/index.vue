@@ -31,7 +31,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import BasePage from '@/components/BasePage/index';
-import { ApiListContractPage } from '@/http/contract/contractManagement.js';
+import { ApiListContractPage } from '@/http/contract/contractManagement';
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
 

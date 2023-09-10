@@ -75,6 +75,14 @@ export default defineComponent({
     background-color: var(--el-border-color-light);
   }
 
+  &__yellow::before {
+    background-color: #ee1;
+  }
+
+  &__purple::before {
+    background-color: #526aec;
+  }
+
   &.is__border {
     color: var(--el-color-text);
     background-color: var(--el-fill-color-lighter);
@@ -116,6 +124,18 @@ export default defineComponent({
     color: var(--el-color-info);
     border-color: var(--el-border-color-light);
     background-color: var(--el-border-color-extra-light);
+  }
+
+  &__yellow.is__border {
+    color: #ee1;
+    border-color: #ee1;
+    background-color: #ee1;
+  }
+
+  &__purple.is__border {
+    color: #526aec;
+    border-color: #526aec;
+    background-color: #526aec;
   }
 }
 </style>

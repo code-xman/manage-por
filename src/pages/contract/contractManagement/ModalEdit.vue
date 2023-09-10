@@ -11,6 +11,7 @@
     <div v-loading="pending" class="content scroll_thin overflow-auto full-y">
       <BaseForm
         ref="BaseFormRef"
+        :formType="props.type"
         v-model:formValue="formValue"
         :formItems="formItems"
         :rules="rules"
@@ -18,7 +19,9 @@
         <template #formAfter>
           <div class="formAfterTitle">
             <span>合同签订及履约记录</span>
-            <el-button type="primary" @click="handleAdd"> 新增记录 </el-button>
+            <el-button v-if="!isDetail" type="primary" @click="handleAdd">
+              新增记录
+            </el-button>
           </div>
           <el-table
             :data="formValue.contractRecords"
@@ -34,14 +37,23 @@
               width="60"
             />
             <el-table-column
-              prop="ContractRecordName"
+              prop="contractRecordName"
               label="合同签订履行记录名称"
               width="260"
               align="center"
             >
               <template #default="{ row }">
+                <template v-if="isDetail">
+                  <div>
+                    {{
+                      signNames.find((s) => s.value === row.contractRecordName)
+                        ?.label || '-'
+                    }}
+                  </div>
+                </template>
                 <el-select
-                  v-model="row.ContractRecordName"
+                  v-else
+                  v-model="row.contractRecordName"
                   placeholder="请选择合同签订履行记录名称"
                   clearable
                 >
@@ -55,7 +67,11 @@
             </el-table-column>
             <el-table-column prop="content" label="内容">
               <template #default="{ row }">
+                <template v-if="isDetail">
+                  <div>{{ row.content }}</div>
+                </template>
                 <el-input
+                  v-else
                   v-model="row.content"
                   placeholder="请输入内容"
                   clearable
@@ -69,7 +85,11 @@
               width="140"
             >
               <template #default="{ row }">
+                <template v-if="isDetail">
+                  <div>{{ row.recordDate }}</div>
+                </template>
                 <el-date-picker
+                  v-else
                   v-model="row.recordDate"
                   placeholder="请选择时间"
                   clearable
@@ -83,7 +103,7 @@
                     v-for="file in row.annexes"
                     :key="file.key"
                     class="mx-1"
-                    closable
+                    :closable="!isDetail"
                     @click="() => handlePreview(file)"
                     @close="() => handleClose(row, file)"
                   >
@@ -93,6 +113,7 @@
               </template>
             </el-table-column>
             <el-table-column
+              v-if="!isDetail"
               fixed="right"
               label="操作"
               align="center"
@@ -165,7 +186,11 @@ import {
 import { modalTitleObj } from '@/data/common.js';
 import { getAuthUser } from '@/utils/auth';
 import { parseToDate } from '@/utils/string';
-import { formItems as formItemsData, signNames } from './data';
+import {
+  formItems as formItemsData,
+  signNames,
+  contractRecordsObj,
+} from './data';
 
 defineOptions({ name: 'OrganModalEdit' });
 
@@ -182,6 +207,9 @@ const props = defineProps({
   },
 });
 
+/** 是否是详情 */
+const isDetail = computed(() => props.type === 'detail');
+
 const user = getAuthUser();
 
 const modal = ref(false);
@@ -196,32 +224,40 @@ const BaseFormRef = ref(null);
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
 
-const creditCodeValidate = (rule, value, callback) => {
-  if (isCreditCode(value)) {
-    callback();
-  } else {
-    callback(new Error('请输入正确的社会统一信用代码'));
+// 合同签订时间不能大于合同期限
+const contractDateValidate = (rule, value, callback) => {
+  const signDateVal = formValue.value.signDate?.valueOf();
+  const contractEndDateVal = formValue.value.contractEndDate?.valueOf();
+  if (signDateVal >= contractEndDateVal) {
+    callback(new Error('签订时间应小于合同期限'));
   }
+  callback();
 };
 
 const rules = ref({
   contractName: [{ required: true, message: '请输入合同名称' }],
   deptIds: [{ required: true, message: '请选择合同所属部门' }],
-  signDate: [{ required: true, message: '请选择签订时间' }],
+  signDate: [
+    { required: true, message: '请选择签订时间' },
+    { validator: contractDateValidate },
+  ],
   partyB: [{ required: true, message: '请输入对方单位' }],
   contractTerms: [{ required: true, message: '请输入合同主要条款' }],
   contractAmt: [{ required: true, message: '请输入合同金额' }],
-  contractEndDate: [{ required: true, message: '请选择合同期限' }],
+  contractEndDate: [
+    { required: true, message: '请选择合同期限' },
+    { validator: contractDateValidate },
+  ],
   responsibleDeptId: [{ required: true, message: '请选择合同责任部门' }],
   personIds: [{ required: true, message: '请选择责任人' }],
-  remark: [{ required: true, message: '请输入备注' }],
+  // remark: [{ required: true, message: '请输入备注' }],
 });
 
 /** 新增记录 */
 const handleAdd = () => {
   formValue.value?.contractRecords?.push({
     key: Date.now(),
-    ContractRecordName: '',
+    contractRecordName: '',
     content: '',
     recordDate: '',
     annexes: [],
@@ -233,7 +269,8 @@ const handleSuccess = (row, response, file, fileList) => {
     if (!response.success) throw '上传失败';
     row.annexes.push({
       key: response.data?.[0]?.fileName || '',
-      name: file.name,
+      // name: file.name,
+      name: response.data?.[0]?.fileName,
       fileUrl: response.data?.[0]?.fileUrl || '',
     });
   } catch (error) {
@@ -279,7 +316,7 @@ const handleFormValue = () => {
   formValue.value.contractRecords = formValue.value.contractRecords.map(
     (item) => {
       return {
-        ContractRecordName: item.ContractRecordName,
+        contractRecordName: item.contractRecordName,
         content: item.content,
         recordDate: parseToDate(item.recordDate),
         annexes: item.annexes.map((annex) => annex.key).join(','),
@@ -288,11 +325,36 @@ const handleFormValue = () => {
   );
 };
 
+// 合同签订及履约记录验证
+const contractRecordsValidateFn = () => {
+  const contractRecords = formValue.value.contractRecords;
+  if (!contractRecords || !contractRecords?.length)
+    throw '请添加合同签订及履约记录';
+  const keys = Object.keys(contractRecordsObj);
+  let nullIndex = -1;
+  let nullKey = undefined;
+  const hasNullItem = contractRecords.find((item, index) => {
+    const key = keys.find((key) => {
+      if (key === 'annexes') return !item[key]?.length;
+      return !item[key];
+    });
+    console.log('object :>> ', { index, key });
+    nullIndex = index;
+    nullKey = key;
+    return !!key;
+  });
+
+  if (!!hasNullItem) {
+    throw `请完善第${nullIndex + 1}条记录的${contractRecordsObj[nullKey]}`;
+  }
+};
+
+// 保存
 const confirmClick = async () => {
   try {
     pending.value = true;
+    contractRecordsValidateFn();
     await BaseFormRef.value?.validate();
-    console.log('formValue.value :>> ', formValue.value);
     handleFormValue();
     if (props.type === 'add') {
       await ApiCreateContract(formValue.value);
@@ -313,12 +375,43 @@ const onCloseFn = () => {
   emit('update:modelValue', false);
 };
 
+const init = async () => {
+  try {
+    pending.value = true;
+    const res = await ApiContractDetail({ contractNo: props.row.contractNo });
+    formValue.value = {
+      ...res,
+      personIds: res.personNames.split(','),
+    };
+    formValue.value.contractRecords = formValue.value.contractRecords.map(
+      (item) => {
+        return {
+          ...item,
+          signDate: new Date(formValue.value.signDate),
+          contractEndDate: new Date(formValue.value.contractEndDate),
+          annexes: item.annexes.map((annex) => ({
+            key: annex.value,
+            name: annex.value,
+            fileUrl: annex.label,
+          })),
+        };
+      }
+    );
+    console.log('formValue.value :>> ', formValue.value);
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
+  }
+};
+
+// 监听弹框打开关闭
 watch(
   () => props.modelValue,
   () => {
     modal.value = props.modelValue;
-    if (props.modelValue) {
-      formValue.value = props.row || { personIds: [], contractRecords: [] };
+    if (['edit', 'detail'].includes(props.type) && props.modelValue) {
+      init();
     } else {
       formValue.value = { personIds: [], contractRecords: [] };
     }
@@ -330,11 +423,22 @@ watch(
   () => formValue.value.responsibleDeptId,
   async (value) => {
     // 责任人
+    const index_personIds = formItems.value.findIndex(
+      (item) => item.name === 'personIds'
+    );
     const item_personIds = formItems.value.find(
       (item) => item.name === 'personIds'
     );
     if (!item_personIds) return;
+    // 无选项则不清空数据，处理初始化赋值不清空
+    if (!!item_personIds.options?.length) {
+      formValue.value = {
+        ...formValue.value,
+        personIds: [],
+      };
+    }
 
+    // 处理新的负责人的选项
     if (!value) {
       item_personIds.options = [];
     } else {
@@ -350,11 +454,7 @@ watch(
           })) || [];
       }
     }
-
-    formValue.value = {
-      ...formValue.value,
-      personIds: [],
-    };
+    // formItems.value.splice(index_personIds, 1, item_personIds)
   }
 );
 
@@ -405,6 +505,7 @@ onMounted(async () => {
       cursor: pointer;
       :deep(.el-tag__content) {
         max-width: calc(100% - 20px);
+        line-height: 24px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

@@ -7,7 +7,8 @@
     :label-width="labelWidth"
     :label-position="labelPosition"
     :style="{
-      paddingRight: `${labelWidth * 0.4}px`,
+      paddingLeft: `${labelWidth * 0.1}px`,
+      paddingRight: `${labelWidth * 0.3}px`,
     }"
     class="base-form flex-1"
   >
@@ -20,60 +21,111 @@
         :style="item.style || {}"
       >
         <div v-if="item.type === 'text'">{{ formData[item.name] }}</div>
-        <el-select
-          v-else-if="item.type === 'select'"
-          :placeholder="`请选择${item.label}`"
-          v-bind="item.attrs"
-          :modelValue="formData[item.name]"
-          @update:modelValue="(val) => formValueChange(val, item.name)"
-        >
-          <el-option
-            v-for="option in item.options"
-            :label="option.label"
-            :value="option.value"
-          />
-        </el-select>
-        <el-date-picker
-          v-else-if="item.type === 'dateTime'"
-          v-model="formData[item.name]"
-          :placeholder="`请选择${item.label}`"
-          v-bind="{ type: 'date', ...item.attrs }"
-          @update:modelValue="(val) => formValueChange(val, item.name)"
-        />
-        <el-radio-group
-          v-else-if="item.type === 'radio'"
-          v-bind="item.attrs"
-          :modelValue="formData[item.name]"
-          @update:modelValue="(val) => formValueChange(val, item.name)"
-        >
-          <el-radio v-for="option in item.options" :label="option.value">
-            <template #default>
-              <div
-                v-if="option.slot"
-                v-html="option.slot"
-                class="radio-slot"
-              ></div>
-              <span v-else>{{ option.label }}</span>
+        <template v-else-if="item.type === 'select'">
+          <template v-if="props.formType === 'detail'">
+            <!-- 单选 -->
+            <p v-if="!item.attrs.multiple">
+              {{
+                item.options.find(
+                  (option) => option.value === formData[item.name]
+                )?.label || '-'
+              }}
+            </p>
+            <!-- 多选 -->
+            <template v-else>
+              <p>
+                {{
+                  formData[item.name]
+                    ?.map((fd) => {
+                      return (
+                        item.options.find((option) => option.value === fd)
+                          ?.label || '-'
+                      );
+                    })
+                    ?.join('、') || '-'
+                }}
+              </p>
             </template>
-          </el-radio>
-        </el-radio-group>
-        <el-input-number
-          v-else-if="item.type === 'number'"
-          :placeholder="`请输入${item.label}`"
-          v-bind="{
-            controls: false,
-            ...item.attrs,
-          }"
-          :modelValue="formData[item.name]"
-          @update:modelValue="(val) => formValueChange(val, item.name)"
-        />
-        <el-input
-          v-else
-          :placeholder="`请输入${item.label}`"
-          v-bind="item.attrs"
-          :modelValue="formData[item.name]"
-          @update:modelValue="(val) => formValueChange(val, item.name)"
-        />
+          </template>
+          <el-select
+            v-else
+            :placeholder="`请选择${item.label}`"
+            v-bind="item.attrs"
+            :modelValue="formData[item.name]"
+            @update:modelValue="(val) => formValueChange(val, item.name)"
+          >
+            <el-option
+              v-for="option in item.options"
+              :label="option.label"
+              :value="option.value"
+            />
+          </el-select>
+        </template>
+        <template v-else-if="item.type === 'dateTime'">
+          <p v-if="props.formType === 'detail'">
+            {{ formData[item.name] }}
+          </p>
+          <el-date-picker
+            v-else
+            v-model="formData[item.name]"
+            :placeholder="`请选择${item.label}`"
+            v-bind="{ type: 'date', ...item.attrs }"
+            @update:modelValue="(val) => formValueChange(val, item.name)"
+          />
+        </template>
+        <template v-else-if="item.type === 'radio'">
+          <p v-if="props.formType === 'detail'">
+            {{
+              item.options.find(
+                (option) => option.value === formData[item.name]
+              )?.label || '-'
+            }}
+          </p>
+          <el-radio-group
+            v-else
+            v-bind="item.attrs"
+            :modelValue="formData[item.name]"
+            @update:modelValue="(val) => formValueChange(val, item.name)"
+          >
+            <el-radio v-for="option in item.options" :label="option.value">
+              <template #default>
+                <div
+                  v-if="option.slot"
+                  v-html="option.slot"
+                  class="radio-slot"
+                ></div>
+                <span v-else>{{ option.label }}</span>
+              </template>
+            </el-radio>
+          </el-radio-group>
+        </template>
+        <template v-else-if="item.type === 'number'">
+          <p v-if="props.formType === 'detail'">
+            {{ formData[item.name] }}
+          </p>
+          <el-input-number
+            v-else
+            :placeholder="`请输入${item.label}`"
+            v-bind="{
+              controls: false,
+              ...item.attrs,
+            }"
+            :modelValue="formData[item.name]"
+            @update:modelValue="(val) => formValueChange(val, item.name)"
+          />
+        </template>
+        <template v-else>
+          <p v-if="props.formType === 'detail'">
+            {{ formData[item.name] }}
+          </p>
+          <el-input
+            v-else
+            :placeholder="`请输入${item.label}`"
+            v-bind="item.attrs"
+            :modelValue="formData[item.name]"
+            @update:modelValue="(val) => formValueChange(val, item.name)"
+          />
+        </template>
       </el-form-item>
     </template>
     <slot name="formAfter"></slot>
@@ -121,6 +173,11 @@ const props = defineProps({
   widthAuto: {
     type: Boolean,
     default: false,
+  },
+  /** 表单类型 */
+  formType: {
+    type: String,
+    default: 'edit',
   },
 });
 

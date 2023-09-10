@@ -3,7 +3,8 @@ import BTag from '@/components/baseCommon/BTag.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
 import { ApiDeptList } from '@/http/setting/department.js';
 import { getAuthUser } from '@/utils/auth';
-import { formatAmount, parseToDatetime } from '@/utils/string';
+
+import { formatAmount, parseToDate, parseToDatetime } from '@/utils/string';
 
 const user = getAuthUser();
 
@@ -31,6 +32,14 @@ export const signNames = [
   },
 ];
 
+/** 表格字段映射 */
+export const contractRecordsObj = {
+  contractRecordName: "合同签订履行记录名称",
+  content: "内容",
+  recordDate: "时间",
+  annexes: "附件",
+}
+
 /** 列表字段 */
 export const columns = [
   {
@@ -44,10 +53,11 @@ export const columns = [
     width: '180px',
     formatter(row) {
       const inner = () => row.contractName || '-';
-      if (row.Urgency === 'NORMAL') return h(BTag, { type: 'success' }, inner);
-      if (row.Urgency === 'HALF') return h(BTag, { type: 'success' }, inner);
-      if (row.Urgency === 'THIRD') return h(BTag, { type: 'warning' }, inner);
-      if (row.Urgency === 'ONE_FIFTH') return h(BTag, { type: 'danger' }, inner);
+      if (row.urgency === 'NORMAL') return h(BTag, { type: 'success' }, inner);
+      if (row.urgency === 'HALF') return h(BTag, { type: 'yellow' }, inner);
+      if (row.urgency === 'THIRD') return h(BTag, { type: 'warning' }, inner);
+      if (row.urgency === 'ONE_FIFTH') return h(BTag, { type: 'danger' }, inner);
+      if (row.urgency === 'OVERDUE') return h(BTag, { type: 'purple' }, inner);
       return h(BTag, { type: 'info' }, inner);
     },
   },
@@ -72,7 +82,7 @@ export const columns = [
     label: '合同签订时间',
     minWidth: '160px',
     formatter(row) {
-      return parseToDatetime(row.signDate) || '-';
+      return parseToDate(row.signDate) || '-';
     },
   },
   {
@@ -80,7 +90,7 @@ export const columns = [
     label: '合同到期期限',
     minWidth: '160px',
     formatter(row) {
-      return parseToDatetime(row.contractEndDate) || '-';
+      return parseToDate(row.contractEndDate) || '-';
     },
   },
   {
@@ -156,6 +166,9 @@ export const formItems = [
     type: 'dateTime',
     attrs: {
       clearable: true,
+      'disabled-date': (date) => {
+        return date && date.valueOf() > Date.now();
+      }
     },
   },
 
@@ -191,6 +204,9 @@ export const formItems = [
     type: 'dateTime',
     attrs: {
       clearable: true,
+      'disabled-date': (date) => {
+        return date && date.valueOf() < Date.now();
+      }
     },
   },
   {

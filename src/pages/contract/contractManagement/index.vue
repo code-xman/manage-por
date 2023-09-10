@@ -11,12 +11,21 @@
     >
       <template #options="{ row }">
         <el-button
+          v-if="!['OVERDUE'].includes(row.urgency)"
           v-allow="'9d37b0aa0b9843368dcc7743acda709c'"
           type="primary"
           link
           @click="() => editFn(row)"
         >
           编辑
+        </el-button>
+        <el-button
+          v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
+          type="primary"
+          link
+          @click="() => detailFn(row)"
+        >
+          详情
         </el-button>
       </template>
     </BasePage>
@@ -65,6 +74,12 @@ const addFn = () => {
 
 const editFn = (row) => {
   modalType.value = 'edit';
+  showModelRow.value = row;
+  showModel.value = true;
+};
+
+const detailFn = (row) => {
+  modalType.value = 'detail';
   showModelRow.value = row;
   showModel.value = true;
 };

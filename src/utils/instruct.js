@@ -5,6 +5,8 @@ const btns = getAuthBtn();
 // 自定义指令 v-allow
 export const allowDirective = {
   mounted: (el, bind) => {
+    // 无绑定值或绑定值为true
+    if ([null, undefined, true].includes(bind.value)) return;
     const flag = !!btns?.map((b) => b.menuId)?.includes(bind.value);
     if (flag) return;
     if (!flag) {

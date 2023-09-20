@@ -26,6 +26,7 @@
         :sortable="column.sortable"
         :width="column.width"
         :min-width="column.minWidth"
+        :class-name="column.className"
         :formatter="column.formatter"
         :show-overflow-tooltip="
           column.showOverflowTooltip === undefined
@@ -184,5 +185,15 @@ defineExpose({
   margin-top: 8px;
   display: flex;
   justify-content: flex-end;
+}
+:deep(.el-table__row) {
+  .cell-full {
+    padding: 0;
+    height: 100%;
+    .cell.el-tooltip {
+      padding: 0;
+      height: 100%;
+    }
+  }
 }
 </style>

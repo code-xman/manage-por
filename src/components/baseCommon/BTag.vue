@@ -80,7 +80,7 @@ export default defineComponent({
   }
 
   &__purple::before {
-    background-color: #526aec;
+    background-color: #6d63ff;
   }
 
   &.is__border {
@@ -133,9 +133,9 @@ export default defineComponent({
   }
 
   &__purple.is__border {
-    color: #526aec;
-    border-color: #526aec;
-    background-color: #526aec;
+    color: #6d63ff;
+    border-color: #6d63ff;
+    background-color: #6d63ff;
   }
 }
 </style>

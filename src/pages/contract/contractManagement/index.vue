@@ -67,7 +67,7 @@ const btns = ref([
   },
   {
     key: 'download',
-    name: '下载',
+    name: '导出台账',
     attrs: {
       type: 'success',
     },

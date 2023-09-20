@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import BTag from '@/components/baseCommon/BTag.vue';
+import BCell from '@/components/baseCommon/BCell.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
 import { ApiDeptList } from '@/http/setting/department.js';
 import { getAuthUser } from '@/utils/auth';
@@ -51,19 +51,20 @@ export const columns = [
     prop: 'contractName',
     label: '合同名称',
     width: '180px',
+    className:'cell-full',
     formatter(row) {
       const inner = () => row.contractName || '-';
-      if (row.urgency === 'NORMAL') return h(BTag, { type: 'success' }, inner);
-      if (row.urgency === 'HALF') return h(BTag, { type: 'yellow' }, inner);
-      if (row.urgency === 'THIRD') return h(BTag, { type: 'warning' }, inner);
-      if (row.urgency === 'ONE_FIFTH') return h(BTag, { type: 'danger' }, inner);
-      if (row.urgency === 'OVERDUE') return h(BTag, { type: 'purple' }, inner);
-      return h(BTag, { type: 'info' }, inner);
+      if (row.urgency === 'NORMAL') return h(BCell, { type: 'success' }, inner);
+      if (row.urgency === 'HALF') return h(BCell, { type: 'yellow' }, inner);
+      if (row.urgency === 'THIRD') return h(BCell, { type: 'warning' }, inner);
+      if (row.urgency === 'ONE_FIFTH') return h(BCell, { type: 'danger' }, inner);
+      if (row.urgency === 'OVERDUE') return h(BCell, { type: 'purple' }, inner);
+      return h(BCell, { type: 'info' }, inner);
     },
   },
   {
     prop: 'contractAmt',
-    label: '合同金额',
+    label: '合同金额（元）',
     width: '180px',
     formatter(row) {
       return formatAmount(row.contractAmt) || '-';
@@ -192,7 +193,7 @@ export const formItems = [
 
   {
     name: 'contractAmt',
-    label: '合同金额',
+    label: '合同金额（元）',
     type: 'number',
     attrs: {
       clearable: true,

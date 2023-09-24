@@ -142,7 +142,7 @@ watch(
 );
 
 watch(
-  () => modal,
+  () => modal.value,
   (value) => {
     form.value = {};
     emit('update:modelValue', value);

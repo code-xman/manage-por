@@ -134,13 +134,14 @@ const fetchData = async () => {
         ...props.defaultParams,
         ...props.searchParams,
       });
-      listData.value = dataRes.list;
+      listData.value = dataRes?.list || [];
       total.value = dataRes.total;
     }
     if (Array.isArray(props.list)) {
       listData.value = props.list;
     }
   } catch (error) {
+    console.log('error :>> ', error);
     ElMessage.error(`${error}`);
   } finally {
     pending.value = false;

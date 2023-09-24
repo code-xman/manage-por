@@ -232,10 +232,18 @@ watch(
     immediate: true,
   }
 );
-
+// 验证
 const validate = async () => {
   try {
     await formRef.value?.validate();
+  } catch (error) {
+    throw 'cancel';
+  }
+};
+// 重置
+const resetFields = async () => {
+  try {
+    await formRef.value?.resetFields();
   } catch (error) {
     throw 'cancel';
   }
@@ -245,6 +253,7 @@ defineExpose({
   formRef,
   formData,
   validate,
+  resetFields,
 });
 </script>
 

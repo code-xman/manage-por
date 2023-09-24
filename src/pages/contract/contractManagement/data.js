@@ -205,9 +205,9 @@ export const formItems = [
     type: 'dateTime',
     attrs: {
       clearable: true,
-      'disabled-date': (date) => {
-        return date && date.valueOf() < Date.now();
-      }
+      // 'disabled-date': (date) => {
+      //   return date && date.valueOf() < Date.now();
+      // }
     },
   },
   {

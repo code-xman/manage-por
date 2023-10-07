@@ -230,6 +230,7 @@ watch(
   },
   {
     immediate: true,
+    deep: true, // 需要deep，否则form里面的table数据无法同步更新
   }
 );
 // 验证

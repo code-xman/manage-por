@@ -3,7 +3,7 @@
     class="search-form-box"
     ref="searchFormRef"
     :style="{
-      height: `${searchHeight + 1}px`,
+      height: `${searchHeight + 1 + 8}px`,
     }"
   >
     <BaseForm
@@ -61,7 +61,7 @@ const needExpand = ref(false);
 /** 是否展开 */
 const isExpand = ref(false);
 /** 搜索区域高度 */
-const searchHeight = ref(48);
+const searchHeight = ref(40);
 
 // 监听底层数据变化，同步更新给父级
 watch(

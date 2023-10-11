@@ -84,7 +84,7 @@ export const ApiListTodo = async (params={}) => {
 
 // 项目任务-处理提交
 export const ApiComplete = async (params={}) => {
-  const data = await post('/ap/api/projectFacade/complete', params);
+  const data = await post('/api/projectFacade/complete', params);
   return data;
 };
 

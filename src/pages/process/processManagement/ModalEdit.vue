@@ -72,22 +72,6 @@
                 <div>{{ row.completionDeadline }}</div>
               </template>
             </el-table-column>
-            <!-- <el-table-column prop="annexes" label="附件" width="220">
-              <template #default="{ row }">
-                <div class="filesCol">
-                  <el-tag
-                    v-for="file in row.annexes"
-                    :key="file.key"
-                    class="mx-1"
-                    :closable="!isDetail"
-                    @click="() => handlePreview(file)"
-                    @close="() => handleClose(row, file)"
-                  >
-                    {{ file.name }}
-                  </el-tag>
-                </div>
-              </template>
-            </el-table-column> -->
             <el-table-column
               v-if="!isDetail"
               fixed="right"

@@ -18,6 +18,7 @@
           编辑
         </el-button>
         <el-button
+          v-else
           type="primary"
           link
           @click="() => detailFn(row)"

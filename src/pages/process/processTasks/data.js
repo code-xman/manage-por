@@ -2,8 +2,8 @@ import { h } from 'vue';
 import BTag from '@/components/baseCommon/BTag.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
 import { ApiListUser } from '@/http/setting/user.js';
-import { getAuthUser } from '@/utils/auth'
-import { WHETHER_ENUM, } from '@/data/common';;
+import { getAuthUser } from '@/utils/auth';
+import { WHETHER_ENUM } from '@/data/common';
 
 import { formatAmount, parseToDate, parseToDatetime } from '@/utils/string';
 
@@ -103,8 +103,10 @@ export const columns = [
     fixed: 'right',
     formatter(row) {
       // 	1-是,0-否
-      if (row.requirement === '1') return h(BTag, { type: 'success' }, '是');
-      if (row.requirement === '0') return h(BTag, { type: 'danger' }, '否');
+      if (row.requirement === '1')
+        return h(BTag, { type: 'success' }, () => '是');
+      if (row.requirement === '0')
+        return h(BTag, { type: 'danger' }, () => '否');
       return '-';
     },
   },
@@ -180,4 +182,3 @@ export const formItems = [
     },
   },
 ];
-

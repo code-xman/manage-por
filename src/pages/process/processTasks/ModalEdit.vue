@@ -76,15 +76,15 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="!isDetail"
               fixed="right"
               label="操作"
               align="center"
-              width="160"
+              :width="!isDetail ? 160 : 70"
             >
               <template #default="{ row }">
                 <div class="operate">
                   <el-upload
+                    v-if="!isDetail"
                     class="upload"
                     :action="uploadAction"
                     :headers="uploadHeaders"
@@ -104,9 +104,10 @@
                     size="small"
                     @click="() => handlePreview(row)"
                   >
-                    预览
+                    查看
                   </el-button>
                   <el-button
+                    v-if="!isDetail"
                     link
                     type="danger"
                     size="small"
@@ -221,7 +222,7 @@ const actFilesObj = {
 // 文件列表验证
 const actFilesValiateFn = () => {
   const _actFiles = formValue.value.actFiles;
-  if (!_actFiles || !_actFiles?.length)  throw '请添加文件';
+  if (!_actFiles || !_actFiles?.length) throw '请添加文件';
 
   const keys = Object.keys(actFilesObj);
   let nullIndex = -1;
@@ -240,13 +241,13 @@ const actFilesValiateFn = () => {
   if (!!hasNullItem) {
     throw `请完善文件列表第${nullIndex + 1}个文件的${actFilesObj[nullKey]}`;
   }
-}
+};
 
 // 保存
 const confirmClick = async () => {
   try {
     pending.value = true;
-    await actFilesValiateFn();
+    actFilesValiateFn();
     await BaseFormRef.value?.validate();
 
     await ApiComplete({
@@ -273,6 +274,17 @@ const init = async () => {
   try {
     pending.value = true;
     // 详情 整合数据
+    formValue.value = { ...props.row };
+    const res = await ApiListActFile({ actDefId: props.row.actDefId });
+    formValue.value.actFiles = [...res].map((item) => {
+      return {
+        key: item.fileKey,
+        fileType: item.fileType,
+        fileKey: item.fileKey,
+        fileName: item.fileKey,
+        fileUrl: item.fileUrl,
+      };
+    });
   } catch (error) {
     ElMessage.error(`${error}`);
   } finally {

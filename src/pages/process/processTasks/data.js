@@ -182,3 +182,24 @@ export const formItems = [
     },
   },
 ];
+
+/** 项目表单各项 */
+export const processFormItems = [
+  {
+    name: 'projectName',
+    label: '项目名称',
+  },
+  {
+    name: 'responsibleDeptName',
+    label: '项目责任部门',
+  },
+  {
+    name: 'contractAdminName',
+    label: '项目管理人',
+  },
+  {
+    name: 'projectContent',
+    label: '项目内容',
+    className: 'full-width',
+  },
+];

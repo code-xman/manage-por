@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListProjectPage"
-      :options-size="120"
+      :options-size="160"
     >
       <template #options="{ row }">
         <el-button
@@ -18,6 +18,14 @@
           @click="() => editFn(row)"
         >
           编辑
+        </el-button>
+        <el-button
+          v-allow="'b11afc3b734f42e7816525882c45f70c'"
+          type="primary"
+          link
+          @click="() => copyFn(row)"
+        >
+          复制
         </el-button>
         <el-button
           v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
@@ -76,6 +84,12 @@ const addFn = () => {
 
 const editFn = (row) => {
   modalType.value = 'edit';
+  showModelRow.value = row;
+  showModel.value = true;
+};
+
+const copyFn = (row) => {
+  modalType.value = 'copy';
   showModelRow.value = row;
   showModel.value = true;
 };

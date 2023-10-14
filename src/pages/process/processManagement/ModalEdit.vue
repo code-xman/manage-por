@@ -244,6 +244,11 @@ const handleFormValue = () => {
       (rd) => rd.value === formValue.value.responsibleDeptId
     )?.label || '';
 
+  if (props.type === 'copy') {
+    formValue.value.gid = undefined;
+    formValue.value.projectId = undefined;
+  }
+
   return {
     projectParam: {
       ...formValue.value,
@@ -260,7 +265,7 @@ const confirmClick = async () => {
     await BaseFormRef.value?.validate();
     const saveData = handleFormValue();
     // console.log('saveData :>> ', saveData);
-    if (props.type === 'add') {
+    if (['add', 'copy'].includes(props.type)) {
       await ApiCreateProject(saveData);
     } else if (props.type === 'edit') {
       await ApiEditProject(saveData?.projectParam);
@@ -308,7 +313,7 @@ watch(
   () => props.modelValue,
   () => {
     modal.value = props.modelValue;
-    if (['edit', 'detail'].includes(props.type) && props.modelValue) {
+    if (['edit', 'copy', 'detail'].includes(props.type) && props.modelValue) {
       init();
     } else {
       formValue.value = { processConfigs: [] };

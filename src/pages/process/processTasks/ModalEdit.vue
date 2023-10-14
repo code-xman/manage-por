@@ -121,6 +121,61 @@
           </el-table>
         </template>
       </BaseForm>
+      <div class="process-info">
+        <div class="title">项目详情</div>
+        <BaseForm
+          :formType="'detail'"
+          v-model:formValue="processFormValue"
+          :formItems="processFormItems"
+        >
+          <template #formAfter>
+            <div class="formAfterTitle">
+              <span>步骤节点配置列表</span>
+            </div>
+            <el-table
+              :data="processFormValue.processConfigs"
+              style="width: 100%"
+              stripe
+              border
+            >
+              <el-table-column
+                fixed
+                type="index"
+                label="#"
+                align="center"
+                width="60"
+              />
+              <el-table-column
+                prop="actDefName"
+                label="步骤节点名称"
+                width="260"
+                align="center"
+              />
+              <el-table-column
+                prop="assigneeName"
+                label="步骤负责人姓名"
+                width="260"
+                align="center"
+              />
+              <el-table-column
+                prop="actDefDesc"
+                label="步骤节点描述"
+                :show-overflow-tooltip="true"
+              >
+                <template #default="{ row }">
+                  <div class="actDefDescCell">{{ row.actDefDesc }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="completionDeadline"
+                label="完成时限"
+                align="center"
+                width="140"
+              />
+            </el-table>
+          </template>
+        </BaseForm>
+      </div>
     </div>
     <template #footer>
       <div style="flex: auto">
@@ -145,8 +200,13 @@ import { modalTitleObj } from '@/data/common.js';
 import {
   ApiComplete,
   ApiListActFile,
+  ApiDetailProject,
 } from '@/http/process/processManagement.js';
-import { formItems as formItemsData, fileTypes } from './data';
+import {
+  formItems as formItemsData,
+  fileTypes,
+  processFormItems as processFormItemsData,
+} from './data';
 
 defineOptions({ name: 'ProcessTasksEdit' });
 
@@ -184,6 +244,10 @@ const rules = ref({
   requirement: [{ required: true, message: '请选择是否达到要求' }],
   completeDesc: [{ required: true, message: '请输入完成情况' }],
 });
+
+// 项目详情
+const processFormValue = ref({ processConfigs: [] });
+const processFormItems = ref([...processFormItemsData]);
 
 /** 新增记录 */
 const handleAdd = () => {
@@ -295,12 +359,22 @@ const init = async () => {
 // 监听弹框打开关闭
 watch(
   () => props.modelValue,
-  () => {
+  async () => {
     modal.value = props.modelValue;
     if (['detail'].includes(props.type) && props.modelValue) {
       init();
     } else {
       formValue.value = { actFiles: [] };
+    }
+    // 项目详情
+    const processRes = await ApiDetailProject({
+      projectId: props.row.projectId,
+    });
+    if (processRes?.projectInfo) {
+      processFormValue.value = {
+        ...processRes.projectInfo,
+        processConfigs: processRes?.processConfigs || [],
+      };
     }
   }
 );
@@ -309,6 +383,14 @@ watch(
 <style lang="scss" scoped>
 .process-info {
   padding-bottom: 8px;
+
+  .title {
+    margin: 18px 14px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+  }
 
   .formAfterTitle {
     border-bottom: 1px solid $colorBorder;

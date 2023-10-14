@@ -10,6 +10,15 @@ export default [
     component: () => import('@/layout/Main'),
     children: [
       {
+        path: '/processManagement',
+        name: 'ProcessManagement',
+        meta: {
+          id: 'd0aac48fa8894a899cdadfe49aa8bf69',
+          title: '项目管理',
+        },
+        component: () => import('@/pages/process/processManagement/index.vue'),
+      },
+      {
         path: '/processTasks',
         name: 'ProcessTasks',
         meta: {
@@ -17,15 +26,6 @@ export default [
           title: '项目任务',
         },
         component: () => import('@/pages/process/processTasks/index.vue'),
-      },
-      {
-        path: '/processManagement',
-        name: 'ProcessManagement',
-        meta: {
-          id: 'd0aac48fa8894a899cdadfe49aa8bf69',
-          title: '项目流程管理',
-        },
-        component: () => import('@/pages/process/processManagement/index.vue'),
       },
     ],
   },

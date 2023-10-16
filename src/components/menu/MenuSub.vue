@@ -17,6 +17,7 @@
   </el-sub-menu>
   <el-menu-item v-else :index="props.index">
     <template #title>
+      <i v-if="props.meta?.icon" class="icon iconfont" :class="props.meta.icon" />
       <el-tooltip
         effect="dark"
         placement="top"
@@ -61,7 +62,13 @@ const props = defineProps({
 // const self = getCurrentInstance();
 
 const attrs = useAttrs();
-const hasChild = computed(() => props.child?.length > 0);
+const hasChild = computed(() => {
+  // 无子菜单
+  if (!props.child || props.child.length === 0) return false;
+  // 不隐藏的子菜单
+  const propsChild = props.child.filter(pc => pc.meta.menuHide !== true);
+  return propsChild?.length > 0;
+});
 
 // 路由
 const router = useRouter();
@@ -75,6 +82,7 @@ const toPage = (rote) => {
 <style lang="scss" scoped>
 .icon {
   padding-left: 8px;
+  font-weight: 600;
 }
 .menu-item {
   width: 100%;
@@ -82,6 +90,7 @@ const toPage = (rote) => {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+  font-weight: 600;
   &.noIcon {
     margin-left: 24px;
   }

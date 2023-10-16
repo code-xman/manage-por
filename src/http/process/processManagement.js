@@ -93,3 +93,16 @@ export const ApiListActFile = async (params={}) => {
   const data = await post('/api/projectFacade/listActFile', params);
   return data;
 };
+
+// 	项目-下拉
+export const ApiListProject = async (params={}) => {
+  const data = await post('/api/projectFacade/listProject', params);
+  if (!data) return [];
+  const res = data.map((row) => {
+    return {
+      label: row.projectName,
+      value: row.projectId,
+    };
+  })
+  return res;
+};

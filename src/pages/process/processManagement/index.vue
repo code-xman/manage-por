@@ -11,7 +11,10 @@
     >
       <template #options="{ row }">
         <el-button
-          v-if="!['OVERDUE'].includes(row.urgency)"
+          v-if="
+            !['OVERDUE'].includes(row.urgency) &&
+            row.contractAdminId === user.userId
+          "
           v-allow="'9d37b0aa0b9843368dcc7743acda709c'"
           type="primary"
           link
@@ -48,6 +51,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
+import { getAuthUser } from '@/utils/auth';
 
 import BasePage from '@/components/BasePage/index';
 import { ApiListProjectPage } from '@/http/process/processManagement.js';
@@ -58,6 +62,7 @@ defineOptions({
   name: 'ShowBasePage',
 });
 
+const user = getAuthUser();
 const BasePageRef = ref(null);
 const searchFormValue = ref({});
 

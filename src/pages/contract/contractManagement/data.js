@@ -2,6 +2,7 @@ import { h } from 'vue';
 import BCell from '@/components/baseCommon/BCell.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
 import { ApiDeptList } from '@/http/setting/department.js';
+import { ApiListProject } from '@/http/process/processManagement.js';
 import { getAuthUser } from '@/utils/auth';
 
 import { formatAmount, parseToDate, parseToDatetime } from '@/utils/string';
@@ -63,6 +64,14 @@ export const columns = [
     },
   },
   {
+    prop: 'projectName',
+    label: '项目名称',
+    minWidth: '200px',
+    formatter(row) {
+      return row.projectName || '-';
+    },
+  },
+  {
     prop: 'contractAmt',
     label: '合同金额（元）',
     width: '180px',
@@ -118,16 +127,19 @@ export const searchFormItems = [
       clearable: true,
     },
   },
-  // {
-  //   name: 'contractName',
-  //   label: '合同名称',
-  //   style: {
-  //     width: '250px',
-  //   },
-  //   attrs: {
-  //     clearable: true,
-  //   },
-  // },
+  {
+    name: 'projectId',
+    label: '项目名称',
+    type: 'select',
+    options: () => ApiListProject(),
+    style: {
+      width: '320px',
+    },
+    attrs: {
+      clearable: true,
+      filterable: true,
+    },
+  },
   // {
   //   name: 'partyB',
   //   label: '合同对标公司',
@@ -162,6 +174,14 @@ export const formItems = [
     },
   },
   {
+    name: 'partyB',
+    label: '对方单位',
+    className: 'full-width',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
     name: 'signDate',
     label: '签订时间',
     type: 'dateTime',
@@ -172,15 +192,16 @@ export const formItems = [
       }
     },
   },
-
   {
-    name: 'partyB',
-    label: '对方单位',
+    name: 'projectId',
+    label: '项目名称',
+    type: 'select',
+    options: [],
     attrs: {
       clearable: true,
+      filterable: true,
     },
   },
-
   {
     name: 'contractTerms',
     label: '合同主要条款',

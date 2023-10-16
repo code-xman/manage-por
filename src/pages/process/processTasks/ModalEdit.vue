@@ -278,6 +278,18 @@ const handlePreview = (row) => {
   window.open(row.fileUrl);
 };
 
+/** 删除文件 */
+const handleDelete = async (row) => {
+  try {
+    const index = formValue.value?.actFiles.findIndex(
+      (fp) => fp.key === row.key
+    );
+    formValue.value?.actFiles.splice(index, 1);
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  }
+};
+
 const actFilesObj = {
   fileType: '文件类型',
   fileKey: '附件',
@@ -296,7 +308,7 @@ const actFilesValiateFn = () => {
       if (key === 'annexes') return !item[key]?.length;
       return !item[key] || !item[key]?.length;
     });
-    console.log('object :>> ', { index, key });
+    // console.log('object :>> ', { index, key });
     nullIndex = index;
     nullKey = key;
     return !!key;
@@ -361,7 +373,7 @@ watch(
   () => props.modelValue,
   async () => {
     modal.value = props.modelValue;
-    if (['detail'].includes(props.type) && props.modelValue) {
+    if (props.modelValue) {
       init();
     } else {
       formValue.value = { actFiles: [] };

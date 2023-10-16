@@ -96,11 +96,11 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="annexes" label="附件" width="220">
+            <el-table-column prop="annexesData" label="附件" width="220">
               <template #default="{ row }">
                 <div class="filesCol">
                   <el-tag
-                    v-for="file in row.annexes"
+                    v-for="file in row.annexesData"
                     :key="file.key"
                     class="mx-1"
                     :closable="!isDetail"
@@ -178,6 +178,7 @@ import BaseForm from '@/components/BaseForm';
 import { uploadAction, uploadHeaders } from '@/config/base';
 import { ApiListUser } from '@/http/setting/user.js';
 import { ApiDeptList } from '@/http/setting/department.js';
+import { ApiListProject } from '@/http/process/processManagement.js';
 import {
   ApiCreateContract,
   ApiEditContract,
@@ -220,6 +221,8 @@ const modalTitle = computed(() => {
 const pending = ref(false);
 /** 责任部门选项 */
 const responsibleDepts = ref([]);
+/** 项目选项 */
+const projects = ref([]);
 const BaseFormRef = ref(null);
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
@@ -241,6 +244,7 @@ const rules = ref({
     { required: true, message: '请选择签订时间' },
     { validator: contractDateValidate },
   ],
+  projectId: [{ required: true, message: '请选择项目名称' }],
   partyB: [{ required: true, message: '请输入对方单位' }],
   contractTerms: [{ required: true, message: '请输入合同主要条款' }],
   contractAmt: [{ required: true, message: '请输入合同金额' }],
@@ -260,14 +264,14 @@ const handleAdd = () => {
     contractRecordName: '',
     content: '',
     recordDate: '',
-    annexes: [],
+    annexesData: [],
   });
 };
 /** 上传成功 */
 const handleSuccess = (row, response, file, fileList) => {
   try {
     if (!response.success) throw '上传失败';
-    row.annexes.push({
+    row.annexesData.push({
       key: response.data?.[0]?.fileName || '',
       // name: file.name,
       name: response.data?.[0]?.fileName,
@@ -294,8 +298,8 @@ const handlePreview = (file) => {
 };
 /** 删除文件 */
 const handleClose = (row, file) => {
-  const index = row.annexes.findIndex((rf) => rf.key === file.key);
-  row.annexes.splice(index, 1);
+  const index = row.annexesData.findIndex((rf) => rf.key === file.key);
+  row.annexesData.splice(index, 1);
 };
 
 const cancelClick = () => {
@@ -304,22 +308,31 @@ const cancelClick = () => {
 
 // 保存处理表单数据
 const handleFormValue = () => {
+  // 日期格式化
   formValue.value.signDate = parseToDate(formValue.value.signDate);
   formValue.value.contractEndDate = parseToDate(
     formValue.value.contractEndDate
   );
+  // 项目名称
+  formValue.value.projectName = projects.value.find(
+    (p) => p.value === formValue.value.projectId
+  )?.label || '';
+  // 责任部门名称
   formValue.value.responsibleDeptName =
     responsibleDepts.value.find(
       (r) => r.value === formValue.value.responsibleDeptId
     )?.label || '';
+  // 负责人名称
   formValue.value.personNames = formValue.value.personIds.join(',');
+  // 合同签订及履约记录
   formValue.value.contractRecords = formValue.value.contractRecords.map(
     (item) => {
       return {
         contractRecordName: item.contractRecordName,
         content: item.content,
         recordDate: parseToDate(item.recordDate),
-        annexes: item.annexes.map((annex) => annex.key).join(','),
+        annexesData: item.annexesData,
+        annexes: item.annexesData.map((annex) => annex.key).join(','),
       };
     }
   );
@@ -335,7 +348,7 @@ const contractRecordsValidateFn = () => {
   let nullKey = undefined;
   const hasNullItem = contractRecords.find((item, index) => {
     const key = keys.find((key) => {
-      if (key === 'annexes') return !item[key]?.length;
+      if (key === 'annexesData') return !item[key]?.length;
       return !item[key];
     });
     console.log('object :>> ', { index, key });
@@ -389,7 +402,7 @@ const init = async () => {
           ...item,
           signDate: new Date(formValue.value.signDate),
           contractEndDate: new Date(formValue.value.contractEndDate),
-          annexes: item.annexes.map((annex) => ({
+          annexesData: item.annexes.map((annex) => ({
             key: annex.value,
             name: annex.value,
             fileUrl: annex.label,
@@ -397,7 +410,7 @@ const init = async () => {
         };
       }
     );
-    console.log('formValue.value :>> ', formValue.value);
+    // console.log('formValue.value :>> ', formValue.value);
   } catch (error) {
     ElMessage.error(`${error}`);
   } finally {
@@ -459,6 +472,7 @@ watch(
 );
 
 onMounted(async () => {
+  // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'
   );
@@ -466,6 +480,15 @@ onMounted(async () => {
     orgId: user.orgId,
   });
   Item_responsibleDeptId.options = responsibleDepts.value;
+
+  // 项目名称
+  const Item_projectId = formItems.value.find(
+    (item) => item.name === 'projectId'
+  );
+  projects.value = await ApiListProject();
+  if (Item_projectId) {
+    Item_projectId.options = projects.value;
+  }
 });
 </script>
 

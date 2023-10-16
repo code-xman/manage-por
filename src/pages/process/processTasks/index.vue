@@ -10,7 +10,6 @@
     >
       <template #options="{ row }">
         <el-button
-          v-if="!row.completeTime"
           type="primary"
           link
           @click="() => editFn(row)"
@@ -18,7 +17,7 @@
           编辑
         </el-button>
         <el-button
-          v-else
+          v-if="row.completeTime"
           type="primary"
           link
           @click="() => detailFn(row)"

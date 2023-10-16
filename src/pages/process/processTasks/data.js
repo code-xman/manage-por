@@ -12,6 +12,10 @@ const user = getAuthUser();
 /** 任务类型 WAIT-待处理,DONE-已完成 */
 const taskStatus = [
   {
+    label: '全部',
+    value: undefined,
+  },
+  {
     label: '待处理',
     value: 'WAIT',
   },

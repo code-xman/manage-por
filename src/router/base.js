@@ -27,6 +27,30 @@ const routes = [
     },
     component: () => import('@/pages/logging'),
   },
+
+  // home
+  {
+    path: '/home',
+    name: 'Home',
+    redirect: { name: 'IndexHome' },
+    meta: {
+      title: '首页',
+      icon: 'icon-menhu',
+    },
+    component: () => import('@/layout/Main'),
+    children: [
+      {
+        path: '',
+        name: 'IndexHome',
+        meta: {
+          title: '首页',
+          menuHide: true,
+          icon: 'icon-menhu',
+        },
+        component: () => import('@/pages/home'),
+      },
+    ]
+  },
   {
     path: '/base',
     name: 'Base',
@@ -37,15 +61,6 @@ const routes = [
     },
     component: () => import('@/layout/Main'),
     children: [
-      // home
-      {
-        path: '/home',
-        name: 'Home',
-        meta: {
-          title: 'home',
-        },
-        component: () => import('@/pages/home'),
-      },
       {
         path: '/BaseTable',
         name: 'BaseTable',

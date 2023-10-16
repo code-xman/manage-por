@@ -68,7 +68,7 @@ _axios.interceptors.response.use(
       // token 过期或无效
       if ('401' === code) {
         // 清除登录信息，重新登录
-        // _logout();
+        _logout();
 
         // 直接返回空操作，避免出现多个提示框
         return Promise.reject('请重新登录');

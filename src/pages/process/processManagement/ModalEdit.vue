@@ -25,6 +25,9 @@
             <el-button v-if="!isDetail" type="primary" @click="handleAdd">
               新增节点配置
             </el-button>
+            <el-button v-if="isDetail" type="primary" @click="handleProjectId">
+              项目附件下载
+            </el-button>
           </div>
           <el-table
             :data="formValue.processConfigs"
@@ -73,14 +76,13 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="!isDetail"
               fixed="right"
               label="操作"
               align="center"
               width="120"
             >
               <template #default="{ row }">
-                <div class="operate">
+                <div v-if="!isDetail" class="operate">
                   <el-button
                     link
                     type="primary"
@@ -96,6 +98,16 @@
                     @click="() => handleDelete(row)"
                   >
                     删除
+                  </el-button>
+                </div>
+                <div v-else class="operate">
+                  <el-button
+                    link
+                    type="primary"
+                    size="small"
+                    @click="() => handleActDefId(row)"
+                  >
+                    节点附件下载
                   </el-button>
                 </div>
               </template>
@@ -124,7 +136,8 @@
 
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import FileSaver from 'file-saver';
 import BaseForm from '@/components/BaseForm';
 
 // import { uploadAction, uploadHeaders } from '@/config/base';
@@ -139,6 +152,8 @@ import {
   ApiEditProject,
   ApiDetailProject,
   ApiDeleteProjectActConfig,
+  ApiDownloadActDefId,
+  ApiDownloadProjectId,
 } from '@/http/process/processManagement.js';
 import ModalRowEdit from './ModalRowEdit.vue';
 import { formItems as formItemsData } from './data';
@@ -187,6 +202,50 @@ const rules = ref({
   contractAdminId: [{ required: true, message: '请选择项目管理人' }],
   projectContent: [{ required: true, message: '请输入项目内容' }],
 });
+
+/** 项目附件下载 */
+const handleProjectId = async () => {
+  try {
+    console.log('url :>> ', ApiDownloadProjectId(props.row.projectId));
+    await ElMessageBox.confirm('项目附件下载，确认是否继续？', '操作提示', {
+      type: 'warning',
+    });
+    pending.value = true;
+    // window.open(ApiDownloadProjectId(props.row.projectId));
+    FileSaver.saveAs(
+      ApiDownloadProjectId(props.row.projectId),
+      `${formValue.value.projectName}附件${Date.now()}`
+    );
+  } catch (error) {
+    if (error === 'cancel') return;
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
+  }
+};
+
+/** 节点附件下载 */
+const handleActDefId = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `${row.actDefName}附件下载，确认是否继续？`,
+      '操作提示',
+      {
+        type: 'warning',
+      }
+    );
+    pending.value = true;
+    FileSaver.saveAs(
+      ApiDownloadActDefId(row.actDefId),
+      `${row.actDefName}附件${Date.now()}`
+    );
+  } catch (error) {
+    if (error === 'cancel') return;
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
+  }
+};
 
 /** 新增记录 */
 const handleAdd = () => {

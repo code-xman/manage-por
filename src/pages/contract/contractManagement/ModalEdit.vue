@@ -24,7 +24,7 @@
             </el-button>
           </div>
           <el-table
-            :data="formValue.contractRecords"
+            :data="formValue.contractRecordsData"
             style="width: 100%"
             stripe
             border
@@ -259,7 +259,7 @@ const rules = ref({
 
 /** 新增记录 */
 const handleAdd = () => {
-  formValue.value?.contractRecords?.push({
+  formValue.value?.contractRecordsData?.push({
     key: Date.now(),
     contractRecordName: '',
     content: '',
@@ -286,10 +286,10 @@ const handleExceed = (row, file, fileList) => {};
 const handleRemove = (row, file, fileList) => {};
 /** 删除记录 */
 const handleDelete = (row) => {
-  const index = formValue.value?.contractRecords.findIndex(
+  const index = formValue.value?.contractRecordsData.findIndex(
     (ft) => ft.key === row.key
   );
-  formValue.value?.contractRecords.splice(index, 1);
+  formValue.value?.contractRecordsData.splice(index, 1);
 };
 
 /** 预览文件 */
@@ -325,9 +325,10 @@ const handleFormValue = () => {
   // 负责人名称
   formValue.value.personNames = formValue.value.personIds.join(',');
   // 合同签订及履约记录
-  formValue.value.contractRecords = formValue.value.contractRecords.map(
+  formValue.value.contractRecords = formValue.value.contractRecordsData.map(
     (item) => {
       return {
+        actId: item.actId, // 节点id
         contractRecordName: item.contractRecordName,
         content: item.content,
         recordDate: parseToDate(item.recordDate),
@@ -340,13 +341,13 @@ const handleFormValue = () => {
 
 // 合同签订及履约记录验证
 const contractRecordsValidateFn = () => {
-  const contractRecords = formValue.value.contractRecords;
-  if (!contractRecords || !contractRecords?.length)
+  const contractRecordsData = formValue.value.contractRecordsData;
+  if (!contractRecordsData || !contractRecordsData?.length)
     throw '请添加合同签订及履约记录';
   const keys = Object.keys(contractRecordsObj);
   let nullIndex = -1;
   let nullKey = undefined;
-  const hasNullItem = contractRecords.find((item, index) => {
+  const hasNullItem = contractRecordsData.find((item, index) => {
     const key = keys.find((key) => {
       if (key === 'annexesData') return !item[key]?.length;
       return !item[key];
@@ -396,7 +397,7 @@ const init = async () => {
       ...res,
       personIds: res.personNames.split(','),
     };
-    formValue.value.contractRecords = formValue.value.contractRecords.map(
+    formValue.value.contractRecordsData = formValue.value.contractRecords.map(
       (item) => {
         return {
           ...item,
@@ -426,7 +427,7 @@ watch(
     if (['edit', 'detail'].includes(props.type) && props.modelValue) {
       init();
     } else {
-      formValue.value = { personIds: [], contractRecords: [] };
+      formValue.value = { personIds: [], contractRecordsData: [] };
     }
   }
 );

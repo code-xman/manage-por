@@ -20,7 +20,7 @@ onMounted(() => {
     } else {
       setFlagUser(false);
       ElMessage.success('登录成功');
-      router.replace({ name: 'Organ' });
+      router.replace({ name: 'Home' });
     }
   } catch (error) {
     ElMessage.error(`${error}`);

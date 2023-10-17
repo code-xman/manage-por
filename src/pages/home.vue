@@ -10,6 +10,7 @@
 <script setup>
 import { ref, onMounted, } from 'vue';
 import { ApiListTodo } from '@/http/process/processManagement.js';
+import { ApiListContractPage } from '@/http/contract/contractManagement';
 import { getAuthUser } from '@/utils/auth';
 
 const user = getAuthUser();
@@ -31,10 +32,17 @@ const list = ref([
 
 onMounted(async () => {
   const processRes = await ApiListTodo({
+    pageSize: 1e5,
     taskStatus: 'WAIT',
     userId: user.userId,
   });
-  list.value[0].value = processRes.total;
+  list.value[0].value = processRes?.total || 0;
+
+  const contractRes = await ApiListContractPage({
+    pageSize: 1e5,
+    needSupply: '1',
+  })
+  list.value[1].value = contractRes?.total || 0;
 });
 </script>
 

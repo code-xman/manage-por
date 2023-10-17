@@ -62,7 +62,7 @@ export default defineComponent({
   }
 
   &__info {
-    background-color: var(--el-border-color-light);
+    background-color: #409EFF;
   }
 
   &__yellow {

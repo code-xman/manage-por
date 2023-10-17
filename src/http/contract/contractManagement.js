@@ -12,6 +12,7 @@ export const ApiListContractPage = async (params) => {
 
   if (data?.list) {
     data.list = data.list?.map(row => {
+      if (!row.signDate || !row.contractEndDate) return row;
       const signDateVal = new Date(row.signDate)?.valueOf() || 0;
       const contractEndDateVal = new Date(row.contractEndDate)?.valueOf() || 0;
       const allTime = contractEndDateVal - signDateVal;

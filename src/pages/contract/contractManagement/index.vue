@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListContractPage"
-      :options-size="120"
+      :options-size="140"
     >
       <template #options="{ row }">
         <el-button
@@ -17,7 +17,7 @@
           link
           @click="() => editFn(row)"
         >
-          编辑
+          {{ row.needSupply === '1' ? '完善合同' : '编辑' }}
         </el-button>
         <el-button
           v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
@@ -130,7 +130,7 @@ const downloadFn = async () => {
       pageSize: 1e5,
     });
     if (data.total > 1e5) {
-      ElMessage.warning('最多支持导出10万条数据！')
+      ElMessage.warning('最多支持导出10万条数据！');
     }
     exportExcel(data.list);
   } catch (error) {

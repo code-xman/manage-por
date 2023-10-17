@@ -1,8 +1,9 @@
 import { post } from '@/http';
+import { HTTP_CONFIG } from '@/config/base';
 import { projectStatusObj } from '@/pages/process/processManagement/data.js';
 
 // 	项目-分页
-export const ApiListProjectPage = async (params={}) => {
+export const ApiListProjectPage = async (params = {}) => {
   const _params = {
     pageNum: 1,
     pageSize: 20,
@@ -26,43 +27,43 @@ export const ApiListProjectPage = async (params={}) => {
 };
 
 // 项目-新增
-export const ApiCreateProject = async (params={}) => {
+export const ApiCreateProject = async (params = {}) => {
   const data = await post('/api/projectFacade/createProject', params);
   return data;
 };
 
 // 项目-编辑
-export const ApiEditProject = async (params={}) => {
+export const ApiEditProject = async (params = {}) => {
   const data = await post('/api/projectFacade/editProject', params);
   return data;
 };
 
 // 项目-详情
-export const ApiDetailProject = async (params={}) => {
+export const ApiDetailProject = async (params = {}) => {
   const data = await post('/api/projectFacade/projectDetail', params);
   return data;
 };
 
 // 项目步骤节点配置(单条)-新增
-export const ApiAddProjectActConfig = async (params={}) => {
+export const ApiAddProjectActConfig = async (params = {}) => {
   const data = await post('/api/projectFacade/addProjectActConfig', params);
   return data;
 };
 
 // 项目步骤节点配置(单条)-编辑
-export const ApiEditProjectActConfig = async (params={}) => {
+export const ApiEditProjectActConfig = async (params = {}) => {
   const data = await post('/api/projectFacade/editProjectActConfig', params);
   return data;
 };
 
 // 项目步骤节点配置(单条)-删除
-export const ApiDeleteProjectActConfig = async (params={}) => {
+export const ApiDeleteProjectActConfig = async (params = {}) => {
   const data = await post('/api/projectFacade/deleteProjectActConfig', params);
   return data;
 };
 
 // 	项目任务-分页
-export const ApiListTodo = async (params={}) => {
+export const ApiListTodo = async (params = {}) => {
   const _params = {
     pageNum: 1,
     pageSize: 20,
@@ -83,19 +84,19 @@ export const ApiListTodo = async (params={}) => {
 };
 
 // 项目任务-处理提交
-export const ApiComplete = async (params={}) => {
+export const ApiComplete = async (params = {}) => {
   const data = await post('/api/projectFacade/complete', params);
   return data;
 };
 
 // 	查询文件列表-列表
-export const ApiListActFile = async (params={}) => {
+export const ApiListActFile = async (params = {}) => {
   const data = await post('/api/projectFacade/listActFile', params);
   return data;
 };
 
 // 	项目-下拉
-export const ApiListProject = async (params={}) => {
+export const ApiListProject = async (params = {}) => {
   const data = await post('/api/projectFacade/listProject', params);
   if (!data) return [];
   const res = data.map((row) => {
@@ -103,6 +104,16 @@ export const ApiListProject = async (params={}) => {
       label: row.projectName,
       value: row.projectId,
     };
-  })
+  });
   return res;
+};
+
+// 项目节点文件打包下载 actDefId-项目节点id
+export const ApiDownloadActDefId = (actDefId) => {
+  return `${HTTP_CONFIG.baseUrl}/fileDownLoad/project/actDefId/${actDefId}`;
+};
+
+// 项目所有文件打包下载 projectId-项目id
+export const ApiDownloadProjectId = (projectId) => {
+  return `${HTTP_CONFIG.baseUrl}/fileDownLoad/project/${projectId}`;
 };

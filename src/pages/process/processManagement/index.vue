@@ -15,7 +15,7 @@
             !['OVERDUE'].includes(row.urgency) &&
             row.contractAdminId === user.userId
           "
-          v-allow="'9d37b0aa0b9843368dcc7743acda709c'"
+          v-allow="'e5683cbac0e649d19b514967d1589bad'"
           type="primary"
           link
           @click="() => editFn(row)"
@@ -23,7 +23,7 @@
           编辑
         </el-button>
         <el-button
-          v-allow="'b11afc3b734f42e7816525882c45f70c'"
+          v-allow="'2d98942cbd074bdcab56459f2ff51148'"
           type="primary"
           link
           @click="() => copyFn(row)"
@@ -31,7 +31,7 @@
           复制
         </el-button>
         <el-button
-          v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
+          v-allow="'adc587e366ca483198d83aa19a134906'"
           type="primary"
           link
           @click="() => detailFn(row)"
@@ -70,7 +70,7 @@ const btns = ref([
   {
     key: 'add',
     name: '新增',
-    allow: 'b11afc3b734f42e7816525882c45f70c',
+    allow: 'f7954f60ffb747759e43438bb3b77b73',
     attrs: {
       type: 'primary',
     },

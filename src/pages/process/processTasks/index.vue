@@ -10,6 +10,7 @@
     >
       <template #options="{ row }">
         <el-button
+          v-allow="'e9f451e2df1f4e4eb5ecb98c9270ddd7'"
           type="primary"
           link
           @click="() => editFn(row)"
@@ -18,6 +19,7 @@
         </el-button>
         <el-button
           v-if="row.completeTime"
+          v-allow="'44d370f6cb0e442da8147d113529e1ee'"
           type="primary"
           link
           @click="() => detailFn(row)"

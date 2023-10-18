@@ -34,6 +34,7 @@
             style="width: 100%"
             stripe
             border
+            show-overflow-tooltip
           >
             <el-table-column
               fixed
@@ -73,6 +74,28 @@
             >
               <template #default="{ row }">
                 <div>{{ row.completionDeadline }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="isDetail"
+              prop="completeTime"
+              label="完成时间"
+              align="center"
+              width="170"
+            >
+              <template #default="{ row }">
+                <div>{{ row.completeTime || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="isDetail"
+              prop="completeDesc"
+              label="完成情况"
+              align="left"
+              width="240"
+            >
+              <template #default="{ row }">
+                <div>{{ row.completeDesc || '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column

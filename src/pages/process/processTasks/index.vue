@@ -14,7 +14,7 @@
           link
           @click="() => editFn(row)"
         >
-          编辑
+          {{ !row.completeTime ? '处理' : '修改'}}
         </el-button>
         <el-button
           v-if="row.completeTime"

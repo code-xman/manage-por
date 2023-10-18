@@ -31,6 +31,7 @@
             style="width: 100%"
             stripe
             border
+            show-overflow-tooltip
           >
             <el-table-column
               fixed

@@ -83,7 +83,8 @@ const handleItemClick = (row) => {
 }
 
 .item {
-  background-color: fade-out(#f1f3f7, 0.5);
+  // background-color: fade-out(#f1f3f7, 0.5);
+  background-color: #fff;
   box-shadow: inset 0 1px 3px darken(#f1f3f7, 5%);
   border-radius: 3px;
   align-items: center;

@@ -1,14 +1,17 @@
 <template>
   <div class="home flex-1">
-    <div>{{ user.userName }}，你好！</div>
-    <div class="content">
-      <ItemCountCard :data="list" />
+    <div class="content" >
+      <div>{{ user.userName }}，你好！</div>
+      <div class="items">
+        <ItemCountCard :data="list" />
+      </div>
     </div>
+    <img class="home-bg" src="/images/home-bg.jpg" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ApiListTodo } from '@/http/process/processManagement.js';
 import { ApiListContractPage } from '@/http/contract/contractManagement';
 import { getAuthUser } from '@/utils/auth';
@@ -41,16 +44,30 @@ onMounted(async () => {
   const contractRes = await ApiListContractPage({
     pageSize: 1e5,
     needSupply: '1',
-  })
+  });
   list.value[1].value = contractRes?.total || 0;
 });
 </script>
 
 <style lang="scss" scoped>
 .home {
+  position: relative;
+  width: 100%;
+  height: 100%;
   font-weight: bold;
   .content {
+    padding: 10px;
+  }
+  .items {
     margin-top: 20px;
+  }
+  .home-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    opacity: 0.25;
   }
 }
 </style>

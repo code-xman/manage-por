@@ -13,7 +13,7 @@ const user = getAuthUser();
 const taskStatus = [
   {
     label: '全部',
-    value: undefined,
+    value: '',
   },
   {
     label: '待处理',

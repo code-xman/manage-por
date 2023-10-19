@@ -70,6 +70,15 @@ export const ApiListTodo = async (params = {}) => {
     ...params,
   };
 
+  if (!_params.taskStatus) {
+    _params.taskStatus = undefined;
+  }
+  if (_params.endTime) {
+    _params.endTime = new Date(
+      new Date(_params.endTime).getTime() + 24 * 60 * 60 * 1000 - 1
+    );
+  }
+
   const data = await post('/api/projectFacade/listTodo', _params);
 
   if (data?.list) {

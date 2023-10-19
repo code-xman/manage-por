@@ -54,6 +54,7 @@ import { ElMessage } from 'element-plus';
 import { getAuthUser } from '@/utils/auth';
 
 import BasePage from '@/components/BasePage/index';
+import { exportExcel } from '@/utils/fn.js';
 import { ApiListProjectPage } from '@/http/process/processManagement.js';
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
@@ -75,6 +76,14 @@ const btns = ref([
       type: 'primary',
     },
     clickFn: () => addFn(),
+  },
+  {
+    key: 'download',
+    name: '导出台账',
+    attrs: {
+      type: 'success',
+    },
+    clickFn: () => downloadFn(),
   },
 ]);
 
@@ -103,6 +112,20 @@ const detailFn = (row) => {
   modalType.value = 'detail';
   showModelRow.value = row;
   showModel.value = true;
+};
+
+const downloadFn = async () => {
+  try {
+    const data = await ApiListProjectPage({
+      pageSize: 1e5,
+    });
+    if (data.total > 1e5) {
+      ElMessage.warning('最多支持导出10万条数据！');
+    }
+    exportExcel(data.list, `项目${Date.now()}.xlsx`, columns);
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  }
 };
 
 watch(

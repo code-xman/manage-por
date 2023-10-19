@@ -69,7 +69,7 @@ export const columns = [
     },
   },
   {
-    prop: 'projectStatus',
+    prop: 'projectStatusName',
     label: '项目状态',
     width: '140px',
     fixed: 'right',

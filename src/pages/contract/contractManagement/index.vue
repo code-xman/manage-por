@@ -40,10 +40,9 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
-import ExcelJS from 'exceljs';
-import FileSaver from 'file-saver';
 
 import BasePage from '@/components/BasePage/index';
+import { exportExcel } from '@/utils/fn.js';
 import { ApiListContractPage } from '@/http/contract/contractManagement';
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
@@ -96,34 +95,6 @@ const detailFn = (row) => {
   showModel.value = true;
 };
 
-// 导出Excel
-const exportExcel = (data) => {
-  // 创建工作簿
-  const _workbook = new ExcelJS.Workbook();
-  // 添加工作表
-  const worksheet = _workbook.addWorksheet('sheet1');
-
-  const _columns = columns.filter((col) => col.prop);
-  // 设置表格内容
-  worksheet.columns = _columns.map((col) => {
-    return {
-      header: col.label,
-      key: col.prop,
-      width: Number((col.width || col.minWidth)?.replace('px', '') || 200) / 10,
-    };
-  });
-
-  worksheet.addRows(data);
-
-  // 导出表格
-  _workbook.xlsx.writeBuffer().then((buffer) => {
-    let _file = new Blob([buffer], {
-      type: 'application/octet-stream',
-    });
-    FileSaver.saveAs(_file, `合同${Date.now()}.xlsx`);
-  });
-};
-
 const downloadFn = async () => {
   try {
     const data = await ApiListContractPage({
@@ -132,7 +103,7 @@ const downloadFn = async () => {
     if (data.total > 1e5) {
       ElMessage.warning('最多支持导出10万条数据！');
     }
-    exportExcel(data.list);
+    exportExcel(data.list, `合同${Date.now()}.xlsx`, columns);
   } catch (error) {
     ElMessage.error(`${error}`);
   }

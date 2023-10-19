@@ -81,8 +81,8 @@ const confirmClick = async () => {
       bgColor: '#409EFF',
       ...formValue.value,
       pkId: props.row.pkId,
-      logoFileName: '/vite.svg',
-      icon: '/src/assets/vue.svg',
+      logoFileName: '/images/logo_blue.svg',
+      icon: '/images/logo.svg',
     };
     if (props.type === 'add') {
       await ApiOpenTenant(params);

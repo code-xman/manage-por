@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <img class="logo" src="@/assets/vue.svg" />
+      <img class="logo" src="/images/logo.svg" />
       <div class="home item">{{ user.sysName || APP_INFO.title }}</div>
       <div v-if="route.meta.title" class="title">
         {{ route.meta.title || '' }}
@@ -112,8 +112,8 @@ const handleCommand = async (command) => {
     rgba(0, 0, 0, 0) 50%
   );
   .logo {
-    max-height: 100%;
-    max-width: 100%;
+    height: 40px;
+    width: 40px;
   }
 
   .user {

@@ -384,7 +384,7 @@ watch(
       // }
       // 非平台
       if (user.orgId !== PlatformOrgId) {
-        form.value.roleType = '02';
+        formValue.value.roleType = '02';
       }
     } else {
       // 关闭抽屉

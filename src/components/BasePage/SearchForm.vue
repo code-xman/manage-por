@@ -2,10 +2,10 @@
   <div
     class="search-form-box"
     ref="searchFormRef"
-    :style="{
-      height: `${searchHeight + 1 + 8}px`,
-    }"
   >
+    <!-- :style="{
+      height: `${searchHeight + 1 + 8}px`,
+    }" -->
     <BaseForm
       v-model:formValue="searchFormVal"
       :formItems="searchFormItems_show"
@@ -110,7 +110,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .search-form-box {
   position: relative;
-  // margin-bottom: 8px;
+  margin-bottom: 8px;
   transition: 0.3s;
   .expandBtn {
     position: absolute;
@@ -142,9 +142,9 @@ onMounted(() => {
         width: 170px;
       }
     }
-    // .el-button {
-    //   margin-bottom: 8px;
-    // }
+    .btn-box {
+      margin-bottom: 8px;
+    }
   }
 }
 </style>

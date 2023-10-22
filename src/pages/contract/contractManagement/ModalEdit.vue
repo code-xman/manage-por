@@ -28,7 +28,7 @@
             style="width: 100%"
             stripe
             border
-            show-overflow-tooltip
+            :show-overflow-tooltip="isDetail"
           >
             <el-table-column
               fixed
@@ -99,7 +99,7 @@
             </el-table-column>
             <el-table-column prop="annexesData" label="附件" width="220">
               <template #default="{ row }">
-                <div class="filesCol">
+                <div class="filesCol" v-loading="uploading">
                   <el-tag
                     v-for="file in row.annexesData"
                     :key="file.key"
@@ -142,7 +142,7 @@
                       (file, fileList) => handleRemove(row, file, fileList)
                     "
                   >
-                    <el-button link type="primary" size="small">
+                    <el-button :disabled="uploading" link type="primary" size="small">
                       上传
                     </el-button>
                   </el-upload>
@@ -220,6 +220,7 @@ const modalTitle = computed(() => {
 });
 
 const pending = ref(false);
+const uploading = ref(false);
 /** 责任部门选项 */
 const responsibleDepts = ref([]);
 /** 项目选项 */
@@ -271,6 +272,7 @@ const handleAdd = () => {
 /** 上传成功 */
 const handleSuccess = (row, response, file, fileList) => {
   try {
+    uploading.value = true;
     if (!response.success) throw '上传失败';
     row.annexesData.push({
       key: response.data?.[0]?.fileName || '',
@@ -280,6 +282,8 @@ const handleSuccess = (row, response, file, fileList) => {
     });
   } catch (error) {
     ElMessage.error(`${error}`);
+  } finally {
+    uploading.value = false;
   }
 };
 const handleError = (row, error, file, fileList) => {};

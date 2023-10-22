@@ -1,4 +1,5 @@
 import { post } from '@/http';
+import { HTTP_CONFIG } from '@/config/base';
 
 // 合同列表-分页
 export const ApiListContractPage = async (params) => {
@@ -55,4 +56,9 @@ export const ApiEditContract = async (params) => {
 export const ApiContractDetail = async (params) => {
   const data = await post('/api/contractFacade/contractDetail', params);
   return data;
+};
+
+// 合同所有文件打包下载 contractId-合同编号
+export const ApiDownloadContractNo = (contractNo) => {
+  return `${HTTP_CONFIG.baseUrl}/fileDownLoad/contract/${contractNo}`;
 };

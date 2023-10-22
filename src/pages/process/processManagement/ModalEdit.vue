@@ -229,7 +229,7 @@ const rules = ref({
 /** 项目附件下载 */
 const handleProjectId = async () => {
   try {
-    console.log('url :>> ', ApiDownloadProjectId(props.row.projectId));
+    // console.log('url :>> ', ApiDownloadProjectId(props.row.projectId));
     await ElMessageBox.confirm('项目附件下载，确认是否继续？', '操作提示', {
       type: 'warning',
     });

@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, onMounted, } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { APP_INFO, CACHE_PREFIX, CACHE_AUTH_PREFIX } from '@/config/base';
@@ -67,9 +67,9 @@ const router = useRouter();
 const loading = ref(false);
 const formRef = ref(null);
 const formVal = ref({
-  systemNo: '00000',
-  loginId: 'sadmin',
-  loginPwd: '123456',
+  systemNo: '',
+  loginId: '',
+  loginPwd: '',
 });
 const formRules = ref({
   systemNo: [{ required: true, message: '请输入系统编码' }],
@@ -121,6 +121,17 @@ const loginFn = async () => {
     loading.value = false;
   }
 };
+
+onMounted(() => {
+  // 开发环境直接填充
+  if (import.meta.env.VITE_FLAG === 'development') {
+    formVal.value = {
+      systemNo: '00000',
+      loginId: 'sadmin',
+      loginPwd: '123456',
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -165,8 +176,8 @@ const loginFn = async () => {
       .btn {
         width: 90%;
         height: 40px;
-        background: #409EFF;
-        border-color: #409EFF;
+        background: #409eff;
+        border-color: #409eff;
       }
     }
   }

@@ -38,7 +38,7 @@ export const contractRecordsObj = {
   contractRecordName: "合同签订履行记录名称",
   content: "内容",
   recordDate: "时间",
-  annexes: "附件",
+  annexesData: "附件",
 }
 
 /** 列表字段 */

@@ -288,7 +288,7 @@ const handleRemoveRow = async (row) => {
     .btns {
       margin-bottom: 8px;
       border-bottom: 1px solid $colorBorder;
-      height: 49px;
+      // height: 49px;
     }
   }
   .table {

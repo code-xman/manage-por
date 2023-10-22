@@ -27,6 +27,7 @@
             </el-button>
           </div>
           <el-table
+            v-loading="uploading"
             :data="formValue.actFiles"
             style="width: 100%"
             stripe
@@ -87,6 +88,7 @@
                   <el-upload
                     v-if="!isDetail"
                     class="upload"
+                    :disabled="uploading"
                     :action="uploadAction"
                     :headers="uploadHeaders"
                     :show-file-list="false"
@@ -235,6 +237,7 @@ const modalTitle = computed(() => {
 });
 
 const pending = ref(false);
+const uploading = ref(false);
 // 表单
 const BaseFormRef = ref(null);
 const formValue = ref({ actFiles: [] });
@@ -264,6 +267,7 @@ const handleAdd = () => {
 /** 上传成功 */
 const handleSuccess = (row, response, file, fileList) => {
   try {
+    uploading.value = true;
     if (!response.success) throw '上传失败';
 
     row.fileKey = response.data?.[0]?.fileName;
@@ -271,6 +275,8 @@ const handleSuccess = (row, response, file, fileList) => {
     row.fileUrl = response.data?.[0]?.fileUrl;
   } catch (error) {
     ElMessage.error(`${error}`);
+  } finally {
+    uploading.value = false;
   }
 };
 
@@ -306,7 +312,6 @@ const actFilesValiateFn = () => {
   let nullKey = undefined;
   const hasNullItem = _actFiles.find((item, index) => {
     const key = keys.find((key) => {
-      if (key === 'annexes') return !item[key]?.length;
       return !item[key] || !item[key]?.length;
     });
     // console.log('object :>> ', { index, key });

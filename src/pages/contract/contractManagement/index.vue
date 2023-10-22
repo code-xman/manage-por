@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListContractPage"
-      :options-size="140"
+      :options-size="240"
     >
       <template #options="{ row }">
         <el-button
@@ -27,6 +27,14 @@
         >
           详情
         </el-button>
+        <el-button
+          v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
+          type="primary"
+          link
+          @click="() => handleDownContractFile(row)"
+        >
+          下载合同附件
+        </el-button>
       </template>
     </BasePage>
     <ModalEdit
@@ -39,11 +47,15 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import FileSaver from 'file-saver';
 
 import BasePage from '@/components/BasePage/index';
 import { exportExcel } from '@/utils/fn.js';
-import { ApiListContractPage } from '@/http/contract/contractManagement';
+import {
+  ApiListContractPage,
+  ApiDownloadContractNo,
+} from '@/http/contract/contractManagement';
 import ModalEdit from './ModalEdit.vue';
 import { columns, searchFormItems } from './data';
 
@@ -106,6 +118,23 @@ const downloadFn = async () => {
     exportExcel(data.list, `合同${Date.now()}.xlsx`, columns);
   } catch (error) {
     ElMessage.error(`${error}`);
+  }
+};
+
+/** 合同附件下载 */
+const handleDownContractFile = async (row) => {
+  try {
+    await ElMessageBox.confirm('合同附件下载，确认是否继续？', '操作提示', {
+      type: 'warning',
+    });
+    FileSaver.saveAs(
+      ApiDownloadContractNo(row.contractNo),
+      `${row.contractName}附件${Date.now()}`
+    );
+  } catch (error) {
+    if (error === 'cancel') return;
+    ElMessage.error(`${error}`);
+  } finally {
   }
 };
 

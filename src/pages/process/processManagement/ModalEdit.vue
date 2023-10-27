@@ -46,20 +46,21 @@
             <el-table-column
               prop="actDefName"
               label="步骤节点名称"
-              width="260"
+              width="180"
               align="center"
             >
             </el-table-column>
             <el-table-column
               prop="assigneeName"
               label="步骤负责人姓名"
-              width="260"
+              width="140"
               align="center"
             >
             </el-table-column>
             <el-table-column
               prop="actDefDesc"
               label="步骤节点描述"
+              minWidth="240"
               :show-overflow-tooltip="true"
             >
               <template #default="{ row }">

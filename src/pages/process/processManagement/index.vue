@@ -11,10 +11,6 @@
     >
       <template #options="{ row }">
         <el-button
-          v-if="
-            !['OVERDUE'].includes(row.urgency) &&
-            row.contractAdminId === user.userId
-          "
           v-allow="'e5683cbac0e649d19b514967d1589bad'"
           type="primary"
           link

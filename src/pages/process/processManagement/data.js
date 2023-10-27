@@ -148,7 +148,7 @@ export const formItems = [
   },
   {
     name: 'contractAdminId',
-    label: '项目管理人',
+    label: '合同管理人',
     type: 'select',
     options: [],
     attrs: {

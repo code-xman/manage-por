@@ -357,7 +357,7 @@ const contractRecordsValidateFn = () => {
       if (key === 'annexesData') return !item[key]?.length;
       return !item[key];
     });
-    console.log('object :>> ', { index, key });
+    // console.log('object :>> ', { index, key });
     nullIndex = index;
     nullKey = key;
     return !!key;
@@ -427,8 +427,9 @@ const init = async () => {
 // 监听弹框打开关闭
 watch(
   () => props.modelValue,
-  () => {
+  async () => {
     modal.value = props.modelValue;
+    await base();
     if (['edit', 'detail'].includes(props.type) && props.modelValue) {
       init();
     } else {
@@ -462,7 +463,7 @@ watch(
       item_personIds.options = [];
     } else {
       const res = await ApiListUser({
-        orgId: user.orgId,
+        orgId: props.row?.merchantId || user.orgId,
         deptId: value,
       });
       if (item_personIds) {
@@ -477,14 +478,20 @@ watch(
   }
 );
 
-onMounted(async () => {
+const base = async () => {
+  // 合同所属部门
+  const Item_deptIds = formItems.value.find(
+    (item) => item.name === 'deptIds'
+  );
   // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'
   );
   responsibleDepts.value = await ApiDeptList({
-    orgId: user.orgId,
+    orgId: props.row?.merchantId || user.orgId,
   });
+  
+  Item_deptIds.options = responsibleDepts.value;
   Item_responsibleDeptId.options = responsibleDepts.value;
 
   // 项目名称
@@ -495,7 +502,7 @@ onMounted(async () => {
   if (Item_projectId) {
     Item_projectId.options = projects.value;
   }
-});
+};
 </script>
 
 <style lang="scss" scoped>

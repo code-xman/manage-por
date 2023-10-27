@@ -64,6 +64,14 @@ export const columns = [
     },
   },
   {
+    prop: 'merchantName',
+    label: '所属机构',
+    minWidth: '180px',
+    formatter(row) {
+      return row.merchantName || '-';
+    },
+  },
+  {
     prop: 'projectName',
     label: '项目名称',
     minWidth: '200px',

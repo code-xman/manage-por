@@ -33,12 +33,18 @@ export const signNames = [
   },
 ];
 
-/** 表格字段映射 */
+/** 合同签订及履约记录 表格字段映射 */
 export const contractRecordsObj = {
   contractRecordName: "合同签订履行记录名称",
   content: "内容",
   recordDate: "时间",
   annexesData: "附件",
+}
+/** 合同支付记录 表格字段映射 */
+export const contractPaymentRecordsObj = {
+  recordDate: '时间',
+  amount: '支付金额',
+  remark: '备注',
 }
 
 /** 列表字段 */

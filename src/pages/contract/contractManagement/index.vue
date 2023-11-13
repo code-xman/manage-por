@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListContractPage"
-      :options-size="240"
+      :options-size="180"
     >
       <template #options="{ row }">
         <el-button
@@ -18,6 +18,15 @@
           @click="() => editFn(row)"
         >
           {{ row.needSupply === '1' ? '完善合同' : '编辑' }}
+        </el-button>
+        <el-button
+          v-if="!['OVERDUE'].includes(row.urgency)"
+          v-allow="'9d37b0aa0b9843368dcc7743acda709c'"
+          type="primary"
+          link
+          @click="() => editRecordFn(row)"
+        >
+          编辑记录
         </el-button>
         <el-button
           v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
@@ -100,6 +109,12 @@ const editFn = (row) => {
   showModelRow.value = row;
   showModel.value = true;
 };
+
+const editRecordFn = (row) => {
+  modalType.value = 'editRecord';
+  showModelRow.value = row;
+  showModel.value = true;
+}
 
 const detailFn = (row) => {
   modalType.value = 'detail';

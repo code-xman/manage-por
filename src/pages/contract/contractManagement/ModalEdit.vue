@@ -11,24 +11,26 @@
     <div v-loading="pending" class="content scroll_thin overflow-auto full-y">
       <BaseForm
         ref="BaseFormRef"
-        :formType="props.type"
+        :formType="props.type === 'editRecord' ? 'detail' : props.type"
         v-model:formValue="formValue"
         :formItems="formItems"
         :rules="rules"
       >
         <template #formAfter>
+          <!-- 合同签订及履约记录 -->
           <div class="formAfterTitle">
             <span>合同签订及履约记录</span>
-            <el-button v-if="!isDetail" type="primary" @click="handleAdd">
+            <el-button v-if="isEditRecord" type="primary" @click="handleAdd">
               新增记录
             </el-button>
           </div>
           <el-table
             :data="formValue.contractRecordsData"
             style="width: 100%"
+            class="mb-10"
             stripe
             border
-            :show-overflow-tooltip="isDetail"
+            :show-overflow-tooltip="!isEditRecord"
           >
             <el-table-column
               fixed
@@ -44,7 +46,7 @@
               align="center"
             >
               <template #default="{ row }">
-                <template v-if="isDetail">
+                <template v-if="!isEditRecord">
                   <div>
                     {{
                       signNames.find((s) => s.value === row.contractRecordName)
@@ -68,7 +70,7 @@
             </el-table-column>
             <el-table-column prop="content" label="内容">
               <template #default="{ row }">
-                <template v-if="isDetail">
+                <template v-if="!isEditRecord">
                   <div>{{ row.content }}</div>
                 </template>
                 <el-input
@@ -83,10 +85,10 @@
               prop="recordDate"
               label="时间"
               align="center"
-              width="140"
+              width="165"
             >
               <template #default="{ row }">
-                <template v-if="isDetail">
+                <template v-if="!isEditRecord">
                   <div>{{ row.recordDate }}</div>
                 </template>
                 <el-date-picker
@@ -104,7 +106,7 @@
                     v-for="file in row.annexesData"
                     :key="file.key"
                     class="mx-1"
-                    :closable="!isDetail"
+                    :closable="isEditRecord"
                     @click="() => handlePreview(file)"
                     @close="() => handleClose(row, file)"
                   >
@@ -114,7 +116,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="!isDetail"
+              v-if="isEditRecord"
               fixed="right"
               label="操作"
               align="center"
@@ -142,7 +144,12 @@
                       (file, fileList) => handleRemove(row, file, fileList)
                     "
                   >
-                    <el-button :disabled="uploading" link type="primary" size="small">
+                    <el-button
+                      :disabled="uploading"
+                      link
+                      type="primary"
+                      size="small"
+                    >
                       上传
                     </el-button>
                   </el-upload>
@@ -151,6 +158,106 @@
                     type="danger"
                     size="small"
                     @click="() => handleDelete(row)"
+                  >
+                    删除
+                  </el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 合同支付记录 -->
+          <div class="formAfterTitle">
+            <span>合同支付记录</span>
+            <el-button
+              v-if="isEditRecord"
+              type="primary"
+              @click="handlePaymentAdd"
+            >
+              新增记录
+            </el-button>
+          </div>
+          <el-table
+            :data="formValue.contractPaymentRecordsData"
+            style="width: 100%"
+            class="mb-10"
+            stripe
+            border
+            :show-overflow-tooltip="!isEditRecord"
+          >
+            <el-table-column
+              fixed
+              type="index"
+              label="#"
+              align="center"
+              width="60"
+            />
+            <el-table-column
+              prop="recordDate"
+              label="时间"
+              align="center"
+              width="165"
+            >
+              <template #default="{ row }">
+                <template v-if="!isEditRecord">
+                  <div>{{ row.recordDate }}</div>
+                </template>
+                <el-date-picker
+                  v-else
+                  v-model="row.recordDate"
+                  placeholder="请选择时间"
+                  clearable
+                />
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="amount"
+              label="支付金额"
+              align="center"
+              width="160"
+            >
+              <template #default="{ row }">
+                <template v-if="!isEditRecord">
+                  <div>{{ formatAmount(row.amount) }}</div>
+                </template>
+                <el-input-number
+                  v-else
+                  v-model="row.amount"
+                  placeholder="请输入支付金额"
+                  :min="0"
+                  :max="1e9"
+                  :step="1"
+                  :precision="2"
+                  :controls="false"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="remark" label="备注">
+              <template #default="{ row }">
+                <template v-if="!isEditRecord">
+                  <div>{{ row.remark }}</div>
+                </template>
+                <el-input
+                  v-else
+                  v-model="row.remark"
+                  placeholder="请输入备注"
+                  clearable
+                />
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="isEditRecord"
+              fixed="right"
+              label="操作"
+              align="center"
+              width="70"
+            >
+              <template #default="{ row }">
+                <div class="operate">
+                  <el-button
+                    link
+                    type="danger"
+                    size="small"
+                    @click="() => handlePaymentDelete(row)"
                   >
                     删除
                   </el-button>
@@ -187,11 +294,13 @@ import {
 } from '@/http/contract/contractManagement';
 import { modalTitleObj } from '@/data/common.js';
 import { getAuthUser } from '@/utils/auth';
-import { parseToDate } from '@/utils/string';
+import { parseToDate, formatAmount } from '@/utils/string';
+import { useReasonConfirm } from '@/utils/hooks.js';
 import {
   formItems as formItemsData,
   signNames,
   contractRecordsObj,
+  contractPaymentRecordsObj,
 } from './data';
 
 defineOptions({ name: 'OrganModalEdit' });
@@ -209,8 +318,10 @@ const props = defineProps({
   },
 });
 
-/** 是否是详情 */
+/** 是否是 详情 */
 const isDetail = computed(() => props.type === 'detail');
+/** 是否是 修改记录 */
+const isEditRecord = computed(() => props.type === 'editRecord');
 
 const user = getAuthUser();
 
@@ -307,6 +418,23 @@ const handleClose = (row, file) => {
   row.annexesData.splice(index, 1);
 };
 
+/** 合同支付记录 新增 */
+const handlePaymentAdd = () => {
+  formValue.value?.contractPaymentRecordsData?.push({
+    key: Date.now(),
+    recordDate: '',
+    amount: null,
+    remark: '',
+  });
+};
+/** 合同支付记录 删除 */
+const handlePaymentDelete = (row) => {
+  const index = formValue.value?.contractPaymentRecordsData.findIndex(
+    (ft) => ft.key === row.key
+  );
+  formValue.value?.contractPaymentRecordsData.splice(index, 1);
+};
+
 const cancelClick = () => {
   emit('update:modelValue', false);
 };
@@ -319,9 +447,9 @@ const handleFormValue = () => {
     formValue.value.contractEndDate
   );
   // 项目名称
-  formValue.value.projectName = projects.value.find(
-    (p) => p.value === formValue.value.projectId
-  )?.label || '';
+  formValue.value.projectName =
+    projects.value.find((p) => p.value === formValue.value.projectId)?.label ||
+    '';
   // 责任部门名称
   formValue.value.responsibleDeptName =
     responsibleDepts.value.find(
@@ -342,6 +470,14 @@ const handleFormValue = () => {
       };
     }
   );
+  formValue.value.contractPaymentRecords =
+    formValue.value.contractPaymentRecordsData.map((item) => {
+      return {
+        recordDate: parseToDate(item.recordDate),
+        amount: item.amount,
+        remark: item.remark,
+      };
+    });
 };
 
 // 合同签订及履约记录验证
@@ -368,17 +504,43 @@ const contractRecordsValidateFn = () => {
   }
 };
 
+// 合同支付记录验证
+const contractPaymentRecordsValidateFn = () => {
+  const contractPaymentRecordsData = formValue.value.contractPaymentRecordsData;
+  if (!contractPaymentRecordsData || !contractPaymentRecordsData?.length)
+    throw '请添加合同支付记录';
+  const keys = Object.keys(contractPaymentRecordsObj);
+  let nullIndex = -1;
+  let nullKey = undefined;
+  const hasNullItem = contractPaymentRecordsData.find((item, index) => {
+    const key = keys.find((key) => {
+      if (key === 'annexesData') return !item[key]?.length;
+      return !item[key];
+    });
+    // console.log('object :>> ', { index, key });
+    nullIndex = index;
+    nullKey = key;
+    return !!key;
+  });
+
+  if (!!hasNullItem) {
+    throw `请完善第${nullIndex + 1}条记录的${contractPaymentRecordsObj[nullKey]}`;
+  }
+};
+
 // 保存
 const confirmClick = async () => {
   try {
     pending.value = true;
     contractRecordsValidateFn();
+    contractPaymentRecordsValidateFn();
     await BaseFormRef.value?.validate();
     handleFormValue();
     if (props.type === 'add') {
       await ApiCreateContract(formValue.value);
-    } else if (props.type === 'edit') {
-      await ApiEditContract(formValue.value);
+    } else if (['edit', 'editRecord'].includes(props.type)) {
+      const reason = await useReasonConfirm(); // 二次确认
+      await ApiEditContract({ ...formValue.value, reason: reason.value });
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);
@@ -402,20 +564,22 @@ const init = async () => {
       ...res,
       personIds: res.personNames.split(','),
     };
-    formValue.value.contractRecordsData = formValue.value.contractRecords.map(
+    formValue.value.contractRecordsData = formValue.value.contractRecords?.map(
       (item) => {
         return {
           ...item,
           signDate: new Date(formValue.value.signDate),
           contractEndDate: new Date(formValue.value.contractEndDate),
-          annexesData: item.annexes.map((annex) => ({
+          annexesData: item.annexes?.map((annex) => ({
             key: annex.value,
             name: annex.value,
             fileUrl: annex.label,
-          })),
+          })) || [],
         };
       }
-    );
+    ) || [];
+    formValue.value.contractPaymentRecordsData =
+      formValue.value.contractPaymentRecords?.map((item) => item) || [];
     // console.log('formValue.value :>> ', formValue.value);
   } catch (error) {
     ElMessage.error(`${error}`);
@@ -430,10 +594,13 @@ watch(
   async () => {
     modal.value = props.modelValue;
     await base();
-    if (['edit', 'detail'].includes(props.type) && props.modelValue) {
+    if (
+      ['edit', 'editRecord', 'detail'].includes(props.type) &&
+      props.modelValue
+    ) {
       init();
     } else {
-      formValue.value = { personIds: [], contractRecordsData: [] };
+      formValue.value = { personIds: [], contractRecordsData: [], contractPaymentRecordsData: [] };
     }
   }
 );
@@ -480,9 +647,7 @@ watch(
 
 const base = async () => {
   // 合同所属部门
-  const Item_deptIds = formItems.value.find(
-    (item) => item.name === 'deptIds'
-  );
+  const Item_deptIds = formItems.value.find((item) => item.name === 'deptIds');
   // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'
@@ -490,7 +655,7 @@ const base = async () => {
   responsibleDepts.value = await ApiDeptList({
     orgId: props.row?.merchantId || user.orgId,
   });
-  
+
   Item_deptIds.options = responsibleDepts.value;
   Item_responsibleDeptId.options = responsibleDepts.value;
 
@@ -532,6 +697,18 @@ const base = async () => {
 
   :deep(.el-select) {
     width: 100%;
+  }
+
+  :deep(.el-input-number) {
+    width: 100%;
+    .el-input {
+      .el-input__wrapper {
+        padding: 1px 11px;
+        .el-input__inner {
+          text-align: left;
+        }
+      }
+    }
   }
 
   .filesCol {

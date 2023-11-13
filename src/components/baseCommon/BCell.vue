@@ -22,7 +22,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .cell {
-  display: inline-block;
   position: relative;
   width: 100%;
   height: 100%;
@@ -34,6 +33,9 @@ export default defineComponent({
   background-color: var(--el-fill-color-lighter);
   text-align: left;
   color: #FFF;
+
+  display: flex;
+  align-items: center;
 
   & > em {
     display: inline-block;

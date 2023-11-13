@@ -194,6 +194,11 @@ defineExpose({
     .cell.el-tooltip {
       padding: 0;
       height: 100%;
+
+      // 为了使高度 100% 撑满
+      position: absolute;
+      top: 0;
+      left: 0;
     }
   }
 }

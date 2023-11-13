@@ -8,8 +8,9 @@
     class="my-drawer"
     @close="onCloseFn"
   >
-    <div v-loading="pending" class="content scroll_thin overflow-auto full-y">
+    <div class="content scroll_thin overflow-auto full-y">
       <BaseForm
+        v-loading="pending"
         ref="BaseFormRef"
         :formType="props.type === 'editRecord' ? 'detail' : props.type"
         v-model:formValue="formValue"
@@ -68,7 +69,7 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="content" label="内容">
+            <el-table-column prop="content" label="内容" minWidth="220">
               <template #default="{ row }">
                 <template v-if="!isEditRecord">
                   <div>{{ row.content }}</div>
@@ -99,7 +100,21 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="annexesData" label="附件" width="220">
+            <el-table-column prop="remark" label="备注" minWidth="200">
+              <template #default="{ row }">
+                <template v-if="!isEditRecord">
+                  <div>{{ row.remark }}</div>
+                </template>
+                <el-input
+                  v-else
+                  v-model="row.remark"
+                  placeholder="请输入备注"
+                  clearable
+                  maxlength="100"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="annexesData" label="附件" minWidth="220">
               <template #default="{ row }">
                 <div class="filesCol" v-loading="uploading">
                   <el-tag
@@ -231,7 +246,7 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="remark" label="备注">
+            <el-table-column prop="remark" label="备注" minWidth="200">
               <template #default="{ row }">
                 <template v-if="!isEditRecord">
                   <div>{{ row.remark }}</div>
@@ -241,6 +256,7 @@
                   v-model="row.remark"
                   placeholder="请输入备注"
                   clearable
+                  maxlength="100"
                 />
               </template>
             </el-table-column>
@@ -377,6 +393,7 @@ const handleAdd = () => {
     contractRecordName: '',
     content: '',
     recordDate: '',
+    remark: '',
     annexesData: [],
   });
 };
@@ -465,6 +482,7 @@ const handleFormValue = () => {
         contractRecordName: item.contractRecordName,
         content: item.content,
         recordDate: parseToDate(item.recordDate),
+        remark: item.remark,
         annexesData: item.annexesData,
         annexes: item.annexesData.map((annex) => annex.key).join(','),
       };
@@ -490,6 +508,7 @@ const contractRecordsValidateFn = () => {
   let nullKey = undefined;
   const hasNullItem = contractRecordsData.find((item, index) => {
     const key = keys.find((key) => {
+      if (key === 'remark') return false; // 备注不验证
       if (key === 'annexesData') return !item[key]?.length;
       return !item[key];
     });
@@ -500,7 +519,9 @@ const contractRecordsValidateFn = () => {
   });
 
   if (!!hasNullItem) {
-    throw `请完善第${nullIndex + 1}条记录的${contractRecordsObj[nullKey]}`;
+    throw `请完善第${nullIndex + 1}条合同签订及履约记录的${
+      contractRecordsObj[nullKey]
+    }`;
   }
 };
 
@@ -514,7 +535,7 @@ const contractPaymentRecordsValidateFn = () => {
   let nullKey = undefined;
   const hasNullItem = contractPaymentRecordsData.find((item, index) => {
     const key = keys.find((key) => {
-      if (key === 'annexesData') return !item[key]?.length;
+      if (key === 'remark') return false; // 备注不验证
       return !item[key];
     });
     // console.log('object :>> ', { index, key });
@@ -524,7 +545,9 @@ const contractPaymentRecordsValidateFn = () => {
   });
 
   if (!!hasNullItem) {
-    throw `请完善第${nullIndex + 1}条记录的${contractPaymentRecordsObj[nullKey]}`;
+    throw `请完善第${nullIndex + 1}条合同支付记录的${
+      contractPaymentRecordsObj[nullKey]
+    }`;
   }
 };
 
@@ -532,8 +555,10 @@ const contractPaymentRecordsValidateFn = () => {
 const confirmClick = async () => {
   try {
     pending.value = true;
-    contractRecordsValidateFn();
-    contractPaymentRecordsValidateFn();
+    if (['editRecord'].includes(props.type)) {
+      contractRecordsValidateFn();
+      contractPaymentRecordsValidateFn();
+    }
     await BaseFormRef.value?.validate();
     handleFormValue();
     if (props.type === 'add') {
@@ -564,20 +589,20 @@ const init = async () => {
       ...res,
       personIds: res.personNames.split(','),
     };
-    formValue.value.contractRecordsData = formValue.value.contractRecords?.map(
-      (item) => {
+    formValue.value.contractRecordsData =
+      formValue.value.contractRecords?.map((item) => {
         return {
           ...item,
           signDate: new Date(formValue.value.signDate),
           contractEndDate: new Date(formValue.value.contractEndDate),
-          annexesData: item.annexes?.map((annex) => ({
-            key: annex.value,
-            name: annex.value,
-            fileUrl: annex.label,
-          })) || [],
+          annexesData:
+            item.annexes?.map((annex) => ({
+              key: annex.value,
+              name: annex.value,
+              fileUrl: annex.label,
+            })) || [],
         };
-      }
-    ) || [];
+      }) || [];
     formValue.value.contractPaymentRecordsData =
       formValue.value.contractPaymentRecords?.map((item) => item) || [];
     // console.log('formValue.value :>> ', formValue.value);
@@ -600,7 +625,11 @@ watch(
     ) {
       init();
     } else {
-      formValue.value = { personIds: [], contractRecordsData: [], contractPaymentRecordsData: [] };
+      formValue.value = {
+        personIds: [],
+        contractRecordsData: [],
+        contractPaymentRecordsData: [],
+      };
     }
   }
 );

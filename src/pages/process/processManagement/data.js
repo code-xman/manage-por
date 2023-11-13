@@ -205,6 +205,18 @@ export const formRowItems = [
     },
   },
   {
+    name: 'durationDays',
+    label: '工期天数',
+    type: 'number',
+    attrs: {
+      clearable: true,
+      min: 1,
+      precision: 0,
+      step: 1,
+      controls: false,
+    },
+  },
+  {
     name: 'actDefDesc',
     label: '步骤节点描述',
     className: 'full-width',

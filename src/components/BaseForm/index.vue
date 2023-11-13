@@ -241,6 +241,14 @@ const validate = async () => {
     throw 'cancel';
   }
 };
+// 验证某一项
+const validateField = async (params) => {
+  try {
+    await formRef.value?.validateField(params);
+  } catch (error) {
+    // throw 'cancel';
+  }
+};
 // 重置
 const resetFields = async () => {
   try {
@@ -254,6 +262,7 @@ defineExpose({
   formRef,
   formData,
   validate,
+  validateField,
   resetFields,
 });
 </script>

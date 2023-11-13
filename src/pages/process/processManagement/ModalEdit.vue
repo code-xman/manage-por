@@ -74,7 +74,17 @@
               width="140"
             >
               <template #default="{ row }">
-                <div>{{ row.completionDeadline }}</div>
+                <div>{{ row.completionDeadline || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="durationDays"
+              label="工期天数"
+              width="120"
+              align="center"
+            >
+            <template #default="{ row }">
+                <div>{{ row.durationDays || '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column

@@ -154,16 +154,41 @@ export const searchFormItems = [
       filterable: true,
     },
   },
-  // {
-  //   name: 'partyB',
-  //   label: '合同对标公司',
-  //   style: {
-  //     width: '250px',
-  //   },
-  //   attrs: {
-  //     clearable: true,
-  //   },
-  // },
+  {
+    name: 'deptName',
+    label: '部门',
+    style: {
+      width: '220px',
+    },
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'contractName',
+    label: '合同名称',
+    style: {
+      width: '250px',
+    },
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'signDate',
+    label: '签订时间',
+    type: 'dateTime',
+    style: {
+      width: '300px',
+    },
+    attrs: {
+      clearable: true,
+      type: 'daterange',
+      'range-separator': "至",
+      'start-placeholder': "开始日期",
+      'end-placeholder': "结束日期",
+    },
+  },
 ];
 
 /** 表单各项属性 */

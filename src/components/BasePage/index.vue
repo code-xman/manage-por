@@ -1,6 +1,6 @@
 <template>
   <div class="base-page flex-all column">
-    <div class="page-form">
+    <div class="page-search">
       <SearchForm
         v-if="!!searchFormItems && !!searchFormItems?.length"
         :searchFormItems="searchFormItems"
@@ -94,7 +94,7 @@ const refresh = () => {
   try {
     baseTableRef.value?.fetchData();
   } catch (error) {
-    ElMessage.error(`${error}`)    
+    ElMessage.error(`${error}`);
   }
 };
 
@@ -106,11 +106,11 @@ const onSearchFn = () => {
 
 defineExpose({
   refresh,
-})
+});
 </script>
 
 <style lang="scss" scoped>
 .page-table {
-  height: calc(100% - 122px);
+  overflow: auto;
 }
 </style>

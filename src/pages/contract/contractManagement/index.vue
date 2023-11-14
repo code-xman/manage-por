@@ -51,6 +51,10 @@
       :type="modalType"
       :row="showModelRow"
     ></ModalEdit>
+    <ModalDetail
+      v-model="showDetail"
+      :row="showModelRow"
+    ></ModalDetail>
   </div>
 </template>
 
@@ -66,6 +70,7 @@ import {
   ApiDownloadContractNo,
 } from '@/http/contract/contractManagement';
 import ModalEdit from './ModalEdit.vue';
+import ModalDetail from './ModalDetail.vue';
 import { columns, searchFormItems } from './data';
 
 defineOptions({
@@ -99,6 +104,8 @@ const modalType = ref('');
 const showModel = ref(false);
 const showModelRow = ref();
 
+const showDetail = ref(false);
+
 const addFn = () => {
   modalType.value = 'add';
   showModel.value = true;
@@ -119,7 +126,7 @@ const editRecordFn = (row) => {
 const detailFn = (row) => {
   modalType.value = 'detail';
   showModelRow.value = row;
-  showModel.value = true;
+  showDetail.value = true;
 };
 
 const downloadFn = async () => {

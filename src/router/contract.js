@@ -18,6 +18,15 @@ export default [
         },
         component: () => import('@/pages/contract/contractManagement/index.vue'),
       },
+      {
+        path: '/contractDetailContent',
+        name: 'ContractDetailContent',
+        meta: {
+          title: '合同详情',
+          menuHide: true,
+        },
+        component: () => import('@/pages/contract/contractManagement/ModalDetailContent.vue'),
+      },
     ],
   },
 ];

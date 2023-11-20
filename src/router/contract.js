@@ -23,6 +23,7 @@ export default [
         name: 'ContractDetailContent',
         meta: {
           title: '合同详情',
+          id: true,
           menuHide: true,
         },
         component: () => import('@/pages/contract/contractManagement/ModalDetailContent.vue'),

@@ -8,7 +8,7 @@
     class="my-drawer"
     @close="onCloseFn"
   >
-    <div class="content scroll_thin overflow-auto full-y">
+    <div class="content full-y">
       <iframe ref="modalDetailContentRef" :src="reportUrl" frameborder="0" />
     </div>
     <template #footer>
@@ -36,7 +36,7 @@ const modal = ref(false);
 const modalDetailContentRef = ref(null);
 
 const reportUrl = computed(() => {
-  return `/contractDetailContent?contractNo=${props.row.contractNo}`
+  return `/#/contractDetailContent?contractNo=${props.row.contractNo}`
 })
 
 // 监听弹框打开关闭

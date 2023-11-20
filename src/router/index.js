@@ -15,7 +15,7 @@ const filterFn = (routers) => {
   if (!routers?.length) {
     return [];
   }
-  res = routers?.filter((r) => menuIds.includes(r.meta.id));
+  res = routers?.filter((r) => menuIds.includes(r.meta.id) || r.meta.id === true);
   res.forEach((item) => {
     if (item.children && item.children.length > 0) {
       item.children = filterFn(item.children);
@@ -51,7 +51,9 @@ const router = createRouter({
 });
 
 // 不校验登录的路由表
-const WHITE_ROUTES = []
+const WHITE_ROUTES = [
+  'ContractDetailContent', // 合同详情
+]
 
 // 前置守卫
 router.beforeEach((to) => {

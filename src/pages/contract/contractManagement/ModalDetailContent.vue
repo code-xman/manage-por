@@ -1,6 +1,6 @@
 <!-- 详情内容组件  -->
 <template>
-  <div class="ModalDetailContent">
+  <div class="ModalDetailContent scroll_thin overflow-auto full-y">
     <BaseForm
       v-loading="pending"
       ref="BaseFormRef"

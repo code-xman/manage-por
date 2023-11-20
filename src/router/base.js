@@ -2,7 +2,7 @@ const routes = [
   {
     path: '/',
     // 默认进入中转页，中转页的详见中转视图定义
-    redirect: { name: 'Login' },
+    redirect: { name: 'Home' },
     meta: {
       menuHide: true,
     },

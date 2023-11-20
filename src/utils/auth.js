@@ -101,34 +101,34 @@ export const removeAuthRole = () => {
 
 ////////////////////////////////////////////////////////////////
 
-// 设置角色信息
+// 设置菜单信息
 export const setAuthMenu = (menus) => {
   setCache(CACHE_MENU_KEY, menus);
 };
 
-// 获取角色信息
+// 获取菜单信息
 export const getAuthMenu = () => {
   return getCache(CACHE_MENU_KEY);
 };
 
-// 清除角色信息
+// 清除菜单信息
 export const removeAuthMenu = () => {
   removeCache(CACHE_MENU_KEY);
 };
 
 ////////////////////////////////////////////////////////////////
 
-// 设置角色信息
+// 设置按钮信息
 export const setAuthBtn = (btns) => {
   setCache(CACHE_BTN_KEY, btns);
 };
 
-// 获取角色信息
+// 获取按钮信息
 export const getAuthBtn = () => {
   return getCache(CACHE_BTN_KEY);
 };
 
-// 清除角色信息
+// 清除按钮信息
 export const removeAuthBtn = () => {
   removeCache(CACHE_BTN_KEY);
 };

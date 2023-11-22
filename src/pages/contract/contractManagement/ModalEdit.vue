@@ -704,7 +704,7 @@ const base = async () => {
   padding-bottom: 8px;
 
   .formAfterTitle {
-    border-bottom: 1px solid $colorBorder;
+    // border-bottom: 1px solid $colorBorder;
     width: 100%;
     padding-bottom: 10px;
     font-size: 14px;

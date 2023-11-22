@@ -7,8 +7,8 @@
     :label-width="labelWidth"
     :label-position="labelPosition"
     :style="{
-      paddingLeft: `${labelWidth * 0.1}px`,
-      paddingRight: `${labelWidth * 0.3}px`,
+      marginLeft: `${labelWidth * 0.1}px`,
+      marginRight: `${labelWidth * 0.3}px`,
     }"
     class="base-form flex-1"
   >

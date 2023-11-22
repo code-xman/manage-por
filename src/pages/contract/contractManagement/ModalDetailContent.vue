@@ -16,7 +16,6 @@
         <el-table
           :data="formValue.contractRecordsData"
           style="width: 100%"
-          class="mb-10"
           stripe
           border
           show-overflow-tooltip
@@ -79,7 +78,6 @@
         <el-table
           :data="formValue.contractPaymentRecordsData"
           style="width: 100%"
-          class="mb-10"
           stripe
           border
           show-overflow-tooltip
@@ -128,7 +126,7 @@ import { ApiContractDetail } from '@/http/contract/contractManagement';
 import { formatAmount } from '@/utils/string';
 import { formItems as formItemsData, signNames } from './data';
 
-defineOptions({name: 'ModalDetailContent'})
+defineOptions({ name: 'ModalDetailContent' });
 
 const pending = ref(false);
 const contractNo = ref('');
@@ -145,7 +143,7 @@ const init = async () => {
     contractNo.value = params.get('contractNo');
 
     if (!contractNo.value) return;
-    
+
     const res = await ApiContractDetail({ contractNo: contractNo.value });
     formValue.value = {
       ...res,
@@ -198,15 +196,40 @@ onUnmounted(() => {
 .ModalDetailContent {
   padding-bottom: 8px;
 
+  :deep(.el-form) {
+    border-top: 1px solid $colorBorder;
+    .el-form-item {
+      margin: 0;
+      border: 1px solid $colorBorder;
+      border-top: 0;
+      height: 40px;
+      line-height: 40px;
+      .el-form-item__label {
+        border-right: 1px solid $colorBorder;
+        height: 40px;
+        line-height: 40px;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .el-form-item__content {
+        padding: 0 10px;
+      }
+    }
+    .formAfterTitle {
+      border-left: 1px solid $colorBorder;
+      border-right: 1px solid $colorBorder;
+    }
+  }
+
   .formAfterTitle {
-    border-bottom: 1px solid $colorBorder;
+    // border-bottom: 1px solid $colorBorder;
     width: 100%;
-    padding-bottom: 10px;
+    // padding-bottom: 10px;
     font-size: 14px;
     font-weight: bold;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 
     position: sticky;
     position: -webkit-sticky;

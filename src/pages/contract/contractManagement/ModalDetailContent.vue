@@ -18,7 +18,6 @@
           style="width: 100%"
           stripe
           border
-          show-overflow-tooltip
         >
           <el-table-column
             fixed
@@ -48,15 +47,15 @@
             prop="recordDate"
             label="时间"
             align="center"
-            width="165"
+            width="140"
           >
           </el-table-column>
-          <el-table-column prop="remark" label="备注" minWidth="200">
+          <el-table-column prop="remark" label="备注" minWidth="180">
             <template #default="{ row }">
               <div>{{ row.remark || '-' }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="annexesData" label="附件" minWidth="220">
+          <el-table-column prop="annexesData" label="附件" minWidth="180">
             <template #default="{ row }">
               <div class="filesCol">
                 <el-tag
@@ -194,9 +193,12 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .ModalDetailContent {
+  width: 1075px;
   padding-bottom: 8px;
 
   :deep(.el-form) {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     border-top: 1px solid $colorBorder;
     .el-form-item {
       margin: 0;
@@ -241,6 +243,10 @@ onUnmounted(() => {
       line-height: 32px;
     }
   }
+  .el-table {
+    border: 1px solid $colorBorder;
+    border-collapse: collapse;
+  }
 
   :deep(.el-select) {
     width: 100%;
@@ -281,6 +287,16 @@ onUnmounted(() => {
     .upload {
       display: flex;
     }
+  }
+}
+
+// 打印背景图形
+@media print {
+  .ModalDetailContent {
+    -webkit-print-color-adjust: exact;
+    -moz-print-color-adjust: exact;
+    -ms-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
 </style>

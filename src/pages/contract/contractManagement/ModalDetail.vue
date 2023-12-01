@@ -2,7 +2,7 @@
   <el-drawer
     v-model="modal"
     title="详情"
-    size="90%"
+    size="1200px"
     append-to-body
     destroy-on-close
     class="my-drawer"
@@ -14,13 +14,14 @@
     <template #footer>
       <div style="flex: auto">
         <el-button @click="onCloseFn">关闭</el-button>
+        <el-button type="primary" @click="onPrintFn">打印</el-button>
       </div>
     </template>
   </el-drawer>
 </template>
 
 <script setup>
-import { ref, watch, computed, } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 defineOptions({ name: 'OrganModalDetail' });
 
@@ -36,8 +37,8 @@ const modal = ref(false);
 const modalDetailContentRef = ref(null);
 
 const reportUrl = computed(() => {
-  return `/#/contractDetailContent?contractNo=${props.row.contractNo}`
-})
+  return `/#/contractDetailContent?contractNo=${props.row.contractNo}`;
+});
 
 // 监听弹框打开关闭
 watch(
@@ -47,14 +48,23 @@ watch(
   }
 );
 
+// 打印
+const onPrintFn = () => {
+  modalDetailContentRef.value?.contentWindow.print();
+};
+
 const onCloseFn = () => {
   emit('update:modelValue', false);
 };
 </script>
 
 <style lang="scss" scoped>
+.content {
+  display: flex;
+  justify-content: center;
+}
 iframe {
-  width: 100%;
+  width: 1075px;
   height: 100%;
 }
 </style>

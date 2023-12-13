@@ -17,7 +17,7 @@
         :formItems="formItems"
         :rules="rules"
       >
-        <template #formAfter>
+        <template #formAfter v-if="props.type !== 'add'">
           <!-- 合同签订及履约记录 -->
           <div class="formAfterTitle">
             <span>合同签订及履约记录</span>
@@ -325,6 +325,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
   modelValue: Boolean,
+  // add-新增 edit-完善合同 editRecord-编辑记录 detail-详情
   type: {
     type: String,
     default: 'edit',
@@ -565,7 +566,7 @@ const confirmClick = async () => {
       await ApiCreateContract(formValue.value);
     } else if (['edit', 'editRecord'].includes(props.type)) {
       const reason = await useReasonConfirm(); // 二次确认
-      await ApiEditContract({ ...formValue.value, reason: reason.value });
+      await ApiEditContract({ ...formValue.value, modifyContent: reason });
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);

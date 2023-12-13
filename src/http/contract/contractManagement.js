@@ -2,7 +2,7 @@ import { post } from '@/http';
 import { HTTP_CONFIG } from '@/config/base';
 
 // 合同列表-分页
-export const ApiListContractPage = async (params) => {
+export const ApiListContractPage = async (params={}) => {
   const _params = {
     pageNum: 1,
     pageSize: 20,
@@ -40,20 +40,20 @@ export const ApiListContractPage = async (params) => {
   return data || { list: [], total: 0 };
 };
 
-// 新增-合同
-export const ApiCreateContract = async (params) => {
+// 新增-合同基本信息
+export const ApiCreateContract = async (params={}) => {
   const data = await post('/api/contractFacade/createContract', params);
   return data;
 };
 
-// 编辑-合同
-export const ApiEditContract = async (params) => {
+// 编辑-合同基本信息
+export const ApiEditContract = async (params={}) => {
   const data = await post('/api/contractFacade/editContract', params);
   return data;
 };
 
-// 详情-合同
-export const ApiContractDetail = async (params) => {
+// 详情-合同基本信息
+export const ApiContractDetail = async (params={}) => {
   const data = await post('/api/contractFacade/contractDetail', params);
   return data;
 };
@@ -61,4 +61,28 @@ export const ApiContractDetail = async (params) => {
 // 合同所有文件打包下载 contractId-合同编号
 export const ApiDownloadContractNo = (contractNo) => {
   return `${HTTP_CONFIG.baseUrl}/fileDownLoad/contract/${contractNo}`;
+};
+
+// 列表-合同履约记录
+export const ApiListContractSignRecord = async (params={}) => {
+  const data = await post('/api/contractFacade/listContractSignRecord', params);
+  return data || { list: [], total: 0 };
+};
+
+// 新增编辑-合同履约记录
+export const ApiCreateContractRecord = async (params={}) => {
+  const data = await post('/api/contractFacade/createContractRecord', params);
+  return data;
+};
+
+// 列表-合同支付记录
+export const ApiListContractPayRecord = async (params={}) => {
+  const data = await post('/api/contractFacade/listContractPayRecord', params);
+  return data || { list: [], total: 0 };
+};
+
+// 新增编辑-合同支付记录
+export const ApiCreateContractPayRecord = async (params={}) => {
+  const data = await post('/api/contractFacade/createContractPayRecord', params);
+  return data;
 };

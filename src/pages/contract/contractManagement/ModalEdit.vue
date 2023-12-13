@@ -565,8 +565,8 @@ const confirmClick = async () => {
     if (props.type === 'add') {
       await ApiCreateContract(formValue.value);
     } else if (['edit', 'editRecord'].includes(props.type)) {
-      const reason = await useReasonConfirm(); // 二次确认
-      await ApiEditContract({ ...formValue.value, modifyContent: reason });
+      const reasonObj = await useReasonConfirm(); // 二次确认
+      await ApiEditContract({ ...formValue.value, modifyContent: reasonObj.value });
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);

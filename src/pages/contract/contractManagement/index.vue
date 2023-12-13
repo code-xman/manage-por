@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListContractPage"
-      :options-size="180"
+      :options-size="300"
     >
       <template #options="{ row }">
         <el-button
@@ -38,7 +38,7 @@
         </el-button>
         <el-button
           v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
-          type="primary"
+          type="success"
           link
           @click="() => handleDownContractFile(row)"
         >

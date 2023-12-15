@@ -192,7 +192,7 @@
             </el-button>
           </div>
           <el-table
-            :data="formValue.contractPaymentRecordsData"
+            :data="formValue.contractPayRecordsData"
             style="width: 100%"
             class="mb-10"
             stripe
@@ -207,36 +207,36 @@
               width="60"
             />
             <el-table-column
-              prop="recordDate"
+              prop="payTime"
               label="时间"
               align="center"
               width="165"
             >
               <template #default="{ row }">
                 <template v-if="!isEditRecord">
-                  <div>{{ row.recordDate }}</div>
+                  <div>{{ row.payTime }}</div>
                 </template>
                 <el-date-picker
                   v-else
-                  v-model="row.recordDate"
+                  v-model="row.payTime"
                   placeholder="请选择时间"
                   clearable
                 />
               </template>
             </el-table-column>
             <el-table-column
-              prop="amount"
+              prop="payAmt"
               label="支付金额"
               align="center"
               width="160"
             >
               <template #default="{ row }">
                 <template v-if="!isEditRecord">
-                  <div>{{ formatAmount(row.amount) }}</div>
+                  <div>{{ formatAmount(row.payAmt) }}</div>
                 </template>
                 <el-input-number
                   v-else
-                  v-model="row.amount"
+                  v-model="row.payAmt"
                   placeholder="请输入支付金额"
                   :min="0"
                   :max="1e9"
@@ -307,6 +307,10 @@ import {
   ApiCreateContract,
   ApiEditContract,
   ApiContractDetail,
+  ApiListContractSignRecord,
+  ApiCreateContractRecord,
+  ApiListContractPayRecord,
+  ApiCreateContractPayRecord,
 } from '@/http/contract/contractManagement';
 import { modalTitleObj } from '@/data/common.js';
 import { getAuthUser } from '@/utils/auth';
@@ -387,7 +391,7 @@ const rules = ref({
   // remark: [{ required: true, message: '请输入备注' }],
 });
 
-/** 新增记录 */
+/** 新增记录 合同签订及履约记录 */
 const handleAdd = () => {
   formValue.value?.contractRecordsData?.push({
     key: Date.now(),
@@ -438,19 +442,19 @@ const handleClose = (row, file) => {
 
 /** 合同支付记录 新增 */
 const handlePaymentAdd = () => {
-  formValue.value?.contractPaymentRecordsData?.push({
+  formValue.value?.contractPayRecordsData?.push({
     key: Date.now(),
-    recordDate: '',
-    amount: null,
+    payTime: '',
+    payAmt: null,
     remark: '',
   });
 };
 /** 合同支付记录 删除 */
 const handlePaymentDelete = (row) => {
-  const index = formValue.value?.contractPaymentRecordsData.findIndex(
+  const index = formValue.value?.contractPayRecordsData.findIndex(
     (ft) => ft.key === row.key
   );
-  formValue.value?.contractPaymentRecordsData.splice(index, 1);
+  formValue.value?.contractPayRecordsData.splice(index, 1);
 };
 
 const cancelClick = () => {
@@ -475,6 +479,10 @@ const handleFormValue = () => {
     )?.label || '';
   // 负责人名称
   formValue.value.personNames = formValue.value.personIds.join(',');
+};
+
+// 保存处理记录数据
+const handleRecordsValue = () => {
   // 合同签订及履约记录
   formValue.value.contractRecords = formValue.value.contractRecordsData.map(
     (item) => {
@@ -489,11 +497,13 @@ const handleFormValue = () => {
       };
     }
   );
-  formValue.value.contractPaymentRecords =
-    formValue.value.contractPaymentRecordsData.map((item) => {
+
+  // 合同支付记录
+  formValue.value.contractPayRecords =
+    formValue.value.contractPayRecordsData.map((item) => {
       return {
-        recordDate: parseToDate(item.recordDate),
-        amount: item.amount,
+        payTime: parseToDate(item.payTime),
+        payAmt: item.payAmt,
         remark: item.remark,
       };
     });
@@ -528,13 +538,13 @@ const contractRecordsValidateFn = () => {
 
 // 合同支付记录验证
 const contractPaymentRecordsValidateFn = () => {
-  const contractPaymentRecordsData = formValue.value.contractPaymentRecordsData;
-  if (!contractPaymentRecordsData || !contractPaymentRecordsData?.length)
+  const contractPayRecordsData = formValue.value.contractPayRecordsData;
+  if (!contractPayRecordsData || !contractPayRecordsData?.length)
     throw '请添加合同支付记录';
   const keys = Object.keys(contractPaymentRecordsObj);
   let nullIndex = -1;
   let nullKey = undefined;
-  const hasNullItem = contractPaymentRecordsData.find((item, index) => {
+  const hasNullItem = contractPayRecordsData.find((item, index) => {
     const key = keys.find((key) => {
       if (key === 'remark') return false; // 备注不验证
       return !item[key];
@@ -556,17 +566,34 @@ const contractPaymentRecordsValidateFn = () => {
 const confirmClick = async () => {
   try {
     pending.value = true;
+    if (['edit'].includes(props.type)) {
+      await BaseFormRef.value?.validate();
+      handleFormValue();
+    }
     if (['editRecord'].includes(props.type)) {
       contractRecordsValidateFn();
       contractPaymentRecordsValidateFn();
+      handleRecordsValue();
     }
-    await BaseFormRef.value?.validate();
-    handleFormValue();
     if (props.type === 'add') {
       await ApiCreateContract(formValue.value);
-    } else if (['edit', 'editRecord'].includes(props.type)) {
+    } else if (['edit'].includes(props.type)) {
       const reasonObj = await useReasonConfirm(); // 二次确认
-      await ApiEditContract({ ...formValue.value, modifyContent: reasonObj.value });
+      await ApiEditContract({
+        ...formValue.value,
+        modifyContent: reasonObj.value,
+      });
+    } else if (['editRecord'].includes(props.type)) {
+      // 保存-合同履约记录
+      await ApiCreateContractRecord({
+        contractNo: props.row.contractNo,
+        contractRecords: formValue.value.contractRecords,
+      });
+      // 保存-合同支付记录
+      await ApiCreateContractPayRecord({
+        contractNo: props.row.contractNo,
+        contractPayRecords: formValue.value.contractPayRecords,
+      });
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);
@@ -590,6 +617,8 @@ const init = async () => {
       ...res,
       personIds: res.personNames.split(','),
     };
+    // 合同履约记录
+    const signRes = await ApiListContractSignRecord({ contractNo: props.row.contractNo });
     formValue.value.contractRecordsData =
       formValue.value.contractRecords?.map((item) => {
         return {
@@ -604,8 +633,10 @@ const init = async () => {
             })) || [],
         };
       }) || [];
-    formValue.value.contractPaymentRecordsData =
-      formValue.value.contractPaymentRecords?.map((item) => item) || [];
+    // 合同支付记录
+    const payRes = await ApiListContractPayRecord({ contractNo: props.row.contractNo });
+    formValue.value.contractPayRecordsData =
+      formValue.value.contractPayRecords?.map((item) => item) || [];
     // console.log('formValue.value :>> ', formValue.value);
   } catch (error) {
     ElMessage.error(`${error}`);
@@ -629,7 +660,7 @@ watch(
       formValue.value = {
         personIds: [],
         contractRecordsData: [],
-        contractPaymentRecordsData: [],
+        contractPayRecordsData: [],
       };
     }
   }

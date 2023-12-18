@@ -22,6 +22,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
+import { getAuthUser } from '@/utils/auth';
 
 defineOptions({ name: 'OrganModalDetail' });
 
@@ -33,11 +34,14 @@ const props = defineProps({
   },
 });
 
+const user = getAuthUser();
 const modal = ref(false);
 const modalDetailContentRef = ref(null);
 
 const reportUrl = computed(() => {
-  return `/#/contractDetailContent?contractNo=${props.row.contractNo}`;
+  return `/#/contractDetailContent?contractNo=${props.row.contractNo}&oId=${
+    props.row?.merchantId || user.orgId
+  }`;
 });
 
 // 监听弹框打开关闭

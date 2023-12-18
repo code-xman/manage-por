@@ -13,12 +13,7 @@
         <div class="formAfterTitle">
           <span>合同签订及履约记录</span>
         </div>
-        <el-table
-          :data="formValue.contractRecordsData"
-          style="width: 100%"
-          stripe
-          border
-        >
+        <el-table :data="contractRecords" style="width: 100%" stripe border>
           <el-table-column
             fixed
             type="index"
@@ -75,7 +70,7 @@
           <span>合同支付记录</span>
         </div>
         <el-table
-          :data="formValue.contractPaymentRecordsData"
+          :data="contractPayRecords"
           style="width: 100%"
           stripe
           border
@@ -89,20 +84,20 @@
             width="60"
           />
           <el-table-column
-            prop="recordDate"
+            prop="payTime"
             label="时间"
             align="center"
             width="165"
           >
           </el-table-column>
           <el-table-column
-            prop="amount"
+            prop="payAmt"
             label="支付金额"
             align="center"
             width="160"
           >
             <template #default="{ row }">
-              <div>{{ formatAmount(row.amount) }}</div>
+              <div>{{ formatAmount(row.payAmt) }}</div>
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" minWidth="200">
@@ -117,11 +112,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch, } from 'vue';
 import { ElMessage } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
 
-import { ApiContractDetail } from '@/http/contract/contractManagement';
+import { ApiListUser } from '@/http/setting/user.js';
+import { ApiDeptList } from '@/http/setting/department.js';
+import { ApiListProject } from '@/http/process/processManagement.js';
+import {
+  ApiContractDetail,
+  ApiListContractSignRecord,
+  ApiListContractPayRecord,
+} from '@/http/contract/contractManagement';
 import { formatAmount } from '@/utils/string';
 import { formItems as formItemsData, signNames } from './data';
 
@@ -131,15 +133,47 @@ const pending = ref(false);
 const contractNo = ref('');
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
+const orgId = ref('');
+
+/** 责任部门选项 */
+const responsibleDepts = ref([]);
+// 合同签订及履约记录 数据
+const contractRecords = ref([]);
+// 合同支付记录 数据
+const contractPayRecords = ref([]);
+
+const base = async () => {
+  // 获取url参数
+  const paramsStr = window.location.href.split('?')[1];
+  const params = new URLSearchParams(paramsStr);
+  contractNo.value = params.get('contractNo');
+  orgId.value = params.get('oId');
+
+  // 合同所属部门
+  const Item_deptIds = formItems.value.find((item) => item.name === 'deptIds');
+  // 合同责任部门
+  const Item_responsibleDeptId = formItems.value.find(
+    (item) => item.name === 'responsibleDeptId'
+  );
+  responsibleDepts.value = await ApiDeptList({
+    orgId: orgId.value,
+  });
+
+  Item_deptIds.options = responsibleDepts.value;
+  Item_responsibleDeptId.options = responsibleDepts.value;
+
+  // 项目名称
+  const Item_projectId = formItems.value.find(
+    (item) => item.name === 'projectId'
+  );
+  if (Item_projectId) {
+    Item_projectId.options = await ApiListProject();
+  }
+};
 
 const init = async () => {
   try {
     pending.value = true;
-
-    // 获取url参数
-    const paramsStr = window.location.href.split('?')[1];
-    const params = new URLSearchParams(paramsStr);
-    contractNo.value = params.get('contractNo');
 
     if (!contractNo.value) return;
 
@@ -148,8 +182,13 @@ const init = async () => {
       ...res,
       personIds: res.personNames.split(','),
     };
-    formValue.value.contractRecordsData =
-      formValue.value.contractRecords?.map((item) => {
+    // 合同履约记录
+    const signRes = await ApiListContractSignRecord({
+      contractNo: contractNo.value,
+    });
+
+    contractRecords.value =
+      signRes?.map((item) => {
         return {
           ...item,
           signDate: new Date(formValue.value.signDate),
@@ -162,8 +201,13 @@ const init = async () => {
             })) || [],
         };
       }) || [];
-    formValue.value.contractPaymentRecordsData =
-      formValue.value.contractPaymentRecords?.map((item) => item) || [];
+
+    // 合同支付记录
+    const payRes = await ApiListContractPayRecord({
+      contractNo: contractNo.value,
+    });
+
+    contractPayRecords.value = payRes?.map((item) => item) || [];
     // console.log('formValue.value :>> ', formValue.value);
   } catch (error) {
     ElMessage.error(`${error}`);
@@ -172,22 +216,59 @@ const init = async () => {
   }
 };
 
+// 监听合同责任部门
+watch(
+  () => formValue.value.responsibleDeptId,
+  async (value) => {
+    // 责任人
+    const item_personIds = formItems.value.find(
+      (item) => item.name === 'personIds'
+    );
+    if (!item_personIds) return;
+    // 无选项则不清空数据，处理初始化赋值不清空
+    if (!!item_personIds.options?.length) {
+      formValue.value = {
+        ...formValue.value,
+        personIds: [],
+      };
+    }
+
+    // 处理新的负责人的选项
+    if (!value) {
+      item_personIds.options = [];
+    } else {
+      const res = await ApiListUser({
+        orgId: orgId.value,
+        deptId: value,
+      });
+      if (item_personIds) {
+        item_personIds.options =
+          res?.map((item) => ({
+            label: item.userName,
+            value: item.userId,
+          })) || [];
+      }
+    }
+  }
+);
+
 /** 预览文件 */
 const handlePreview = (file) => {
   window.open(file.fileUrl);
 };
 
 onMounted(async () => {
-  init();
+  await base();
+  await init();
 });
 
 onUnmounted(() => {
   formValue.value = {
     deptIds: [],
     personIds: [],
-    contractRecordsData: [],
-    contractPaymentRecordsData: [],
   };
+  contractRecords.value = [];
+  contractPayRecords.value = [];
 });
 </script>
 

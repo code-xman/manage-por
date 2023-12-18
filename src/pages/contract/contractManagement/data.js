@@ -42,8 +42,8 @@ export const contractRecordsObj = {
 }
 /** 合同支付记录 表格字段映射 */
 export const contractPaymentRecordsObj = {
-  recordDate: '时间',
-  amount: '支付金额',
+  payTime: '时间',
+  payAmt: '支付金额',
   remark: '备注',
 }
 

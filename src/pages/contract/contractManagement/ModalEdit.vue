@@ -26,7 +26,7 @@
             </el-button>
           </div>
           <el-table
-            :data="formValue.contractRecordsData"
+            :data="contractRecords"
             style="width: 100%"
             class="mb-10"
             stripe
@@ -192,7 +192,7 @@
             </el-button>
           </div>
           <el-table
-            :data="formValue.contractPayRecordsData"
+            :data="contractPayRecords"
             style="width: 100%"
             class="mb-10"
             stripe
@@ -360,6 +360,12 @@ const projects = ref([]);
 const BaseFormRef = ref(null);
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
+// 合同签订及履约记录 数据
+const contractRecords = ref([]);
+const hasContractRecords = ref(false);
+// 合同支付记录 数据
+const contractPayRecords = ref([]);
+const hasContractPayRecords = ref(false);
 
 // 合同签订时间不能大于合同期限
 const contractDateValidate = (rule, value, callback) => {
@@ -393,7 +399,7 @@ const rules = ref({
 
 /** 新增记录 合同签订及履约记录 */
 const handleAdd = () => {
-  formValue.value?.contractRecordsData?.push({
+  contractRecords.value?.push({
     key: Date.now(),
     contractRecordName: '',
     content: '',
@@ -424,10 +430,8 @@ const handleExceed = (row, file, fileList) => {};
 const handleRemove = (row, file, fileList) => {};
 /** 删除记录 */
 const handleDelete = (row) => {
-  const index = formValue.value?.contractRecordsData.findIndex(
-    (ft) => ft.key === row.key
-  );
-  formValue.value?.contractRecordsData.splice(index, 1);
+  const index = contractRecords.value?.findIndex((ft) => ft.key === row.key);
+  contractRecords.value?.splice(index, 1);
 };
 
 /** 预览文件 */
@@ -442,7 +446,7 @@ const handleClose = (row, file) => {
 
 /** 合同支付记录 新增 */
 const handlePaymentAdd = () => {
-  formValue.value?.contractPayRecordsData?.push({
+  contractPayRecords.value?.push({
     key: Date.now(),
     payTime: '',
     payAmt: null,
@@ -451,10 +455,8 @@ const handlePaymentAdd = () => {
 };
 /** 合同支付记录 删除 */
 const handlePaymentDelete = (row) => {
-  const index = formValue.value?.contractPayRecordsData.findIndex(
-    (ft) => ft.key === row.key
-  );
-  formValue.value?.contractPayRecordsData.splice(index, 1);
+  const index = contractPayRecords.value?.findIndex((ft) => ft.key === row.key);
+  contractPayRecords.value?.splice(index, 1);
 };
 
 const cancelClick = () => {
@@ -484,40 +486,39 @@ const handleFormValue = () => {
 // 保存处理记录数据
 const handleRecordsValue = () => {
   // 合同签订及履约记录
-  formValue.value.contractRecords = formValue.value.contractRecordsData.map(
-    (item) => {
-      return {
-        actId: item.actId, // 节点id
-        contractRecordName: item.contractRecordName,
-        content: item.content,
-        recordDate: parseToDate(item.recordDate),
-        remark: item.remark,
-        annexesData: item.annexesData,
-        annexes: item.annexesData.map((annex) => annex.key).join(','),
-      };
-    }
-  );
+  contractRecords.value = contractRecords.value.map((item) => {
+    return {
+      actId: item.actId, // 节点id
+      contractRecordName: item.contractRecordName,
+      content: item.content,
+      recordDate: parseToDate(item.recordDate),
+      remark: item.remark,
+      annexesData: item.annexesData,
+      annexes: item.annexesData.map((annex) => annex.key).join(','),
+    };
+  });
 
   // 合同支付记录
-  formValue.value.contractPayRecords =
-    formValue.value.contractPayRecordsData.map((item) => {
-      return {
-        payTime: parseToDate(item.payTime),
-        payAmt: item.payAmt,
-        remark: item.remark,
-      };
-    });
+  contractPayRecords.value = contractPayRecords.value?.map((item, index) => {
+    return {
+      indexNo: index,
+      payTime: parseToDate(item.payTime),
+      payAmt: item.payAmt,
+      remark: item.remark,
+    };
+  });
 };
 
 // 合同签订及履约记录验证
 const contractRecordsValidateFn = () => {
-  const contractRecordsData = formValue.value.contractRecordsData;
-  if (!contractRecordsData || !contractRecordsData?.length)
+  if (hasContractRecords.value && !contractRecords.value?.length) {
     throw '请添加合同签订及履约记录';
+  }
+  if (!contractRecords.value?.length) return;
   const keys = Object.keys(contractRecordsObj);
   let nullIndex = -1;
   let nullKey = undefined;
-  const hasNullItem = contractRecordsData.find((item, index) => {
+  const hasNullItem = contractRecords.value?.find((item, index) => {
     const key = keys.find((key) => {
       if (key === 'remark') return false; // 备注不验证
       if (key === 'annexesData') return !item[key]?.length;
@@ -538,13 +539,14 @@ const contractRecordsValidateFn = () => {
 
 // 合同支付记录验证
 const contractPaymentRecordsValidateFn = () => {
-  const contractPayRecordsData = formValue.value.contractPayRecordsData;
-  if (!contractPayRecordsData || !contractPayRecordsData?.length)
+  if (hasContractPayRecords.value && !contractPayRecords.value?.length) {
     throw '请添加合同支付记录';
+  }
+  if (!contractPayRecords.value?.length) return;
   const keys = Object.keys(contractPaymentRecordsObj);
   let nullIndex = -1;
   let nullKey = undefined;
-  const hasNullItem = contractPayRecordsData.find((item, index) => {
+  const hasNullItem = contractPayRecords.value.find((item, index) => {
     const key = keys.find((key) => {
       if (key === 'remark') return false; // 备注不验证
       return !item[key];
@@ -584,16 +586,23 @@ const confirmClick = async () => {
         modifyContent: reasonObj.value,
       });
     } else if (['editRecord'].includes(props.type)) {
-      // 保存-合同履约记录
-      await ApiCreateContractRecord({
-        contractNo: props.row.contractNo,
-        contractRecords: formValue.value.contractRecords,
-      });
-      // 保存-合同支付记录
-      await ApiCreateContractPayRecord({
-        contractNo: props.row.contractNo,
-        contractPayRecords: formValue.value.contractPayRecords,
-      });
+      // 已经有数据 || 当前有数据
+      if (hasContractRecords.value || contractRecords.value?.length) {
+        // 保存-合同履约记录
+        await ApiCreateContractRecord({
+          contractNo: props.row.contractNo,
+          contractRecords: contractRecords.value,
+        });
+      }
+
+      // 已经有数据 || 当前有数据
+      if (hasContractPayRecords.value || contractPayRecords.value?.length) {
+        // 保存-合同支付记录
+        await ApiCreateContractPayRecord({
+          contractNo: props.row.contractNo,
+          contractPayRecords: contractPayRecords.value,
+        });
+      }
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);
@@ -618,9 +627,14 @@ const init = async () => {
       personIds: res.personNames.split(','),
     };
     // 合同履约记录
-    const signRes = await ApiListContractSignRecord({ contractNo: props.row.contractNo });
-    formValue.value.contractRecordsData =
-      formValue.value.contractRecords?.map((item) => {
+    const signRes = await ApiListContractSignRecord({
+      contractNo: props.row.contractNo,
+    });
+    if (signRes?.length) {
+      hasContractRecords.value = true;
+    }
+    contractRecords.value =
+      signRes?.map((item) => {
         return {
           ...item,
           signDate: new Date(formValue.value.signDate),
@@ -634,9 +648,13 @@ const init = async () => {
         };
       }) || [];
     // 合同支付记录
-    const payRes = await ApiListContractPayRecord({ contractNo: props.row.contractNo });
-    formValue.value.contractPayRecordsData =
-      formValue.value.contractPayRecords?.map((item) => item) || [];
+    const payRes = await ApiListContractPayRecord({
+      contractNo: props.row.contractNo,
+    });
+    if (payRes?.length) {
+      hasContractPayRecords.value = true;
+    }
+    contractPayRecords.value = payRes?.map((item) => item) || [];
     // console.log('formValue.value :>> ', formValue.value);
   } catch (error) {
     ElMessage.error(`${error}`);
@@ -658,10 +676,13 @@ watch(
       init();
     } else {
       formValue.value = {
+        deptIds: [],
         personIds: [],
-        contractRecordsData: [],
-        contractPayRecordsData: [],
       };
+      contractPayRecords.value = [];
+      hasContractRecords.value = false;
+      contractRecords.value = [];
+      hasContractPayRecords.value = false;
     }
   }
 );
@@ -671,9 +692,6 @@ watch(
   () => formValue.value.responsibleDeptId,
   async (value) => {
     // 责任人
-    const index_personIds = formItems.value.findIndex(
-      (item) => item.name === 'personIds'
-    );
     const item_personIds = formItems.value.find(
       (item) => item.name === 'personIds'
     );
@@ -702,7 +720,6 @@ watch(
           })) || [];
       }
     }
-    // formItems.value.splice(index_personIds, 1, item_personIds)
   }
 );
 

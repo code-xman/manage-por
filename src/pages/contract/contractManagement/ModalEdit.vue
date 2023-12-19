@@ -21,7 +21,11 @@
           <!-- 合同签订及履约记录 -->
           <div class="formAfterTitle">
             <span>合同签订及履约记录</span>
-            <el-button v-if="isEditRecord" type="primary" @click="handleAdd">
+            <el-button
+              v-if="isEditRecord && formValue.value.finish === '0'"
+              type="primary"
+              @click="handleAdd"
+            >
               新增记录
             </el-button>
           </div>
@@ -184,7 +188,7 @@
           <div class="formAfterTitle">
             <span>合同支付记录</span>
             <el-button
-              v-if="isEditRecord"
+              v-if="isEditRecord && formValue.value.finish === '0'"
               type="primary"
               @click="handlePaymentAdd"
             >
@@ -359,7 +363,7 @@ const responsibleDepts = ref([]);
 const projects = ref([]);
 const BaseFormRef = ref(null);
 const formValue = ref({});
-const formItems = ref([...formItemsData]);
+const formItems = ref([]);
 // 合同签订及履约记录 数据
 const contractRecords = ref([]);
 const hasContractRecords = ref(false);
@@ -394,6 +398,7 @@ const rules = ref({
   ],
   responsibleDeptId: [{ required: true, message: '请选择合同责任部门' }],
   personIds: [{ required: true, message: '请选择责任人' }],
+  finish: [{ required: true, message: '请选择是否完结' }],
   // remark: [{ required: true, message: '请输入备注' }],
 });
 
@@ -570,6 +575,9 @@ const confirmClick = async () => {
     pending.value = true;
     if (['edit'].includes(props.type)) {
       await BaseFormRef.value?.validate();
+      if (!!formValue.value.unPayedAmt && formValue.value.finish === '1') {
+        throw '存在待支付金额，不能完结合同';
+      }
       handleFormValue();
     }
     if (['editRecord'].includes(props.type)) {
@@ -668,6 +676,22 @@ watch(
   () => props.modelValue,
   async () => {
     modal.value = props.modelValue;
+    if (props.modelValue) {
+      // 详情才会有 已支付金额 / 待支付金额
+      formItems.value = [
+        ...formItemsData.filter(
+          (e) => !['payedAmt', 'unPayedAmt'].includes(e.name)
+        ),
+      ];
+
+      // 新增没有 是否完结
+      if (['add'].includes(props.type)) {
+        formItems.value = [
+          ...formItems.value.filter((e) => !['finish'].includes(e.name)),
+        ];
+      }
+    }
+
     await base();
     if (
       ['edit', 'editRecord', 'detail'].includes(props.type) &&

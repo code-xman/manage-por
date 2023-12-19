@@ -1,5 +1,7 @@
 import { h } from 'vue';
+import BTag from '@/components/baseCommon/BTag.vue';
 import BCell from '@/components/baseCommon/BCell.vue';
+import { WHETHER_ENUM } from '@/data/common';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
 import { ApiDeptList } from '@/http/setting/department.js';
 import { ApiListProject } from '@/http/process/processManagement.js';
@@ -35,17 +37,17 @@ export const signNames = [
 
 /** 合同签订及履约记录 表格字段映射 */
 export const contractRecordsObj = {
-  contractRecordName: "合同签订履行记录名称",
-  content: "内容",
-  recordDate: "时间",
-  annexesData: "附件",
-}
+  contractRecordName: '合同签订履行记录名称',
+  content: '内容',
+  recordDate: '时间',
+  annexesData: '附件',
+};
 /** 合同支付记录 表格字段映射 */
 export const contractPaymentRecordsObj = {
   payTime: '时间',
   payAmt: '支付金额',
   remark: '备注',
-}
+};
 
 /** 列表字段 */
 export const columns = [
@@ -58,13 +60,14 @@ export const columns = [
     prop: 'contractName',
     label: '合同名称',
     width: '180px',
-    className:'cell-full',
+    className: 'cell-full',
     formatter(row) {
       const inner = () => row.contractName || '-';
       if (row.urgency === 'NORMAL') return h(BCell, { type: 'success' }, inner);
       if (row.urgency === 'HALF') return h(BCell, { type: 'yellow' }, inner);
       if (row.urgency === 'THIRD') return h(BCell, { type: 'warning' }, inner);
-      if (row.urgency === 'ONE_FIFTH') return h(BCell, { type: 'danger' }, inner);
+      if (row.urgency === 'ONE_FIFTH')
+        return h(BCell, { type: 'danger' }, inner);
       if (row.urgency === 'OVERDUE') return h(BCell, { type: 'purple' }, inner);
       return h(BCell, { type: 'info' }, inner);
     },
@@ -123,6 +126,20 @@ export const columns = [
     minWidth: '220px',
     formatter(row) {
       return row.remark || '-';
+    },
+  },
+  {
+    prop: 'finish',
+    label: '合同是否完结',
+    width: '120px',
+    fixed: 'right',
+    formatter(row) {
+      // 	1-是,0-否
+      if (row.finish === '1')
+        return h(BTag, { type: 'success' }, () => '已完结');
+      if (row.finish === '0')
+        return h(BTag, { type: 'warning' }, () => '未完结');
+      return '-';
     },
   },
 ];
@@ -184,9 +201,9 @@ export const searchFormItems = [
     attrs: {
       clearable: true,
       type: 'daterange',
-      'range-separator': "至",
-      'start-placeholder': "开始日期",
-      'end-placeholder': "结束日期",
+      'range-separator': '至',
+      'start-placeholder': '开始日期',
+      'end-placeholder': '结束日期',
     },
   },
 ];
@@ -226,7 +243,7 @@ export const formItems = [
       clearable: true,
       'disabled-date': (date) => {
         return date && date.valueOf() > Date.now();
-      }
+      },
     },
   },
   {
@@ -248,7 +265,6 @@ export const formItems = [
       autosize: { minRows: 3, maxRows: 5 },
     },
   },
-
   {
     name: 'contractAmt',
     label: '合同金额（元）',
@@ -256,6 +272,25 @@ export const formItems = [
     attrs: {
       clearable: true,
     },
+    format: (val) => formatAmount(val),
+  },
+  {
+    name: 'payedAmt',
+    label: '已支付金额（元）',
+    type: 'number',
+    attrs: {
+      clearable: true,
+    },
+    format: (val) => formatAmount(val),
+  },
+  {
+    name: 'unPayedAmt',
+    label: '待支付金额（元）',
+    type: 'number',
+    attrs: {
+      clearable: true,
+    },
+    format: (val) => formatAmount(val),
   },
   {
     name: 'contractEndDate',
@@ -289,6 +324,12 @@ export const formItems = [
       'collapse-tags-tooltip': true,
       'max-collapse-tags': 4,
     },
+  },
+  {
+    name: 'finish',
+    label: '是否完结',
+    type: 'select',
+    options: [...WHETHER_ENUM],
   },
   {
     name: 'remark',

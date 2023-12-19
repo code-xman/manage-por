@@ -20,7 +20,7 @@
           {{ row.needSupply === '1' ? '完善合同' : '编辑' }}
         </el-button>
         <el-button
-          v-if="!['OVERDUE'].includes(row.urgency)"
+          v-if="!['OVERDUE'].includes(row.urgency) && row.finish === '0'"
           v-allow="'9d37b0aa0b9843368dcc7743acda709c'"
           type="primary"
           link

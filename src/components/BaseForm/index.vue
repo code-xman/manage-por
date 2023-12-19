@@ -101,7 +101,11 @@
         </template>
         <template v-else-if="item.type === 'number'">
           <p v-if="props.formType === 'detail'">
-            {{ formData[item.name] }}
+            {{
+              item.format
+                ? item.format(formData[item.name])
+                : formData[item.name]
+            }}
           </p>
           <el-input-number
             v-else

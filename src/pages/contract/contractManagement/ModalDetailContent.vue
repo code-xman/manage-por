@@ -150,7 +150,7 @@ const base = async () => {
   orgId.value = params.get('oId');
 
   // 合同所属部门
-  const Item_deptIds = formItems.value.find((item) => item.name === 'deptIds');
+  const Item_deptIdsData = formItems.value.find((item) => item.name === 'deptIdsData');
   // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'
@@ -159,7 +159,7 @@ const base = async () => {
     orgId: orgId.value,
   });
 
-  Item_deptIds.options = responsibleDepts.value;
+  Item_deptIdsData.options = responsibleDepts.value;
   Item_responsibleDeptId.options = responsibleDepts.value;
 
   // 项目名称
@@ -180,7 +180,8 @@ const init = async () => {
     const res = await ApiContractDetail({ contractNo: contractNo.value });
     formValue.value = {
       ...res,
-      personIds: res.personNames.split(','),
+      deptIdsData: res.deptIds?.split(',') || [],
+      personIds: res.personNames?.split(',') || [],
     };
     // 合同履约记录
     const signRes = await ApiListContractSignRecord({
@@ -264,7 +265,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   formValue.value = {
-    deptIds: [],
+    deptIdsData: [],
     personIds: [],
   };
   contractRecords.value = [];

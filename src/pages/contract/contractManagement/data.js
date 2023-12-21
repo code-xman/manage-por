@@ -218,13 +218,13 @@ export const formItems = [
     },
   },
   {
-    name: 'deptIds',
+    name: 'deptIdsData',
     label: '合同所属部门',
     type: 'select',
     options: [],
     attrs: {
       clearable: true,
-      // multiple: true,
+      multiple: true,
     },
   },
   {

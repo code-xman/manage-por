@@ -383,7 +383,7 @@ const contractDateValidate = (rule, value, callback) => {
 
 const rules = ref({
   contractName: [{ required: true, message: '请输入合同名称' }],
-  deptIds: [{ required: true, message: '请选择合同所属部门' }],
+  deptIdsData: [{ required: true, message: '请选择合同所属部门' }],
   signDate: [
     { required: true, message: '请选择签订时间' },
     { validator: contractDateValidate },
@@ -486,6 +486,8 @@ const handleFormValue = () => {
     )?.label || '';
   // 负责人名称
   formValue.value.personNames = formValue.value.personIds.join(',');
+  // 所属部门
+  formValue.value.deptIds = formValue.value.deptIdsData.join(',');
 };
 
 // 保存处理记录数据
@@ -632,7 +634,8 @@ const init = async () => {
     const res = await ApiContractDetail({ contractNo: props.row.contractNo });
     formValue.value = {
       ...res,
-      personIds: res.personNames.split(','),
+      deptIdsData: res.deptIds?.split(',') || [],
+      personIds: res.personNames?.split(',') || [],
     };
     // 合同履约记录
     const signRes = await ApiListContractSignRecord({
@@ -700,7 +703,7 @@ watch(
       init();
     } else {
       formValue.value = {
-        deptIds: [],
+        deptIdsData: [],
         personIds: [],
       };
       contractPayRecords.value = [];
@@ -749,7 +752,7 @@ watch(
 
 const base = async () => {
   // 合同所属部门
-  const Item_deptIds = formItems.value.find((item) => item.name === 'deptIds');
+  const Item_deptIdsData = formItems.value.find((item) => item.name === 'deptIdsData');
   // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'
@@ -758,7 +761,7 @@ const base = async () => {
     orgId: props.row?.merchantId || user.orgId,
   });
 
-  Item_deptIds.options = responsibleDepts.value;
+  Item_deptIdsData.options = responsibleDepts.value;
   Item_responsibleDeptId.options = responsibleDepts.value;
 
   // 项目名称

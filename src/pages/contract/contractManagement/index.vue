@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListContractPage"
-      :options-size="300"
+      :options-size="350"
     >
       <template #options="{ row }">
         <el-button
@@ -21,7 +21,7 @@
         </el-button>
         <el-button
           v-if="!['OVERDUE'].includes(row.urgency) && row.finish === '0'"
-          v-allow="'9d37b0aa0b9843368dcc7743acda709c'"
+          v-allow="'c38826ada921427386ea564d1e22c22e'"
           type="primary"
           link
           @click="() => editRecordFn(row)"
@@ -35,6 +35,14 @@
           @click="() => detailFn(row)"
         >
           详情
+        </el-button>
+        <el-button
+          v-allow="'9293c0ae670b4f29b3890c560594d52f'"
+          type="warning"
+          link
+          @click="() => operationRecordsFn(row)"
+        >
+          操作记录
         </el-button>
         <el-button
           v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
@@ -51,10 +59,8 @@
       :type="modalType"
       :row="showModelRow"
     ></ModalEdit>
-    <ModalDetail
-      v-model="showDetail"
-      :row="showModelRow"
-    ></ModalDetail>
+    <ModalDetail v-model="showDetail" :row="showModelRow"></ModalDetail>
+    <ModalOperation v-model="showOperation" :row="showModelRow"></ModalOperation>
   </div>
 </template>
 
@@ -71,6 +77,7 @@ import {
 } from '@/http/contract/contractManagement';
 import ModalEdit from './ModalEdit.vue';
 import ModalDetail from './ModalDetail.vue';
+import ModalOperation from './ModalOperation.vue';
 import { columns, searchFormItems } from './data';
 
 defineOptions({
@@ -101,10 +108,13 @@ const btns = ref([
 ]);
 
 const modalType = ref('');
+// 编辑/编辑记录 弹框
 const showModel = ref(false);
 const showModelRow = ref();
-
+// 详情弹框
 const showDetail = ref(false);
+// 操作记录
+const showOperation = ref(false);
 
 const addFn = () => {
   modalType.value = 'add';
@@ -121,12 +131,17 @@ const editRecordFn = (row) => {
   modalType.value = 'editRecord';
   showModelRow.value = row;
   showModel.value = true;
-}
+};
 
 const detailFn = (row) => {
   modalType.value = 'detail';
   showModelRow.value = row;
   showDetail.value = true;
+};
+
+const operationRecordsFn = (row) => {
+  showModelRow.value = row;
+  showOperation.value = true;
 };
 
 const downloadFn = async () => {

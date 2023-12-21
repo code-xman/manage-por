@@ -4,7 +4,7 @@
   </span>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 
 // 自定义 Tag

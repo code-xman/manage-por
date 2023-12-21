@@ -24,7 +24,7 @@
         <template v-else-if="item.type === 'select'">
           <template v-if="props.formType === 'detail'">
             <!-- 单选 -->
-            <p v-if="!item.attrs.multiple">
+            <p v-if="!item.attrs?.multiple">
               {{
                 item.options.find(
                   (option) => option.value === formData[item.name]

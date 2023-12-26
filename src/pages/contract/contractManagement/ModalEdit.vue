@@ -22,7 +22,7 @@
           <div class="formAfterTitle">
             <span>合同签订及履约记录</span>
             <el-button
-              v-if="isEditRecord && formValue.value.finish !== '1'"
+              v-if="isEditRecord && formValue.finish !== '1'"
               type="primary"
               @click="handleAdd"
             >
@@ -188,7 +188,7 @@
           <div class="formAfterTitle">
             <span>合同支付记录</span>
             <el-button
-              v-if="isEditRecord && formValue.value.finish !== '1'"
+              v-if="isEditRecord && formValue.finish !== '1'"
               type="primary"
               @click="handlePaymentAdd"
             >

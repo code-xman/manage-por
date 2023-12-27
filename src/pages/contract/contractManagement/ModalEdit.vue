@@ -683,7 +683,7 @@ watch(
       // 详情才会有 已支付金额 / 待支付金额
       formItems.value = [
         ...formItemsData.filter(
-          (e) => !['payedAmt', 'unPayedAmt'].includes(e.name)
+          (e) => !['payedAmt', 'unPayedAmt'].includes(e.name) && e.name
         ),
       ];
 

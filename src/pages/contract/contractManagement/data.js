@@ -331,6 +331,7 @@ export const formItems = [
     type: 'select',
     options: [...WHETHER_ENUM],
   },
+  {},
   {
     name: 'remark',
     label: '备注',

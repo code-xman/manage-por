@@ -56,6 +56,7 @@
                 <el-tag
                   v-for="file in row.annexesData"
                   :key="file.key"
+                  :title="file.name"
                   class="mx-1"
                   @click="() => handlePreview(file)"
                 >
@@ -112,7 +113,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
 
@@ -150,7 +151,9 @@ const base = async () => {
   orgId.value = params.get('oId');
 
   // 合同所属部门
-  const Item_deptIdsData = formItems.value.find((item) => item.name === 'deptIdsData');
+  const Item_deptIdsData = formItems.value.find(
+    (item) => item.name === 'deptIdsData'
+  );
   // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'
@@ -274,6 +277,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$colorBorder: #666;
+
 .ModalDetailContent {
   width: 1075px;
   padding-bottom: 8px;
@@ -282,9 +287,11 @@ onUnmounted(() => {
     margin-left: 0 !important;
     margin-right: 0 !important;
     border-top: 1px solid $colorBorder;
+    border-right: 1px solid $colorBorder;
     .el-form-item {
       margin: 0;
       border: 1px solid $colorBorder;
+      border-right: 0;
       border-top: 0;
       height: 40px;
       line-height: 40px;
@@ -301,7 +308,6 @@ onUnmounted(() => {
     }
     .formAfterTitle {
       border-left: 1px solid $colorBorder;
-      border-right: 1px solid $colorBorder;
     }
   }
 
@@ -327,7 +333,13 @@ onUnmounted(() => {
   }
   .el-table {
     border: 1px solid $colorBorder;
+    border-right: 0;
     border-collapse: collapse;
+    :deep(th),
+    :deep(td) {
+      color: #333;
+      border-color: $colorBorder;
+    }
   }
 
   :deep(.el-select) {

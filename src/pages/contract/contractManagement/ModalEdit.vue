@@ -705,6 +705,7 @@ watch(
       formValue.value = {
         deptIdsData: [],
         personIds: [],
+        finish: '0',
       };
       contractPayRecords.value = [];
       hasContractRecords.value = false;

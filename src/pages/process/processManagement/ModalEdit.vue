@@ -83,7 +83,7 @@
               width="120"
               align="center"
             >
-            <template #default="{ row }">
+              <template #default="{ row }">
                 <div>{{ row.durationDays || '-' }}</div>
               </template>
             </el-table-column>
@@ -113,7 +113,7 @@
               fixed="right"
               label="操作"
               align="center"
-              width="120"
+              width="180"
             >
               <template #default="{ row }">
                 <div v-if="!isDetail" class="operate">
@@ -124,6 +124,14 @@
                     @click="() => handleEdit(row)"
                   >
                     编辑
+                  </el-button>
+                  <el-button
+                    link
+                    type="primary"
+                    size="small"
+                    @click="() => handleInsert(row)"
+                  >
+                    上方插入行
                   </el-button>
                   <el-button
                     link
@@ -180,6 +188,7 @@ import { parseToDate } from '@/utils/string';
 import { ApiListUser } from '@/http/setting/user.js';
 import { ApiDeptList } from '@/http/setting/department.js';
 import { modalTitleObj } from '@/data/common.js';
+import { useReasonConfirm } from '@/utils/hooks.js';
 
 import {
   ApiCreateProject,
@@ -233,7 +242,9 @@ const showModelRow = ref({});
 const rules = ref({
   projectName: [{ required: true, message: '请输入项目名称' }],
   responsibleDeptId: [{ required: true, message: '请选择项目责任部门' }],
-  contractAdminId: [{ required: true, message: '请选择项目管理人' }],
+  responsibleAdminId: [{ required: true, message: '请选择项目管理人' }],
+  contractAdminId: [{ required: true, message: '请选择合同管理人' }],
+  finish: [{ required: true, message: '请选择是否完结' }],
   projectContent: [{ required: true, message: '请输入项目内容' }],
 });
 
@@ -281,21 +292,49 @@ const handleActDefId = async (row) => {
   }
 };
 
+const editRowIndex = ref(0); // 编辑行的index
+const editRowType = ref('add'); // 编辑行的类型
+const showModelRowData = {
+  actDefName: '', // 步骤节点名称
+  assignee: '', // 步骤负责人
+  actDefDesc: '', // 步骤节点描述
+  completionDeadline: '', // 完成时限
+  fundSource: '', // 资金来源
+  fundName: '', // 资金名称
+  fileName: '', // 附件名称
+};
+
 /** 新增记录 */
 const handleAdd = () => {
+  editRowType.value = 'add';
+  editRowIndex.value = formValue.value?.processConfigs?.length || 0;
   showModel.value = true;
   showModelRow.value = {
+    ...showModelRowData,
     key: Date.now(),
-    actDefName: '', // 步骤节点名称
-    assignee: '', // 步骤负责人
-    actDefDesc: '', // 步骤节点描述
-    completionDeadline: '', // 完成时限
   };
   // formValue.value?.processConfigs?.push();
 };
 
+// 插入
+const handleInsert = (row) => {
+  editRowType.value = 'insert';
+  editRowIndex.value = formValue.value?.processConfigs.findIndex(
+    (fp) => fp.key === row.key
+  );
+  showModel.value = true;
+  showModelRow.value = {
+    ...showModelRowData,
+    key: Date.now(),
+  };
+};
+
 /** 编辑步骤节点 */
 const handleEdit = (row) => {
+  editRowType.value = 'edit';
+  editRowIndex.value = formValue.value?.processConfigs.findIndex(
+    (fp) => fp.key === row.key
+  );
   showModel.value = true;
   showModelRow.value = row;
 };
@@ -316,13 +355,13 @@ const handleDelete = async (row) => {
 };
 /** 更新步骤数据 */
 const onUpdateRow = (newRow) => {
-  const index = formValue.value?.processConfigs.findIndex(
-    (fp) => fp.key === newRow.key
-  );
-  if (index >= 0) {
-    formValue.value?.processConfigs.splice(index, 1, newRow);
-  } else {
+  if (editRowIndex.value < 0) return;
+  if (editRowType.value === 'add') {
     formValue.value?.processConfigs?.push(newRow);
+  } else if (editRowType.value === 'edit') {
+    formValue.value?.processConfigs.splice(editRowIndex.value, 1, newRow);
+  } else if (editRowType.value === 'insert') {
+    formValue.value?.processConfigs.splice(editRowIndex.value, 0, newRow);
   }
 };
 
@@ -361,7 +400,11 @@ const confirmClick = async () => {
     if (['add', 'copy'].includes(props.type)) {
       await ApiCreateProject(saveData);
     } else if (props.type === 'edit') {
-      await ApiEditProject(saveData?.projectParam);
+      const reasonObj = await useReasonConfirm(); // 二次确认
+      await ApiEditProject({
+        ...saveData.projectParam,
+        modifyContent: reasonObj.value,
+      });
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);
@@ -409,7 +452,11 @@ watch(
     if (['edit', 'copy', 'detail'].includes(props.type) && props.modelValue) {
       init();
     } else {
-      formValue.value = { processConfigs: [] };
+      formValue.value = {
+        processConfigs: [],
+        responsibleAdminId: [],
+        finish: '0',
+      };
     }
   }
 );
@@ -423,7 +470,13 @@ watch(
       const item_contractAdminId = formItems.value.find(
         (item) => item.name === 'contractAdminId'
       );
-      if (!item_contractAdminId) return;
+      // 项目管理人
+      const item_responsibleAdminId = formItems.value.find(
+        (item) => item.name === 'responsibleAdminId'
+      );
+
+      if (!item_contractAdminId || !item_responsibleAdminId) return;
+
       // 无选项则不清空数据，处理初始化赋值不清空
       if (!!item_contractAdminId.options?.length) {
         formValue.value = {
@@ -431,23 +484,31 @@ watch(
           contractAdminId: [],
         };
       }
+      if (!!item_responsibleAdminId.options?.length) {
+        formValue.value = {
+          ...formValue.value,
+          responsibleAdminId: [],
+        };
+      }
 
       // 处理新的负责人的选项
       if (!value) {
         item_contractAdminId.options = [];
+        item_responsibleAdminId.options = [];
       } else {
         const res = await ApiListUser({
           orgId: user.orgId,
           deptId: value,
         });
 
-        listUser.value = res;
+        listUser.value =
+          res?.map((item) => ({
+            label: item.userName,
+            value: item.userId,
+          })) || [];
         if (item_contractAdminId) {
-          item_contractAdminId.options =
-            res?.map((item) => ({
-              label: item.userName,
-              value: item.userId,
-            })) || [];
+          item_contractAdminId.options = res;
+          item_responsibleAdminId.options = res;
         }
       }
     } catch (error) {
@@ -515,15 +576,15 @@ onMounted(async () => {
     }
   }
 
-  .operate {
-    display: flex;
-    & > * {
-      padding: 4px 8px;
-    }
-    .upload {
-      display: flex;
-    }
-  }
+  // .operate {
+  //   display: flex;
+  //   & > * {
+  //     padding: 4px 8px;
+  //   }
+  //   .upload {
+  //     display: flex;
+  //   }
+  // }
 }
 .actDefDescCell {
   max-width: 100%;

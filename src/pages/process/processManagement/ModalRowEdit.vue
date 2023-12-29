@@ -2,7 +2,7 @@
   <el-dialog
     v-model="modal"
     title="步骤节点配置"
-    width="900px"
+    width="1000px"
     :close-on-click-modal="false"
     append-to-body
   >
@@ -77,6 +77,7 @@ const rules = ref({
   actDefDesc: [{ required: true, message: '请输入步骤节点描述' }],
   completionDeadline: [{ validator: TimeValiate }],
   durationDays: [{ validator: TimeValiate }],
+  fileName: [{ required: true, message: '请输入附件名称' }],
 });
 
 const handleSubmit = async () => {

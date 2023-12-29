@@ -1,5 +1,6 @@
 import { h } from 'vue';
 import BTag from '@/components/baseCommon/BTag.vue';
+import { WHETHER_ENUM } from '@/data/common';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
 import { ApiListUser } from '@/http/setting/user.js';
 import { getAuthUser } from '@/utils/auth';
@@ -116,16 +117,41 @@ export const searchFormItems = [
       clearable: true,
     },
   },
-  // {
-  //   name: 'projectName',
-  //   label: '项目名称',
-  //   style: {
-  //     width: '250px',
-  //   },
-  //   attrs: {
-  //     clearable: true,
-  //   },
-  // },
+  {
+    name: 'deptName',
+    label: '部门',
+    style: {
+      width: '220px',
+    },
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'projectName',
+    label: '项目名称',
+    style: {
+      width: '250px',
+    },
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'signDate',
+    label: '签订时间',
+    type: 'dateTime',
+    style: {
+      width: '300px',
+    },
+    attrs: {
+      clearable: true,
+      type: 'daterange',
+      'range-separator': '至',
+      'start-placeholder': '开始日期',
+      'end-placeholder': '结束日期',
+    },
+  },
 ];
 
 /** 表单各项属性 */
@@ -147,6 +173,19 @@ export const formItems = [
     },
   },
   {
+    name: 'responsibleAdminId',
+    label: '项目管理人',
+    type: 'select',
+    options: [],
+    attrs: {
+      clearable: true,
+      multiple: true,
+      'collapse-tags': true,
+      'collapse-tags-tooltip': true,
+      'max-collapse-tags': 4,
+    },
+  },
+  {
     name: 'contractAdminId',
     label: '合同管理人',
     type: 'select',
@@ -154,10 +193,16 @@ export const formItems = [
     attrs: {
       clearable: true,
       // multiple: true,
-      'collapse-tags': true,
-      'collapse-tags-tooltip': true,
-      'max-collapse-tags': 4,
+      // 'collapse-tags': true,
+      // 'collapse-tags-tooltip': true,
+      // 'max-collapse-tags': 4,
     },
+  },
+  {
+    name: 'finish',
+    label: '是否完结',
+    type: 'select',
+    options: [...WHETHER_ENUM],
   },
   {
     name: 'projectContent',
@@ -194,6 +239,20 @@ export const formRowItems = [
     },
   },
   {
+    name: 'fundSource',
+    label: '资金来源',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
+    name: 'fundName',
+    label: '资金名称',
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
     name: 'completionDeadline',
     label: '完成时限',
     type: 'dateTime',
@@ -214,6 +273,13 @@ export const formRowItems = [
       precision: 0,
       step: 1,
       controls: false,
+    },
+  },
+  {
+    name: 'fileName',
+    label: '附件名称',
+    attrs: {
+      clearable: true,
     },
   },
   {

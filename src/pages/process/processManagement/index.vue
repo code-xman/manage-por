@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListProjectPage"
-      :options-size="160"
+      :options-size="220"
     >
       <template #options="{ row }">
         <el-button
@@ -34,6 +34,14 @@
         >
           详情
         </el-button>
+        <el-button
+          v-allow="'585050548c86475b96fb5ec184f6aafe'"
+          type="warning"
+          link
+          @click="() => operationRecordsFn(row)"
+        >
+          操作记录
+        </el-button>
       </template>
     </BasePage>
     <ModalEdit
@@ -41,6 +49,7 @@
       :type="modalType"
       :row="showModelRow"
     ></ModalEdit>
+    <ModalOperation v-model="showOperation" :row="showModelRow"></ModalOperation>
   </div>
 </template>
 
@@ -53,6 +62,7 @@ import BasePage from '@/components/BasePage/index';
 import { exportExcel } from '@/utils/fn.js';
 import { ApiListProjectPage } from '@/http/process/processManagement.js';
 import ModalEdit from './ModalEdit.vue';
+import ModalOperation from './ModalOperation.vue';
 import { columns, searchFormItems } from './data';
 
 defineOptions({
@@ -62,6 +72,8 @@ defineOptions({
 const user = getAuthUser();
 const BasePageRef = ref(null);
 const searchFormValue = ref({});
+// 操作记录
+const showOperation = ref(false);
 
 const btns = ref([
   {
@@ -108,6 +120,11 @@ const detailFn = (row) => {
   modalType.value = 'detail';
   showModelRow.value = row;
   showModel.value = true;
+};
+
+const operationRecordsFn = (row) => {
+  showModelRow.value = row;
+  showOperation.value = true;
 };
 
 const downloadFn = async () => {

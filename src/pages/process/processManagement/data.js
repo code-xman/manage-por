@@ -253,17 +253,6 @@ export const formRowItems = [
     },
   },
   {
-    name: 'completionDeadline',
-    label: '完成时限',
-    type: 'dateTime',
-    attrs: {
-      clearable: true,
-      // 'disabled-date': (date) => {
-      //   return date && date.valueOf() > Date.now();
-      // }
-    },
-  },
-  {
     name: 'durationDays',
     label: '工期天数',
     type: 'number',
@@ -273,6 +262,18 @@ export const formRowItems = [
       precision: 0,
       step: 1,
       controls: false,
+    },
+  },
+  {
+    name: 'completionDeadline',
+    label: '完成时限',
+    type: 'dateTime',
+    attrs: {
+      clearable: true,
+      disabled: true,
+      // 'disabled-date': (date) => {
+      //   return date && date.valueOf() > Date.now();
+      // }
     },
   },
   {

@@ -18,145 +18,147 @@
         v-model:formValue="formValue"
         :formItems="formItems"
         :rules="rules"
+      ></BaseForm>
+      <div class="formAfterTitle">
+        <span>步骤节点配置列表</span>
+        <el-button v-if="!isDetail" type="primary" @click="handleAdd">
+          新增节点配置
+        </el-button>
+        <el-button
+          v-if="isDetail && props.source === 'process'"
+          type="primary"
+          @click="handleProjectId"
+        >
+          项目附件下载
+        </el-button>
+      </div>
+      <el-table
+        :data="processConfigs"
+        style="width: 100%"
+        stripe
+        border
+        show-overflow-tooltip
       >
-        <template #formAfter>
-          <div class="formAfterTitle">
-            <span>步骤节点配置列表</span>
-            <el-button v-if="!isDetail" type="primary" @click="handleAdd">
-              新增节点配置
-            </el-button>
-            <el-button v-if="isDetail" type="primary" @click="handleProjectId">
-              项目附件下载
-            </el-button>
-          </div>
-          <el-table
-            :data="formValue.processConfigs"
-            style="width: 100%"
-            stripe
-            border
-            show-overflow-tooltip
-          >
-            <el-table-column
-              fixed
-              type="index"
-              label="#"
-              align="center"
-              width="60"
-            />
-            <el-table-column
-              prop="actDefName"
-              label="步骤节点名称"
-              width="180"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="assigneeName"
-              label="步骤负责人姓名"
-              width="140"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="actDefDesc"
-              label="步骤节点描述"
-              minWidth="240"
-              :show-overflow-tooltip="true"
-            >
-              <template #default="{ row }">
-                <div class="actDefDescCell">{{ row.actDefDesc }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="completionDeadline"
-              label="完成时限"
-              align="center"
-              width="140"
-            >
-              <template #default="{ row }">
-                <div>{{ row.completionDeadline || '-' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="durationDays"
-              label="工期天数"
-              width="120"
-              align="center"
-            >
-              <template #default="{ row }">
-                <div>{{ row.durationDays || '-' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-if="isDetail"
-              prop="completeTime"
-              label="完成时间"
-              align="center"
-              width="170"
-            >
-              <template #default="{ row }">
-                <div>{{ row.completeTime || '-' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-if="isDetail"
-              prop="completeDesc"
-              label="完成情况"
-              align="left"
-              width="240"
-            >
-              <template #default="{ row }">
-                <div>{{ row.completeDesc || '-' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              label="操作"
-              align="center"
-              width="180"
-            >
-              <template #default="{ row }">
-                <div v-if="!isDetail" class="operate">
-                  <el-button
-                    link
-                    type="primary"
-                    size="small"
-                    @click="() => handleEdit(row)"
-                  >
-                    编辑
-                  </el-button>
-                  <el-button
-                    link
-                    type="primary"
-                    size="small"
-                    @click="() => handleInsert(row)"
-                  >
-                    上方插入行
-                  </el-button>
-                  <el-button
-                    link
-                    type="danger"
-                    size="small"
-                    @click="() => handleDelete(row)"
-                  >
-                    删除
-                  </el-button>
-                </div>
-                <div v-else class="operate">
-                  <el-button
-                    link
-                    type="primary"
-                    size="small"
-                    @click="() => handleActDefId(row)"
-                  >
-                    节点附件下载
-                  </el-button>
-                </div>
-              </template>
-            </el-table-column>
-          </el-table>
-        </template>
-      </BaseForm>
+        <el-table-column
+          fixed
+          type="index"
+          label="#"
+          align="center"
+          width="60"
+        />
+        <el-table-column
+          prop="actDefName"
+          label="步骤节点名称"
+          width="180"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="assigneeName"
+          label="步骤负责人姓名"
+          width="140"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="actDefDesc"
+          label="步骤节点描述"
+          minWidth="240"
+          :show-overflow-tooltip="true"
+        >
+          <template #default="{ row }">
+            <div class="actDefDescCell">{{ row.actDefDesc }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="completionDeadline"
+          label="完成时限"
+          align="center"
+          width="140"
+        >
+          <template #default="{ row }">
+            <div>{{ row.completionDeadline || '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="durationDays"
+          label="工期天数"
+          width="120"
+          align="center"
+        >
+          <template #default="{ row }">
+            <div>{{ row.durationDays || '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="isDetail"
+          prop="completeTime"
+          label="完成时间"
+          align="center"
+          width="170"
+        >
+          <template #default="{ row }">
+            <div>{{ row.completeTime || '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="isDetail"
+          prop="completeDesc"
+          label="完成情况"
+          align="left"
+          width="240"
+        >
+          <template #default="{ row }">
+            <div>{{ row.completeDesc || '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="!isDetail || props.source === 'process'"
+          fixed="right"
+          label="操作"
+          align="center"
+          width="180"
+        >
+          <template #default="{ row }">
+            <div v-if="!isDetail" class="operate">
+              <el-button
+                link
+                type="primary"
+                size="small"
+                @click="() => handleEdit(row)"
+              >
+                编辑
+              </el-button>
+              <el-button
+                link
+                type="primary"
+                size="small"
+                @click="() => handleInsert(row)"
+              >
+                上方插入行
+              </el-button>
+              <el-button
+                link
+                type="danger"
+                size="small"
+                @click="() => handleDelete(row)"
+              >
+                删除
+              </el-button>
+            </div>
+            <div v-else class="operate">
+              <el-button
+                link
+                type="primary"
+                size="small"
+                @click="() => handleActDefId(row)"
+              >
+                节点附件下载
+              </el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <template #footer>
       <div style="flex: auto">
@@ -211,6 +213,10 @@ const props = defineProps({
     type: String,
     default: 'edit',
   },
+  source: {
+    type: String,
+    default: 'process',
+  },
   row: {
     type: Object,
   },
@@ -235,6 +241,8 @@ const listUser = ref([]);
 const BaseFormRef = ref(null);
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
+// 步骤节点
+const processConfigs = ref([]);
 // 步骤节点配置弹框
 const showModel = ref(false);
 const showModelRow = ref({});
@@ -307,19 +315,19 @@ const showModelRowData = {
 /** 新增记录 */
 const handleAdd = () => {
   editRowType.value = 'add';
-  editRowIndex.value = formValue.value?.processConfigs?.length || 0;
+  editRowIndex.value = processConfigs.value.length || 0;
   showModel.value = true;
   showModelRow.value = {
     ...showModelRowData,
     key: Date.now(),
   };
-  // formValue.value?.processConfigs?.push();
+  // processConfigs.value.push();
 };
 
 // 插入
 const handleInsert = (row) => {
   editRowType.value = 'insert';
-  editRowIndex.value = formValue.value?.processConfigs.findIndex(
+  editRowIndex.value = processConfigs.value.findIndex(
     (fp) => fp.key === row.key
   );
   showModel.value = true;
@@ -332,7 +340,7 @@ const handleInsert = (row) => {
 /** 编辑步骤节点 */
 const handleEdit = (row) => {
   editRowType.value = 'edit';
-  editRowIndex.value = formValue.value?.processConfigs.findIndex(
+  editRowIndex.value = processConfigs.value.findIndex(
     (fp) => fp.key === row.key
   );
   showModel.value = true;
@@ -344,10 +352,8 @@ const handleDelete = async (row) => {
     if (props.type === 'edit') {
       await ApiDeleteProjectActConfig({ actDefId: row.actDefId });
     }
-    const index = formValue.value?.processConfigs.findIndex(
-      (fp) => fp.key === row.key
-    );
-    formValue.value?.processConfigs.splice(index, 1);
+    const index = processConfigs.value.findIndex((fp) => fp.key === row.key);
+    processConfigs.value.splice(index, 1);
     ElMessage.success('删除成功');
   } catch (error) {
     ElMessage.error(`${error}`);
@@ -357,11 +363,11 @@ const handleDelete = async (row) => {
 const onUpdateRow = (newRow) => {
   if (editRowIndex.value < 0) return;
   if (editRowType.value === 'add') {
-    formValue.value?.processConfigs?.push(newRow);
+    processConfigs.value.push(newRow);
   } else if (editRowType.value === 'edit') {
-    formValue.value?.processConfigs.splice(editRowIndex.value, 1, newRow);
+    processConfigs.value.splice(editRowIndex.value, 1, newRow);
   } else if (editRowType.value === 'insert') {
-    formValue.value?.processConfigs.splice(editRowIndex.value, 0, newRow);
+    processConfigs.value.splice(editRowIndex.value, 0, newRow);
   }
 };
 
@@ -384,9 +390,8 @@ const handleFormValue = () => {
   return {
     projectParam: {
       ...formValue.value,
-      processConfigs: undefined,
     },
-    processConfigs: formValue.value.processConfigs,
+    processConfigs: processConfigs.value || [],
   };
 };
 
@@ -426,16 +431,14 @@ const init = async () => {
     const res = await ApiDetailProject({ projectId: props.row.projectId });
     formValue.value = {
       ...res.projectInfo,
-      processConfigs: res.processConfigs,
     };
-    formValue.value.processConfigs = formValue.value.processConfigs.map(
-      (item) => {
+    processConfigs.value =
+      res.processConfigs?.map((item) => {
         return {
           ...item,
           key: item.actDefId,
         };
-      }
-    );
+      }) || [];
     // console.log('formValue.value :>> ', formValue.value);
   } catch (error) {
     ElMessage.error(`${error}`);
@@ -453,10 +456,10 @@ watch(
       init();
     } else {
       formValue.value = {
-        processConfigs: [],
         responsibleAdminId: [],
         finish: '0',
       };
+      processConfigs.value = [];
     }
   }
 );

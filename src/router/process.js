@@ -10,6 +10,15 @@ export default [
     component: () => import('@/layout/Main'),
     children: [
       {
+        path: '/processTemplate',
+        name: 'ProcessTemplate',
+        meta: {
+          id: '54e735bbe4d647868f9b93c749c10d4a',
+          title: '项目模板',
+        },
+        component: () => import('@/pages/process/template/index.vue'),
+      },
+      {
         path: '/processManagement',
         name: 'ProcessManagement',
         meta: {

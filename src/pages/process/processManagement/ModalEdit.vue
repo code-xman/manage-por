@@ -14,156 +14,168 @@
     >
       <BaseForm
         ref="BaseFormRef"
-        :formType="props.type"
+        :formType="isEditRecord ? 'detail' : props.type"
         v-model:formValue="formValue"
         :formItems="formItems"
         :rules="rules"
-      ></BaseForm>
-      <div class="formAfterTitle">
-        <span>步骤节点配置列表</span>
-        <el-button v-if="!isDetail" type="primary" @click="handleAdd">
-          新增节点配置
-        </el-button>
-        <el-button
-          v-if="isDetail && props.source === 'process'"
-          type="primary"
-          @click="handleProjectId"
-        >
-          项目附件下载
-        </el-button>
-      </div>
-      <el-table
-        :data="processConfigs"
-        style="width: 100%"
-        stripe
-        border
-        show-overflow-tooltip
       >
-        <el-table-column
-          fixed
-          type="index"
-          label="#"
-          align="center"
-          width="60"
-        />
-        <el-table-column
-          prop="actDefName"
-          label="步骤节点名称"
-          width="180"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="assigneeName"
-          label="步骤负责人姓名"
-          width="140"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="actDefDesc"
-          label="步骤节点描述"
-          minWidth="240"
-          :show-overflow-tooltip="true"
-        >
-          <template #default="{ row }">
-            <div class="actDefDescCell">{{ row.actDefDesc }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="completionDeadline"
-          label="完成时限"
-          align="center"
-          width="140"
-        >
-          <template #default="{ row }">
-            <div>{{ row.completionDeadline || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="durationDays"
-          label="工期天数"
-          width="120"
-          align="center"
-        >
-          <template #default="{ row }">
-            <div>{{ row.durationDays || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="isDetail"
-          prop="completeTime"
-          label="完成时间"
-          align="center"
-          width="170"
-        >
-          <template #default="{ row }">
-            <div>{{ row.completeTime || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="isDetail"
-          prop="completeDesc"
-          label="完成情况"
-          align="left"
-          width="240"
-        >
-          <template #default="{ row }">
-            <div>{{ row.completeDesc || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="!isDetail || props.source === 'process'"
-          fixed="right"
-          label="操作"
-          align="center"
-          width="180"
-        >
-          <template #default="{ row }">
-            <div v-if="!isDetail" class="operate">
-              <el-button
-                link
-                type="primary"
-                size="small"
-                @click="() => handleEdit(row)"
-              >
-                编辑
-              </el-button>
-              <el-button
-                link
-                type="primary"
-                size="small"
-                @click="() => handleInsert(row)"
-              >
-                上方插入行
-              </el-button>
-              <el-button
-                link
-                type="danger"
-                size="small"
-                @click="() => handleDelete(row)"
-              >
-                删除
-              </el-button>
-            </div>
-            <div v-else class="operate">
-              <el-button
-                link
-                type="primary"
-                size="small"
-                @click="() => handleActDefId(row)"
-              >
-                节点附件下载
-              </el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+        <template #formAfter v-if="props.type !== 'add'">
+          <div class="formAfterTitle">
+            <span>步骤节点配置列表</span>
+            <el-button
+              v-if="isEditRecord && formValue.finish !== '1'"
+              type="primary"
+              @click="handleAdd"
+            >
+              新增节点配置
+            </el-button>
+            <el-button
+              v-if="isDetail && props.source === 'process'"
+              type="primary"
+              @click="handleProjectId"
+            >
+              项目附件下载
+            </el-button>
+          </div>
+          <el-table
+            :data="processConfigs"
+            style="width: 100%"
+            stripe
+            border
+            show-overflow-tooltip
+          >
+            <el-table-column
+              fixed
+              type="index"
+              label="#"
+              align="center"
+              width="60"
+            />
+            <el-table-column
+              prop="actDefName"
+              label="步骤节点名称"
+              width="180"
+              align="center"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="assigneeName"
+              label="步骤负责人姓名"
+              width="140"
+              align="center"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="actDefDesc"
+              label="步骤节点描述"
+              minWidth="240"
+              :show-overflow-tooltip="true"
+            >
+              <template #default="{ row }">
+                <div class="actDefDescCell">{{ row.actDefDesc }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="completionDeadline"
+              label="完成时限"
+              align="center"
+              width="140"
+            >
+              <template #default="{ row }">
+                <div>{{ row.completionDeadline || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="durationDays"
+              label="工期天数"
+              width="120"
+              align="center"
+            >
+              <template #default="{ row }">
+                <div>{{ row.durationDays || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="isDetail"
+              prop="completeTime"
+              label="完成时间"
+              align="center"
+              width="170"
+            >
+              <template #default="{ row }">
+                <div>{{ row.completeTime || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="isDetail"
+              prop="completeDesc"
+              label="完成情况"
+              align="left"
+              width="240"
+            >
+              <template #default="{ row }">
+                <div>{{ row.completeDesc || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="isEditRecord || props.source === 'process'"
+              fixed="right"
+              label="操作"
+              align="center"
+              width="180"
+            >
+              <template #default="{ row }">
+                <div v-if="isEditRecord" class="operate">
+                  <el-button
+                    link
+                    type="primary"
+                    size="small"
+                    @click="() => handleEdit(row)"
+                  >
+                    编辑
+                  </el-button>
+                  <el-button
+                    link
+                    type="primary"
+                    size="small"
+                    @click="() => handleInsert(row)"
+                  >
+                    上方插入行
+                  </el-button>
+                  <el-button
+                    link
+                    type="danger"
+                    size="small"
+                    @click="() => handleDelete(row)"
+                  >
+                    删除
+                  </el-button>
+                </div>
+                <div v-if="isDetail" class="operate">
+                  <el-button
+                    link
+                    type="primary"
+                    size="small"
+                    @click="() => handleActDefId(row)"
+                  >
+                    节点附件下载
+                  </el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </BaseForm>
     </div>
     <template #footer>
       <div style="flex: auto">
         <el-button @click="onCloseFn">关闭</el-button>
-        <el-button :disabled="pending" type="primary" @click="confirmClick">
+        <el-button
+          v-if="!isDetail"
+          :disabled="pending"
+          type="primary"
+          @click="confirmClick"
+        >
           确定
         </el-button>
       </div>
@@ -200,7 +212,7 @@ import {
   ApiDownloadActDefId,
   ApiDownloadProjectId,
 } from '@/http/process/processManagement.js';
-import ModalRowEdit from './ModalRowEdit.vue';
+import ModalRowEdit from '@/pages/process/processManagement/ModalRowEdit';
 import { formItems as formItemsData } from './data';
 
 defineOptions({ name: 'OrganModalEdit' });
@@ -209,10 +221,12 @@ const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
   modelValue: Boolean,
+  // add-新增 edit-编辑 editRecord-编辑记录 detail-详情
   type: {
     type: String,
     default: 'edit',
   },
+  // process-项目管理 template-项目模板
   source: {
     type: String,
     default: 'process',
@@ -224,6 +238,8 @@ const props = defineProps({
 
 /** 是否是详情 */
 const isDetail = computed(() => props.type === 'detail');
+/** 是否是 修改记录 */
+const isEditRecord = computed(() => props.type === 'editRecord');
 
 const user = getAuthUser();
 
@@ -240,7 +256,7 @@ const listUser = ref([]);
 // 表单
 const BaseFormRef = ref(null);
 const formValue = ref({});
-const formItems = ref([...formItemsData]);
+const formItems = ref([...formItemsData.filter(e => e.name)]);
 // 步骤节点
 const processConfigs = ref([]);
 // 步骤节点配置弹框
@@ -349,7 +365,7 @@ const handleEdit = (row) => {
 /** 删除步骤节点 */
 const handleDelete = async (row) => {
   try {
-    if (props.type === 'edit') {
+    if (props.type === 'editRecord') {
       await ApiDeleteProjectActConfig({ actDefId: row.actDefId });
     }
     const index = processConfigs.value.findIndex((fp) => fp.key === row.key);
@@ -452,7 +468,10 @@ watch(
   () => props.modelValue,
   () => {
     modal.value = props.modelValue;
-    if (['edit', 'copy', 'detail'].includes(props.type) && props.modelValue) {
+    if (
+      ['edit', 'editRecord', 'copy', 'detail'].includes(props.type) &&
+      props.modelValue
+    ) {
       init();
     } else {
       formValue.value = {

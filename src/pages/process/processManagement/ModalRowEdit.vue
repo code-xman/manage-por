@@ -93,7 +93,7 @@ const handleSubmit = async () => {
     };
 
     // 编辑项目
-    if (props.type === 'edit') {
+    if (props.type === 'editRecord') {
       if (!!props.row.actDefId) {
         // 编辑步骤
         await ApiEditProjectActConfig(formVal);

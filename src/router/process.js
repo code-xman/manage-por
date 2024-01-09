@@ -38,4 +38,14 @@ export default [
       },
     ],
   },
+  {
+    path: '/processDetailContent',
+    name: 'ProcessDetailContent',
+    meta: {
+      title: '项目详情',
+      id: true,
+      menuHide: true,
+    },
+    component: () => import('@/pages/process/processManagement/ModalDetailContent.vue'),
+  },
 ];

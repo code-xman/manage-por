@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListProjectPage"
-      :options-size="220"
+      :options-size="300"
     >
       <template #options="{ row }">
         <el-button
@@ -19,13 +19,21 @@
           编辑
         </el-button>
         <el-button
+          v-allow="'9c3f6a07321747489f58afdcab2c262f'"
+          type="primary"
+          link
+          @click="() => editRecordFn(row)"
+        >
+          编辑记录
+        </el-button>
+        <!-- <el-button
           v-allow="'2d98942cbd074bdcab56459f2ff51148'"
           type="primary"
           link
           @click="() => copyFn(row)"
         >
           复制
-        </el-button>
+        </el-button> -->
         <el-button
           v-allow="'adc587e366ca483198d83aa19a134906'"
           type="primary"
@@ -33,6 +41,14 @@
           @click="() => detailFn(row)"
         >
           详情
+        </el-button>
+        <el-button
+          v-allow="'2d98942cbd074bdcab56459f2ff51148'"
+          type="success"
+          link
+          @click="() => priviewFn(row)"
+        >
+          预览
         </el-button>
         <el-button
           v-allow="'585050548c86475b96fb5ec184f6aafe'"
@@ -49,7 +65,11 @@
       :type="modalType"
       :row="showModelRow"
     ></ModalEdit>
-    <ModalOperation v-model="showOperation" :row="showModelRow"></ModalOperation>
+    <ModalDetail v-model="showDetail" :row="showModelRow"></ModalDetail>
+    <ModalOperation
+      v-model="showOperation"
+      :row="showModelRow"
+    ></ModalOperation>
   </div>
 </template>
 
@@ -61,8 +81,9 @@ import { getAuthUser } from '@/utils/auth';
 import BasePage from '@/components/BasePage/index';
 import { exportExcel } from '@/utils/fn.js';
 import { ApiListProjectPage } from '@/http/process/processManagement.js';
-import ModalEdit from './ModalEdit.vue';
-import ModalOperation from './ModalOperation.vue';
+import ModalEdit from '@/pages/process/processManagement/ModalEdit.vue';
+import ModalDetail from '@/pages/process/processManagement/ModalDetail.vue';
+import ModalOperation from '@/pages/process/processManagement/ModalOperation';
 import { columns, searchFormItems } from './data';
 
 defineOptions({
@@ -98,6 +119,7 @@ const btns = ref([
 const modalType = ref('');
 const showModel = ref(false);
 const showModelRow = ref();
+const showDetail = ref(false);
 
 const addFn = () => {
   modalType.value = 'add';
@@ -106,6 +128,12 @@ const addFn = () => {
 
 const editFn = (row) => {
   modalType.value = 'edit';
+  showModelRow.value = row;
+  showModel.value = true;
+};
+
+const editRecordFn = (row) => {
+  modalType.value = 'editRecord';
   showModelRow.value = row;
   showModel.value = true;
 };
@@ -120,6 +148,11 @@ const detailFn = (row) => {
   modalType.value = 'detail';
   showModelRow.value = row;
   showModel.value = true;
+};
+
+const priviewFn = (row) => {
+  showModelRow.value = row;
+  showDetail.value = true;
 };
 
 const operationRecordsFn = (row) => {

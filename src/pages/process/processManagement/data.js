@@ -64,7 +64,7 @@ export const columns = [
   {
     prop: 'projectContent',
     label: '项目内容',
-    minWidth: '220px',
+    minWidth: '240px',
     formatter(row) {
       return row.projectContent || '-';
     },
@@ -204,6 +204,7 @@ export const formItems = [
     type: 'select',
     options: [...WHETHER_ENUM],
   },
+  {},
   {
     name: 'projectContent',
     label: '项目内容',

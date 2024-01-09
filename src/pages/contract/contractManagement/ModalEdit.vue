@@ -12,7 +12,7 @@
       <BaseForm
         v-loading="pending"
         ref="BaseFormRef"
-        :formType="props.type === 'editRecord' ? 'detail' : props.type"
+        :formType="isEditRecord ? 'detail' : props.type"
         v-model:formValue="formValue"
         :formItems="formItems"
         :rules="rules"
@@ -333,7 +333,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
   modelValue: Boolean,
-  // add-新增 edit-完善合同 editRecord-编辑记录 detail-详情
+  // add-新增 edit-编辑/完善合同 editRecord-编辑记录 detail-详情
   type: {
     type: String,
     default: 'edit',

@@ -79,7 +79,7 @@ router.beforeEach((to) => {
             name: 'Login',
             query: {
               // 如果因为登录失效导致跳转，则需要记录登录前的位置
-              returnUrl: encodeURIComponent(location.href),
+              // returnUrl: encodeURIComponent(location.href),
             },
           };
     }

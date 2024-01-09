@@ -6,6 +6,7 @@ export const modalTitleObj = {
   add: '新增',
   addSon: '新增子级',
   edit: '编辑',
+  editRecord: '编辑记录',
   detail: '详情',
   '': '',
 };

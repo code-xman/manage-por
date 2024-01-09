@@ -28,9 +28,10 @@ const _logout = () => {
     if (loginRedirect && typeof loginRedirect === 'number') {
       loginRedirect = clearTimeout(loginRedirect);
     }
-    window.location.href = `/login?returnUrl=${encodeURIComponent(
-      location.href
-    )}`;
+    window.location.href = `/login`;
+    // `/login?returnUrl=${encodeURIComponent(
+    //   location.href
+    // )}`;
   }, 300);
 };
 

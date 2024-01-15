@@ -11,12 +11,7 @@
         <div class="formAfterTitle">
           <span>步骤节点配置列表</span>
         </div>
-        <el-table
-          :data="processConfigs"
-          style="width: 100%"
-          stripe
-          border
-        >
+        <el-table :data="processConfigs" style="width: 100%" stripe border>
           <el-table-column
             fixed
             type="index"
@@ -258,7 +253,7 @@ $colorBorder: #666;
       border-left: 1px solid $colorBorder;
     }
   }
-  
+
   .formAfterTitle {
     // border-bottom: 1px solid $colorBorder;
     width: 100%;
@@ -283,10 +278,18 @@ $colorBorder: #666;
     border: 1px solid $colorBorder;
     border-right: 0;
     border-collapse: collapse;
+    :deep(tr) {
+      th:last-child,
+      td:last-child {
+        border-right: 0;
+      }
+    }
+
     :deep(th),
     :deep(td) {
       color: #333;
       border-color: $colorBorder !important;
+      font-size: 12px;
     }
   }
 

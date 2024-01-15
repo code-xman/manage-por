@@ -7,6 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListProjectPage"
+      :defaultParams="defaultParams"
       :options-size="140"
     >
       <template #options="{ row }">
@@ -54,6 +55,11 @@ defineOptions({
 // const user = getAuthUser();
 const BasePageRef = ref(null);
 const searchFormValue = ref({});
+// 分页默认参数
+const defaultParams = ref({
+  // 模板标识 1-是,0-否
+  templateFlag: '1',
+});
 // 操作记录
 const showOperation = ref(false);
 

@@ -172,11 +172,25 @@ export const formItems = [
       clearable: true,
     },
   },
+  // {
+  //   name: 'responsibleAdminId',
+  //   label: '项目管理人',
+  //   type: 'select',
+  //   options: [],
+  //   attrs: {
+  //     clearable: true,
+  //     multiple: true,
+  //     'collapse-tags': true,
+  //     'collapse-tags-tooltip': true,
+  //     'max-collapse-tags': 4,
+  //   },
+  // },
   {
-    name: 'responsibleAdminId',
+    name: 'contractAdminId',
     label: '项目管理人',
     type: 'select',
     options: [],
+    useSelfTmp: true,
     attrs: {
       clearable: true,
       multiple: true,
@@ -186,25 +200,12 @@ export const formItems = [
     },
   },
   {
-    name: 'contractAdminId',
-    label: '合同管理人',
-    type: 'select',
-    options: [],
-    attrs: {
-      clearable: true,
-      // multiple: true,
-      // 'collapse-tags': true,
-      // 'collapse-tags-tooltip': true,
-      // 'max-collapse-tags': 4,
-    },
-  },
-  {
     name: 'finish',
     label: '是否完结',
     type: 'select',
     options: [...WHETHER_ENUM],
   },
-  {},
+  // {},
   {
     name: 'projectContent',
     label: '项目内容',

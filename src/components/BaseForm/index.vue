@@ -54,11 +54,33 @@
             :modelValue="formData[item.name]"
             @update:modelValue="(val) => formValueChange(val, item.name)"
           >
-            <el-option
-              v-for="option in item.options"
-              :label="option.label"
-              :value="option.value"
-            />
+            <template v-if="item.useSelfTmp">
+              <el-option
+                v-for="option in item.options"
+                :key="option.value"
+                :label="option.label"
+                :value="option.value"
+              >
+                <span style="float: left">{{ option.label }}</span>
+                <span
+                  style="
+                    float: right;
+                    color: var(--el-text-color-secondary);
+                    font-size: 12px;
+                  "
+                >
+                  {{ option.text }}
+                </span>
+              </el-option>
+            </template>
+            <template v-else>
+              <el-option
+                v-for="option in item.options"
+                :key="option.value"
+                :label="option.label"
+                :value="option.value"
+              />
+            </template>
           </el-select>
         </template>
         <template v-else-if="item.type === 'dateTime'">

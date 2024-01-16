@@ -107,6 +107,15 @@ const btns = ref([
     clickFn: () => addFn(),
   },
   {
+    key: 'useTemplate',
+    name: '使用模板新增',
+    allow: '962b112368364f5e8f0f22132c81a0ca',
+    attrs: {
+      type: 'primary',
+    },
+    clickFn: () => useTemplate(),
+  },
+  {
     key: 'download',
     name: '导出台账',
     attrs: {
@@ -124,6 +133,10 @@ const showDetail = ref(false);
 const addFn = () => {
   modalType.value = 'add';
   showModel.value = true;
+};
+
+const useTemplate = () => {
+  
 };
 
 const editFn = (row) => {

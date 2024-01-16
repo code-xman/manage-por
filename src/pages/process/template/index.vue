@@ -20,6 +20,14 @@
           编辑
         </el-button>
         <el-button
+          v-allow="'dfa984f551fb43e68be687b51acaa9ab'"
+          type="primary"
+          link
+          @click="() => editRecordFn(row)"
+        >
+          编辑记录
+        </el-button>
+        <el-button
           v-allow="'d8a4a6ecca9e4dcb8f6c22766be4269f'"
           type="primary"
           link
@@ -86,6 +94,12 @@ const addFn = () => {
 
 const editFn = (row) => {
   modalType.value = 'edit';
+  showModelRow.value = row;
+  showModel.value = true;
+};
+
+const editRecordFn = (row) => {
+  modalType.value = 'editRecord';
   showModelRow.value = row;
   showModel.value = true;
 };

@@ -251,12 +251,12 @@ const modalTitle = computed(() => {
 const pending = ref(false);
 /** 责任部门选项 */
 const responsibleDepts = ref([]);
-/** 合同管理人选项 */
+/** 项目管理人选项 */
 const listUser = ref([]);
 // 表单
 const BaseFormRef = ref(null);
 const formValue = ref({});
-const formItems = ref([...formItemsData.filter(e => e.name)]);
+const formItems = ref([...formItemsData.filter((e) => e.name)]);
 // 步骤节点
 const processConfigs = ref([]);
 // 步骤节点配置弹框
@@ -266,8 +266,7 @@ const showModelRow = ref({});
 const rules = ref({
   projectName: [{ required: true, message: '请输入项目名称' }],
   responsibleDeptId: [{ required: true, message: '请选择项目责任部门' }],
-  responsibleAdminId: [{ required: true, message: '请选择项目管理人' }],
-  contractAdminId: [{ required: true, message: '请选择合同管理人' }],
+  contractAdminId: [{ required: true, message: '请选择项目管理人' }],
   finish: [{ required: true, message: '请选择是否完结' }],
   projectContent: [{ required: true, message: '请输入项目内容' }],
 });
@@ -389,9 +388,10 @@ const onUpdateRow = (newRow) => {
 
 // 保存处理表单数据
 const handleFormValue = () => {
-  formValue.value.contractAdminName =
-    listUser.value?.find((lu) => lu.value === formValue.value.contractAdminId)
-      ?.label || '';
+  formValue.value.contractAdminName = listUser.value
+    ?.filter((lu) => formValue.value.contractAdminId?.includes(lu.value))
+    .map((lu) => lu.label)
+    .join();
 
   formValue.value.responsibleDeptName =
     responsibleDepts.value?.find(
@@ -448,6 +448,9 @@ const init = async () => {
     formValue.value = {
       ...res.projectInfo,
     };
+    formValue.value.contractAdminId = formValue.value.contractAdminId
+      ? formValue.value.contractAdminId.split()
+      : [];
     processConfigs.value =
       res.processConfigs?.map((item) => {
         return {
@@ -475,7 +478,7 @@ watch(
       init();
     } else {
       formValue.value = {
-        responsibleAdminId: [],
+        contractAdminId: [],
         finish: '0',
       };
       processConfigs.value = [];
@@ -483,64 +486,9 @@ watch(
   }
 );
 
-// 监听项目责任部门
-watch(
-  () => formValue.value.responsibleDeptId,
-  async (value) => {
-    try {
-      // 项目管理人
-      const item_contractAdminId = formItems.value.find(
-        (item) => item.name === 'contractAdminId'
-      );
-      // 项目管理人
-      const item_responsibleAdminId = formItems.value.find(
-        (item) => item.name === 'responsibleAdminId'
-      );
-
-      if (!item_contractAdminId || !item_responsibleAdminId) return;
-
-      // 无选项则不清空数据，处理初始化赋值不清空
-      if (!!item_contractAdminId.options?.length) {
-        formValue.value = {
-          ...formValue.value,
-          contractAdminId: [],
-        };
-      }
-      if (!!item_responsibleAdminId.options?.length) {
-        formValue.value = {
-          ...formValue.value,
-          responsibleAdminId: [],
-        };
-      }
-
-      // 处理新的负责人的选项
-      if (!value) {
-        item_contractAdminId.options = [];
-        item_responsibleAdminId.options = [];
-      } else {
-        const res = await ApiListUser({
-          orgId: user.orgId,
-          deptId: value,
-        });
-
-        listUser.value =
-          res?.map((item) => ({
-            label: item.userName,
-            value: item.userId,
-          })) || [];
-        if (item_contractAdminId) {
-          item_contractAdminId.options = res;
-          item_responsibleAdminId.options = res;
-        }
-      }
-    } catch (error) {
-      ElMessage.error(`${error}`);
-    }
-  }
-);
-
 onMounted(async () => {
   try {
+    // 项目责任部门
     const Item_responsibleDeptId = formItems.value.find(
       (item) => item.name === 'responsibleDeptId'
     );
@@ -548,6 +496,24 @@ onMounted(async () => {
       orgId: user.orgId,
     });
     Item_responsibleDeptId.options = responsibleDepts.value;
+
+    // 项目管理人
+    const item_contractAdminId = formItems.value.find(
+      (item) => item.name === 'contractAdminId'
+    );
+    const res = await ApiListUser({
+      orgId: user.orgId,
+      // deptId: value,
+    });
+
+    listUser.value =
+      res?.map((item) => ({
+        label: item.userName,
+        value: item.userId,
+        text: item.mobile,
+      })) || [];
+
+    item_contractAdminId.options = listUser.value;
   } catch (error) {
     ElMessage.error(`${error}`);
   }

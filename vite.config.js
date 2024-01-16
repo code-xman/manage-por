@@ -12,7 +12,7 @@ export default defineConfig({
   // 开发服务
   server: {
     host: '0.0.0.0', // 如需内网共享访问，可设置为 0.0.0.0
-    port: 8080, // 默认端口
+    port: 8083, // 默认端口
     open: false, // 开发服务启动成功自动在浏览器中打开
     headers: {
       'Access-Control-Allow-Origin': '*',

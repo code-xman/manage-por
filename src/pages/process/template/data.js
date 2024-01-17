@@ -16,7 +16,7 @@ export const columns = [
     prop: 'projectName',
     label: '项目名称',
     width: '180px',
-    className: 'cell-full',
+    // className: 'cell-full',
     formatter(row) {
       return row.projectName || '-';
     },

@@ -393,6 +393,8 @@ const handleFormValue = () => {
     .map((lu) => lu.label)
     .join();
 
+  formValue.value.contractAdminId = formValue.value.contractAdminId.join();
+
   formValue.value.responsibleDeptName =
     responsibleDepts.value?.find(
       (rd) => rd.value === formValue.value.responsibleDeptId
@@ -407,7 +409,7 @@ const handleFormValue = () => {
     projectParam: {
       ...formValue.value,
     },
-    processConfigs: processConfigs.value || [],
+    // processConfigs: processConfigs.value || [],
   };
 };
 
@@ -425,6 +427,7 @@ const confirmClick = async () => {
       await ApiEditProject({
         ...saveData.projectParam,
         modifyContent: reasonObj.value,
+        templateFlag: props.source === 'template' ? '1' : '0', // 模板标识 1-是,0-否
       });
     }
     ElMessage.success('保存成功');
@@ -448,8 +451,8 @@ const init = async () => {
     formValue.value = {
       ...res.projectInfo,
     };
-    formValue.value.contractAdminId = formValue.value.contractAdminId
-      ? formValue.value.contractAdminId.split()
+    formValue.value.contractAdminId = res.projectInfo.contractAdminId
+      ? res.projectInfo.contractAdminId.split(',')
       : [];
     processConfigs.value =
       res.processConfigs?.map((item) => {

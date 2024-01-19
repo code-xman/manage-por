@@ -44,6 +44,12 @@ export const ApiDetailProject = async (params = {}) => {
   return data;
 };
 
+// 工作日计算
+export const ApiWorkDay = async (params = {}) => {
+  const data = await post('/api/projectFacade/workDay', params);
+  return data;
+};
+
 // 项目步骤节点配置(单条)-新增
 export const ApiAddProjectActConfig = async (params = {}) => {
   const data = await post('/api/projectFacade/addProjectActConfig', params);

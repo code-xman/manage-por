@@ -76,6 +76,26 @@
               </template>
             </el-table-column>
             <el-table-column
+              prop="startDate"
+              label="开始日期"
+              align="center"
+              width="140"
+            >
+              <template #default="{ row }">
+                <div>{{ row.startDate || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="workDays"
+              label="工期天数"
+              width="120"
+              align="center"
+            >
+              <template #default="{ row }">
+                <div>{{ row.workDays || '-' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="completionDeadline"
               label="完成时限"
               align="center"
@@ -83,16 +103,6 @@
             >
               <template #default="{ row }">
                 <div>{{ row.completionDeadline || '-' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="durationDays"
-              label="工期天数"
-              width="120"
-              align="center"
-            >
-              <template #default="{ row }">
-                <div>{{ row.durationDays || '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column
@@ -324,7 +334,7 @@ const showModelRowData = {
   completionDeadline: '', // 完成时限
   fundSource: '', // 资金来源
   fundName: '', // 资金名称
-  fileName: '', // 附件名称
+  attachmentName: '', // 附件名称
 };
 
 /** 新增记录 */

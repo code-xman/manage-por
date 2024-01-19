@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, nextTick } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import BaseForm from '@/components/BaseForm';
 
@@ -36,6 +36,7 @@ import { ApiListUser } from '@/http/setting/user.js';
 import {
   ApiEditProjectActConfig,
   ApiAddProjectActConfig,
+  ApiWorkDay,
 } from '@/http/process/processManagement.js';
 import { formRowItems } from './data';
 
@@ -63,21 +64,13 @@ const listUser = ref([]);
 const BaseFormRef = ref(null);
 const formValue = ref({});
 
-// 时间验证
-const TimeValiate = (rule, value, callback) => {
-  if (formValue.value?.completionDeadline || formValue.value?.durationDays) {
-    callback();
-  }
-  callback(new Error('请选择完成时限或者输入工期天数'));
-};
-
 const rules = ref({
   actDefName: [{ required: true, message: '请输入步骤节点名称' }],
   assignee: [{ required: true, message: '请选择步骤负责人' }],
   actDefDesc: [{ required: true, message: '请输入步骤节点描述' }],
-  completionDeadline: [{ validator: TimeValiate }],
-  durationDays: [{ validator: TimeValiate }],
-  fileName: [{ required: true, message: '请输入附件名称' }],
+  startDate: [{ required: true, message: '请选择开始日期' }],
+  workDays: [{ required: true, message: '请输入工期天数' }],
+  attachmentName: [{ required: true, message: '请输入附件名称' }],
 });
 
 const handleSubmit = async () => {
@@ -122,6 +115,17 @@ watch(
     modal.value = value;
     if (value) {
       formValue.value = props.row;
+
+      // 开始日期
+      const startDateItem = formRowItems.find((e) => e.name === 'startDate');
+      if (startDateItem) {
+        startDateItem.attrs['onBlur'] = handleEndDate;
+      }
+      // 工期天数
+      const workDaysItem = formRowItems.find((e) => e.name === 'workDays');
+      if (workDaysItem) {
+        workDaysItem.attrs['onBlur'] = handleEndDate;
+      }
     }
   }
 );
@@ -137,27 +141,24 @@ watch(
   }
 );
 
-// 监听完成时限
-watch(
-  () => formValue.value.completionDeadline,
-  (val) => {
-    BaseFormRef.value?.validateField('durationDays');
-    if (val) {
-      formValue.value.durationDays = null;
+const handleEndDate = async () => {
+  try {
+    pending.value = true;
+    if (!formValue.value.workDays || !formValue.value.startDate) {
+      formValue.value.completionDeadline = '';
+      return;
     }
+    const res = await ApiWorkDay({
+      workDays: formValue.value.workDays,
+      startDate: formValue.value.startDate,
+    });
+    formValue.value.completionDeadline = res.endDate;
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
   }
-);
-
-// 监听工期天数
-watch(
-  () => formValue.value.durationDays,
-  (val) => {
-    BaseFormRef.value?.validateField('completionDeadline');
-    if (val) {
-      formValue.value.completionDeadline = null;
-    }
-  }
-);
+};
 
 onMounted(async () => {
   listUser.value = await ApiListUser({

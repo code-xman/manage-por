@@ -53,13 +53,13 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="durationDays"
+            prop="workDays"
             label="工期天数"
             width="80"
             align="center"
           >
             <template #default="{ row }">
-              <div>{{ row.durationDays || '-' }}</div>
+              <div>{{ row.workDays || '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column

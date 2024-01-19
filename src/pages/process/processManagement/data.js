@@ -255,12 +255,25 @@ export const formRowItems = [
     },
   },
   {
-    name: 'durationDays',
+    name: 'startDate',
+    label: '开始日期',
+    type: 'dateTime',
+    attrs: {
+      clearable: true,
+      disabled: false,
+      // 'disabled-date': (date) => {
+      //   return date && date.valueOf() > Date.now();
+      // }
+    },
+  },
+  {
+    name: 'workDays',
     label: '工期天数',
     type: 'number',
     attrs: {
       clearable: true,
       min: 1,
+      max: 365,
       precision: 0,
       step: 1,
       controls: false,
@@ -279,7 +292,7 @@ export const formRowItems = [
     },
   },
   {
-    name: 'fileName',
+    name: 'attachmentName',
     label: '附件名称',
     attrs: {
       clearable: true,

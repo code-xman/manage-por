@@ -82,7 +82,7 @@
               width="140"
             >
               <template #default="{ row }">
-                <div>{{ row.startDate || '-' }}</div>
+                <div>{{ parseToDate(row.startDate) || '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column
@@ -102,7 +102,7 @@
               width="140"
             >
               <template #default="{ row }">
-                <div>{{ row.completionDeadline || '-' }}</div>
+                <div>{{ parseToDate(row.completionDeadline) || '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column
@@ -193,6 +193,7 @@
   </el-drawer>
   <ModalRowEdit
     v-model="showModel"
+    :indexNo="editRowIndex"
     :row="showModelRow"
     :type="props.type"
     :projectId="formValue.projectId || ''"

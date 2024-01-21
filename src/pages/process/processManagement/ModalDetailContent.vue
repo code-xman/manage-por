@@ -117,62 +117,6 @@ const formItems = ref([...formItemsData]);
 // 步骤节点
 const processConfigs = ref([]);
 
-// 监听项目责任部门
-watch(
-  () => formValue.value.responsibleDeptId,
-  async (value) => {
-    try {
-      // 项目管理人
-      const item_contractAdminId = formItems.value.find(
-        (item) => item.name === 'contractAdminId'
-      );
-      // 项目管理人
-      const item_responsibleAdminId = formItems.value.find(
-        (item) => item.name === 'responsibleAdminId'
-      );
-
-      if (!item_contractAdminId || !item_responsibleAdminId) return;
-
-      // 无选项则不清空数据，处理初始化赋值不清空
-      if (!!item_contractAdminId.options?.length) {
-        formValue.value = {
-          ...formValue.value,
-          contractAdminId: [],
-        };
-      }
-      if (!!item_responsibleAdminId.options?.length) {
-        formValue.value = {
-          ...formValue.value,
-          responsibleAdminId: [],
-        };
-      }
-
-      // 处理新的负责人的选项
-      if (!value) {
-        item_contractAdminId.options = [];
-        item_responsibleAdminId.options = [];
-      } else {
-        const res = await ApiListUser({
-          orgId: user.orgId,
-          deptId: value,
-        });
-
-        listUser.value =
-          res?.map((item) => ({
-            label: item.userName,
-            value: item.userId,
-          })) || [];
-        if (item_contractAdminId) {
-          item_contractAdminId.options = res;
-          item_responsibleAdminId.options = res;
-        }
-      }
-    } catch (error) {
-      ElMessage.error(`${error}`);
-    }
-  }
-);
-
 const base = async () => {
   try {
     // 获取url参数
@@ -180,6 +124,7 @@ const base = async () => {
     const params = new URLSearchParams(paramsStr);
     projectId.value = params.get('projectId');
 
+    // 项目责任部门
     const Item_responsibleDeptId = formItems.value.find(
       (item) => item.name === 'responsibleDeptId'
     );
@@ -187,6 +132,24 @@ const base = async () => {
       orgId: user.orgId,
     });
     Item_responsibleDeptId.options = responsibleDepts.value;
+
+    // 项目管理人
+    const item_contractAdminId = formItems.value.find(
+      (item) => item.name === 'contractAdminId'
+    );
+    const res = await ApiListUser({
+      orgId: user.orgId,
+      // deptId: value,
+    });
+
+    listUser.value =
+      res?.map((item) => ({
+        label: item.userName,
+        value: item.userId,
+        text: item.mobile,
+      })) || [];
+
+    item_contractAdminId.options = listUser.value;
   } catch (error) {
     ElMessage.error(`${error}`);
   }
@@ -198,6 +161,7 @@ const init = async () => {
     const res = await ApiDetailProject({ projectId: projectId.value });
     formValue.value = {
       ...res.projectInfo,
+      contractAdminId: res.projectInfo.contractAdminId.split(','),
     };
     processConfigs.value =
       res.processConfigs?.map((item) => {

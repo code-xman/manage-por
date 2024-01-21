@@ -52,6 +52,7 @@ const props = defineProps({
     type: String,
     default: 'detail',
   },
+  indexNo: Number,
   row: {
     type: Object,
     default: () => ({}),
@@ -81,6 +82,7 @@ const handleSubmit = async () => {
         ?.label || '';
     const formVal = {
       ...formValue.value,
+      indexNo: props.indexNo,
       assigneeName,
       completionDeadline: parseToDate(formValue.value.completionDeadline),
     };

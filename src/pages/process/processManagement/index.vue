@@ -63,6 +63,7 @@
     <ModalEdit
       v-model="showModel"
       :type="modalType"
+      :source="'process'"
       :row="showModelRow"
     ></ModalEdit>
     <ModalDetail v-model="showDetail" :row="showModelRow"></ModalDetail>
@@ -135,9 +136,7 @@ const addFn = () => {
   showModel.value = true;
 };
 
-const useTemplate = () => {
-  
-};
+const useTemplate = () => {};
 
 const editFn = (row) => {
   modalType.value = 'edit';

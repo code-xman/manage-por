@@ -8,7 +8,7 @@
       :columns="columns"
       :list="ApiListProjectPage"
       :defaultParams="defaultParams"
-      :options-size="140"
+      :options-size="180"
     >
       <template #options="{ row }">
         <el-button

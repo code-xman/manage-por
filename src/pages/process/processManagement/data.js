@@ -164,7 +164,7 @@ export const formItems = [
     },
   },
   {
-    name: 'responsibleDeptId',
+    name: 'responsibleDeptIds',
     label: '项目责任部门',
     type: 'select',
     options: [],
@@ -186,7 +186,7 @@ export const formItems = [
   //   },
   // },
   {
-    name: 'contractAdminId',
+    name: 'contractAdminIds',
     label: '项目管理人',
     type: 'select',
     options: [],

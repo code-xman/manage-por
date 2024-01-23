@@ -126,7 +126,7 @@ const base = async () => {
 
     // 项目责任部门
     const Item_responsibleDeptId = formItems.value.find(
-      (item) => item.name === 'responsibleDeptId'
+      (item) => item.name === 'responsibleDeptIds'
     );
     responsibleDepts.value = await ApiDeptList({
       orgId: user.orgId,
@@ -135,7 +135,7 @@ const base = async () => {
 
     // 项目管理人
     const item_contractAdminId = formItems.value.find(
-      (item) => item.name === 'contractAdminId'
+      (item) => item.name === 'contractAdminIds'
     );
     const res = await ApiListUser({
       orgId: user.orgId,
@@ -161,7 +161,8 @@ const init = async () => {
     const res = await ApiDetailProject({ projectId: projectId.value });
     formValue.value = {
       ...res.projectInfo,
-      contractAdminId: res.projectInfo.contractAdminId.split(','),
+      contractAdminIds: res.projectInfo.contractAdminId?.split(',') || [],
+      responsibleDeptIds: res.projectInfo.responsibleDeptId?.split(',') || [],
     };
     processConfigs.value =
       res.processConfigs?.map((item) => {

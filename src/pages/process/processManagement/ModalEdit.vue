@@ -276,8 +276,8 @@ const showModelRow = ref({});
 // 验证规则
 const rules = ref({
   projectName: [{ required: true, message: '请输入项目名称' }],
-  responsibleDeptId: [{ required: true, message: '请选择项目责任部门' }],
-  contractAdminId: [{ required: true, message: '请选择项目管理人' }],
+  responsibleDeptIds: [{ required: true, message: '请选择项目责任部门' }],
+  contractAdminIds: [{ required: true, message: '请选择项目管理人' }],
   finish: [{ required: true, message: '请选择是否完结' }],
   projectContent: [{ required: true, message: '请输入项目内容' }],
 });
@@ -399,17 +399,21 @@ const onUpdateRow = (newRow) => {
 
 // 保存处理表单数据
 const handleFormValue = () => {
-  formValue.value.contractAdminName = listUser.value
-    ?.filter((lu) => formValue.value.contractAdminId?.includes(lu.value))
-    .map((lu) => lu.label)
-    .join();
+  formValue.value.contractAdminName =
+    listUser.value
+      ?.filter((lu) => formValue.value.contractAdminIds?.includes(lu.value))
+      .map((lu) => lu.label)
+      .join() || '';
 
-  formValue.value.contractAdminId = formValue.value.contractAdminId.join();
+  formValue.value.contractAdminId = formValue.value.contractAdminIds.join();
 
   formValue.value.responsibleDeptName =
-    responsibleDepts.value?.find(
-      (rd) => rd.value === formValue.value.responsibleDeptId
-    )?.label || '';
+    responsibleDepts.value
+      ?.filter((rd) => formValue.value.responsibleDeptIds?.includes(rd.value))
+      .map((rd) => rd.label)
+      .join() || '';
+
+  formValue.value.responsibleDeptId = formValue.value.responsibleDeptIds.join();
 
   if (props.type === 'copy') {
     formValue.value.gid = undefined;
@@ -435,11 +439,12 @@ const confirmClick = async () => {
     if (['add', 'copy'].includes(props.type)) {
       await ApiCreateProject(saveData);
     } else if (props.type === 'edit') {
-      const reasonObj = await useReasonConfirm(); // 二次确认
-      await ApiEditProject({
-        ...saveData.projectParam,
-        modifyContent: reasonObj.value,
-      });
+      const params = { ...saveData.projectParam };
+      if (props.source === 'process') {
+        const reasonObj = await useReasonConfirm(); // 二次确认
+        params.modifyContent = reasonObj.value;
+      }
+      await ApiEditProject(params);
     }
     ElMessage.success('保存成功');
     emit('update:modelValue', false);
@@ -462,9 +467,10 @@ const init = async () => {
     formValue.value = {
       ...res.projectInfo,
     };
-    formValue.value.contractAdminId = res.projectInfo.contractAdminId
-      ? res.projectInfo.contractAdminId.split(',')
-      : [];
+    formValue.value.contractAdminIds =
+      res.projectInfo.contractAdminId?.split(',') || [];
+    formValue.value.responsibleDeptIds =
+      res.projectInfo.responsibleDeptId?.split(',') || [];
     processConfigs.value =
       res.processConfigs?.map((item) => {
         return {
@@ -492,7 +498,8 @@ watch(
       init();
     } else {
       formValue.value = {
-        contractAdminId: [],
+        contractAdminIds: [],
+        responsibleDeptIds: [],
         finish: '0',
       };
       processConfigs.value = [];
@@ -504,7 +511,7 @@ onMounted(async () => {
   try {
     // 项目责任部门
     const Item_responsibleDeptId = formItems.value.find(
-      (item) => item.name === 'responsibleDeptId'
+      (item) => item.name === 'responsibleDeptIds'
     );
     responsibleDepts.value = await ApiDeptList({
       orgId: user.orgId,
@@ -513,7 +520,7 @@ onMounted(async () => {
 
     // 项目管理人
     const item_contractAdminId = formItems.value.find(
-      (item) => item.name === 'contractAdminId'
+      (item) => item.name === 'contractAdminIds'
     );
     const res = await ApiListUser({
       orgId: user.orgId,

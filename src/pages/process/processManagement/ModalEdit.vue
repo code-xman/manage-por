@@ -128,7 +128,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="isEditRecord || props.source === 'process'"
+              v-if="isEditRecord"
               fixed="right"
               label="操作"
               align="center"
@@ -181,7 +181,7 @@
       <div style="flex: auto">
         <el-button @click="onCloseFn">关闭</el-button>
         <el-button
-          v-if="!isDetail"
+          v-if="!isDetail && !isEditRecord"
           :disabled="pending"
           type="primary"
           @click="confirmClick"
@@ -419,6 +419,7 @@ const handleFormValue = () => {
   return {
     projectParam: {
       ...formValue.value,
+      templateFlag: props.source === 'template' ? '1' : '0', // 模板标识 1-是,0-否
     },
     // processConfigs: processConfigs.value || [],
   };
@@ -438,7 +439,6 @@ const confirmClick = async () => {
       await ApiEditProject({
         ...saveData.projectParam,
         modifyContent: reasonObj.value,
-        templateFlag: props.source === 'template' ? '1' : '0', // 模板标识 1-是,0-否
       });
     }
     ElMessage.success('保存成功');

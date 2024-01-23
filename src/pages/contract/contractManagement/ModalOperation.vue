@@ -53,6 +53,8 @@ const columns = [
     prop: 'content',
     label: '修改原因',
     minWidth: '240px',
+    headerAlign: 'center',
+    align: 'left',
   },
   {
     prop: 'rawCreateUser',

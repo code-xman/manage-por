@@ -7,6 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListProjectPage"
+      :defaultParams="defaultParams"
       :options-size="300"
     >
       <template #options="{ row }">
@@ -60,6 +61,24 @@
         </el-button>
       </template>
     </BasePage>
+    <el-dialog v-model="dialogVisible" title="模板选择">
+      <div class="content p-20">
+        <el-select v-model="temVal" placeholder="请选择模板" clearable>
+          <el-option
+            v-for="item in templates"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="useTemConf"> 确定 </el-button>
+        </span>
+      </template>
+    </el-dialog>
     <ModalEdit
       v-model="showModel"
       :type="modalType"
@@ -75,13 +94,16 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { getAuthUser } from '@/utils/auth';
 
 import BasePage from '@/components/BasePage/index';
 import { exportExcel } from '@/utils/fn.js';
-import { ApiListProjectPage } from '@/http/process/processManagement.js';
+import {
+  ApiListProjectPage,
+  ApiListProject,
+} from '@/http/process/processManagement.js';
 import ModalEdit from '@/pages/process/processManagement/ModalEdit.vue';
 import ModalDetail from '@/pages/process/processManagement/ModalDetail.vue';
 import ModalOperation from '@/pages/process/processManagement/ModalOperation';
@@ -94,6 +116,17 @@ defineOptions({
 const user = getAuthUser();
 const BasePageRef = ref(null);
 const searchFormValue = ref({});
+// 分页默认参数
+const defaultParams = ref({
+  // 模板标识 1-是,0-否
+  templateFlag: '0',
+});
+// 模板数据
+const templates = ref([]);
+// 模板选择弹框
+const dialogVisible = ref(false);
+// 选择的模板projectId
+const temVal = ref('');
 // 操作记录
 const showOperation = ref(false);
 
@@ -136,7 +169,25 @@ const addFn = () => {
   showModel.value = true;
 };
 
-const useTemplate = () => {};
+const useTemplate = () => {
+  dialogVisible.value = true;
+};
+
+const useTemConf = () => {
+  if (!temVal.value) {
+    ElMessage.warning('请选择模板');
+    return;
+  }
+  modalType.value = 'copy';
+  showModelRow.value = {
+    projectId: temVal.value,
+  };
+  dialogVisible.value = false;
+  showModel.value = true;
+  nextTick(() => {
+    temVal.value = '';
+  });
+};
 
 const editFn = (row) => {
   modalType.value = 'edit';
@@ -194,6 +245,19 @@ watch(
     }
   }
 );
+
+onMounted(async () => {
+  try {
+    // 获取模板数据
+    templates.value = await ApiListProject({ templateFlag: '1' });
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  }
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+</style>

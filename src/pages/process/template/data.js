@@ -45,21 +45,21 @@ export const columns = [
       return row.projectContent || '-';
     },
   },
-  {
-    prop: 'projectStatusName',
-    label: '项目状态',
-    width: '140px',
-    fixed: 'right',
-    formatter(row) {
-      // 	00-待启动,01-正常,02-结束,03-无效
-      const inner = () => row.projectStatusName || '-';
-      if (row.projectStatus === '01')
-        return h(BTag, { type: 'success' }, inner);
-      if (['02', '03'].includes(row.projectStatus))
-        return h(BTag, { type: 'danger' }, inner);
-      return h(BTag, { type: 'info' }, inner);
-    },
-  },
+  // {
+  //   prop: 'projectStatusName',
+  //   label: '项目状态',
+  //   width: '140px',
+  //   fixed: 'right',
+  //   formatter(row) {
+  //     // 	00-待启动,01-正常,02-结束,03-无效
+  //     const inner = () => row.projectStatusName || '-';
+  //     if (row.projectStatus === '01')
+  //       return h(BTag, { type: 'success' }, inner);
+  //     if (['02', '03'].includes(row.projectStatus))
+  //       return h(BTag, { type: 'danger' }, inner);
+  //     return h(BTag, { type: 'info' }, inner);
+  //   },
+  // },
 
   // {
   //   prop: 'orgId',

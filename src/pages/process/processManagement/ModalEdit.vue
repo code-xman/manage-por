@@ -375,13 +375,19 @@ const handleEdit = (row) => {
 /** 删除步骤节点 */
 const handleDelete = async (row) => {
   try {
+    await ElMessageBox.confirm('删除此步骤节点，确认是否继续？', '操作提示', {
+      type: 'warning',
+    });
+
     if (props.type === 'editRecord') {
       await ApiDeleteProjectActConfig({ actDefId: row.actDefId });
     }
+    
     const index = processConfigs.value.findIndex((fp) => fp.key === row.key);
     processConfigs.value.splice(index, 1);
     ElMessage.success('删除成功');
   } catch (error) {
+    if (error === 'cancel') return;
     ElMessage.error(`${error}`);
   }
 };

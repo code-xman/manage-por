@@ -162,7 +162,7 @@ export const searchFormItems = [
     name: 'projectId',
     label: '项目名称',
     type: 'select',
-    options: () => ApiListProject(),
+    options: () => ApiListProject({ templateFlag: '0' }),
     style: {
       width: '320px',
     },

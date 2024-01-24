@@ -170,6 +170,10 @@ export const formItems = [
     options: [],
     attrs: {
       clearable: true,
+      multiple: true,
+      'collapse-tags': true,
+      'collapse-tags-tooltip': true,
+      'max-collapse-tags': 4,
     },
   },
   // {

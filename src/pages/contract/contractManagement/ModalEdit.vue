@@ -769,7 +769,7 @@ const base = async () => {
   const Item_projectId = formItems.value.find(
     (item) => item.name === 'projectId'
   );
-  projects.value = await ApiListProject();
+  projects.value = await ApiListProject({ templateFlag: '0' });
   if (Item_projectId) {
     Item_projectId.options = projects.value;
   }

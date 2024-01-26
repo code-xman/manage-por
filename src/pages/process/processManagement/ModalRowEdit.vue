@@ -12,7 +12,7 @@
           ref="BaseFormRef"
           v-model:formValue="formValue"
           :formItems="formRowItems"
-          :rules="rules"
+          :rules="props.source === 'process' ? rules : {}"
         ></BaseForm>
       </div>
       <div class="modal-footer">
@@ -51,6 +51,10 @@ const props = defineProps({
   type: {
     type: String,
     default: 'detail',
+  },
+  source: {
+    type: String,
+    default: 'process',
   },
   indexNo: Number,
   row: {

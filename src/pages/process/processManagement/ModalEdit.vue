@@ -17,7 +17,7 @@
         :formType="isEditRecord ? 'detail' : props.type"
         v-model:formValue="formValue"
         :formItems="formItems"
-        :rules="rules"
+        :rules="props.source === 'process' ? rules : {}"
       >
         <template #formAfter v-if="props.type !== 'add'">
           <div class="formAfterTitle">
@@ -196,6 +196,7 @@
     :indexNo="editRowIndex"
     :row="showModelRow"
     :type="props.type"
+    :source="props.source"
     :projectId="formValue.projectId || ''"
     @update="onUpdateRow"
   ></ModalRowEdit>

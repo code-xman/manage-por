@@ -9,6 +9,7 @@
       ></SearchForm>
     </div>
     <BaseBtn v-if="!!btns?.length" :btns="btns" />
+    <slot name="btn"></slot>
     <div class="page-table flex-1">
       <BaseTable
         ref="baseTableRef"

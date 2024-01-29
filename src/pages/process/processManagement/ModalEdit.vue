@@ -383,7 +383,7 @@ const handleDelete = async (row) => {
     if (props.type === 'editRecord') {
       await ApiDeleteProjectActConfig({ actDefId: row.actDefId });
     }
-    
+
     const index = processConfigs.value.findIndex((fp) => fp.key === row.key);
     processConfigs.value.splice(index, 1);
     ElMessage.success('删除成功');
@@ -392,15 +392,34 @@ const handleDelete = async (row) => {
     ElMessage.error(`${error}`);
   }
 };
+
 /** 更新步骤数据 */
-const onUpdateRow = (newRow) => {
-  if (editRowIndex.value < 0) return;
-  if (editRowType.value === 'add') {
-    processConfigs.value.push(newRow);
-  } else if (editRowType.value === 'edit') {
-    processConfigs.value.splice(editRowIndex.value, 1, newRow);
-  } else if (editRowType.value === 'insert') {
-    processConfigs.value.splice(editRowIndex.value, 0, newRow);
+const onUpdateRow = async (newRow) => {
+  // 手动调整数据
+  // if (editRowIndex.value < 0) return;
+  // if (editRowType.value === 'add') {
+  //   processConfigs.value.push(newRow);
+  // } else if (editRowType.value === 'edit') {
+  //   processConfigs.value.splice(editRowIndex.value, 1, newRow);
+  // } else if (editRowType.value === 'insert') {
+  //   processConfigs.value.splice(editRowIndex.value, 0, newRow);
+  // }
+
+  // 请求接口获取数据
+  try {
+    pending.value = true;
+    const res = await ApiDetailProject({ projectId: props.row.projectId });
+    processConfigs.value =
+      res.processConfigs?.map((item) => {
+        return {
+          ...item,
+          key: item.actDefId,
+        };
+      }) || [];
+  } catch (error) {
+    ElMessage.error(`${error}`);
+  } finally {
+    pending.value = false;
   }
 };
 

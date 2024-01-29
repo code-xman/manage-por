@@ -25,7 +25,7 @@ export default [
           id: 'f02c947dfee84ef6a95f2d8869dbfdff',
           title: '表格文件管理',
         },
-        component: () => import('@/pages/file/PolicyFile/index.vue'),
+        component: () => import('@/pages/file/TableFile/index.vue'),
       },
     ],
   },

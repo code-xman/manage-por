@@ -81,7 +81,7 @@ const BasePageRef = ref(null);
 const searchFormValue = ref({});
 const loading = ref(false);
 const defaultParams = ref({
-  fileType: '1',
+  fileType: '2',
 });
 
 const uploadFn = async (row, response, file, fileList) => {
@@ -92,7 +92,7 @@ const uploadFn = async (row, response, file, fileList) => {
       fileKey: response.data?.[0]?.fileName,
       fileName: file.name,
       fileUrl: response.data?.[0]?.fileUrl,
-      fileType: '1', // 1-政策文件;2-表格文件
+      fileType: '2', // 1-政策文件;2-表格文件
     };
     await ApiSysFileAdd(data);
     ElMessage.success('上传成功');

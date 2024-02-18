@@ -84,8 +84,10 @@
       :type="modalType"
       :source="'process'"
       :row="showModelRow"
+      :templateId="temVal"
     ></ModalEdit>
     <ModalDetail v-model="showDetail" :row="showModelRow"></ModalDetail>
+    <!-- 操作记录 -->
     <ModalOperation
       v-model="showOperation"
       :row="showModelRow"
@@ -184,9 +186,6 @@ const useTemConf = () => {
   };
   dialogVisible.value = false;
   showModel.value = true;
-  nextTick(() => {
-    temVal.value = '';
-  });
 };
 
 const editFn = (row) => {
@@ -242,6 +241,7 @@ watch(
   () => {
     if (!showModel.value) {
       BasePageRef.value?.refresh();
+      temVal.value = '';
     }
   }
 );

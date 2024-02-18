@@ -84,7 +84,7 @@ const handleSubmit = async () => {
     const assigneeName =
       listUser.value?.find((lu) => lu.value === formValue.value.assignee)
         ?.label || '';
-    const formVal = {
+    let formVal = {
       ...formValue.value,
       indexNo: props.indexNo,
       assigneeName,
@@ -98,10 +98,12 @@ const handleSubmit = async () => {
         await ApiEditProjectActConfig(formVal);
       } else {
         // 新增步骤
-        await ApiAddProjectActConfig({
+        const data = await ApiAddProjectActConfig({
           ...formVal,
           projectId: props.projectId,
         });
+
+        formVal = {...formVal, actDefId: data.actDefId}
       }
       ElMessage.success('保存成功');
     }

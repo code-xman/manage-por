@@ -221,6 +221,7 @@ import {
   ApiEditProject,
   ApiDetailProject,
   ApiDeleteProjectActConfig,
+  ApiActConfigOrder,
   ApiDownloadActDefId,
   ApiDownloadProjectId,
 } from '@/http/process/processManagement.js';
@@ -246,6 +247,8 @@ const props = defineProps({
   row: {
     type: Object,
   },
+  // 模板id
+  templateId: String,
 });
 
 /** 是否是详情 */
@@ -396,31 +399,46 @@ const handleDelete = async (row) => {
 /** 更新步骤数据 */
 const onUpdateRow = async (newRow) => {
   // 手动调整数据
-  // if (editRowIndex.value < 0) return;
-  // if (editRowType.value === 'add') {
-  //   processConfigs.value.push(newRow);
-  // } else if (editRowType.value === 'edit') {
-  //   processConfigs.value.splice(editRowIndex.value, 1, newRow);
-  // } else if (editRowType.value === 'insert') {
-  //   processConfigs.value.splice(editRowIndex.value, 0, newRow);
-  // }
+  if (editRowIndex.value < 0) return;
+  if (editRowType.value === 'add') {
+    processConfigs.value.push(newRow);
+  } else if (editRowType.value === 'edit') {
+    processConfigs.value.splice(editRowIndex.value, 1, newRow);
+  } else if (editRowType.value === 'insert') {
+    processConfigs.value.splice(editRowIndex.value, 0, newRow);
+  }
 
-  // 请求接口获取数据
+  // 步骤节点顺序保存
   try {
     pending.value = true;
-    const res = await ApiDetailProject({ projectId: props.row.projectId });
-    processConfigs.value =
-      res.processConfigs?.map((item) => {
-        return {
-          ...item,
-          key: item.actDefId,
-        };
-      }) || [];
+    const ActDefs =
+      processConfigs.value?.map((item, index) => ({
+        indexNo: index,
+        actDefId: item.actDefId,
+      })) || [];
+    await ApiActConfigOrder({ ActDefs });
   } catch (error) {
     ElMessage.error(`${error}`);
   } finally {
     pending.value = false;
   }
+
+  // 请求接口获取数据
+  // try {
+  //   pending.value = true;
+  //   const res = await ApiDetailProject({ projectId: props.row.projectId });
+  //   processConfigs.value =
+  //     res.processConfigs?.map((item) => {
+  //       return {
+  //         ...item,
+  //         key: item.actDefId,
+  //       };
+  //     }) || [];
+  // } catch (error) {
+  //   ElMessage.error(`${error}`);
+  // } finally {
+  //   pending.value = false;
+  // }
 };
 
 // 保存处理表单数据
@@ -447,6 +465,7 @@ const handleFormValue = () => {
   }
 
   return {
+    templateId: props.templateId,
     projectParam: {
       ...formValue.value,
       templateFlag: props.source === 'template' ? '1' : '0', // 模板标识 1-是,0-否

@@ -68,6 +68,12 @@ export const ApiDeleteProjectActConfig = async (params = {}) => {
   return data;
 };
 
+// 项目步骤节点配置-顺序保存
+export const ApiActConfigOrder = async (params = {}) => {
+  const data = await post('/api/projectFacade/actConfigOrder', params);
+  return data;
+};
+
 // 	项目任务-分页
 export const ApiListTodo = async (params = {}) => {
   const _params = {

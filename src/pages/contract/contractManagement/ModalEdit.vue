@@ -575,7 +575,7 @@ const contractPaymentRecordsValidateFn = () => {
 const confirmClick = async () => {
   try {
     pending.value = true;
-    if (['edit'].includes(props.type)) {
+    if (['add', 'edit'].includes(props.type)) {
       await BaseFormRef.value?.validate();
       if (!!formValue.value.unPayedAmt && formValue.value.finish === '1') {
         throw '存在待支付金额，不能完结合同';
@@ -712,6 +712,8 @@ watch(
       contractRecords.value = [];
       hasContractPayRecords.value = false;
     }
+
+    BaseFormRef.value?.clearValidate();
   }
 );
 
@@ -753,7 +755,9 @@ watch(
 
 const base = async () => {
   // 合同所属部门
-  const Item_deptIdsData = formItems.value.find((item) => item.name === 'deptIdsData');
+  const Item_deptIdsData = formItems.value.find(
+    (item) => item.name === 'deptIdsData'
+  );
   // 合同责任部门
   const Item_responsibleDeptId = formItems.value.find(
     (item) => item.name === 'responsibleDeptId'

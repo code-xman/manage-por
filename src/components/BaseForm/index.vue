@@ -284,12 +284,22 @@ const resetFields = async () => {
   }
 };
 
+// 清除验证
+const clearValidate = async () => {
+  try {
+    await formRef.value?.clearValidate();
+  } catch (error) {
+    throw 'cancel';
+  }
+};
+
 defineExpose({
   formRef,
   formData,
   validate,
   validateField,
   resetFields,
+  clearValidate,
 });
 </script>
 

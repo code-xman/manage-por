@@ -30,14 +30,14 @@
         </el-upload>
       </template>
       <template #options="{ row }">
-        <el-button
+        <!-- <el-button
           v-allow="'9a7c8726605845e38e90c9810663a004'"
           type="primary"
           link
           @click="() => previewFn(row)"
         >
           查看
-        </el-button>
+        </el-button> -->
         <el-button
           v-allow="'e9fbc8cb6446436189eb49c65a5f25f5'"
           type="danger"
@@ -70,6 +70,7 @@ import {
   ApiSysFilePage,
   ApiSysFileAdd,
   ApiSysFileDel,
+  ApiDownloadFile,
 } from '@/http/file/index.js';
 import { columns, searchFormItems } from './data';
 
@@ -129,14 +130,16 @@ const deleteFn = async (row) => {
   }
 };
 
-//TODO: 未成功
 const downloadFn = async (row) => {
   try {
-    FileSaver.saveAs(row.fileUrl, `${row.fileName}`);
+    if (!row?.fileKey) throw '此文件无法下载';
+    await ElMessageBox.confirm('文件下载，确认是否继续？', '操作提示', {
+      type: 'warning',
+    });
+    FileSaver.saveAs(ApiDownloadFile(row.fileKey), `${row.fileName}`);
   } catch (error) {
     if (error === 'cancel') return;
     ElMessage.error(`${error}`);
-  } finally {
   }
 };
 </script>

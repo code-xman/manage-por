@@ -1,4 +1,5 @@
 import { post } from '@/http';
+import { HTTP_CONFIG } from '@/config/base';
 
 // 分页-文件管理
 export const ApiSysFilePage = async (params = {}) => {
@@ -23,4 +24,9 @@ export const ApiSysFileAdd = async (params = {}) => {
 export const ApiSysFileDel = async (params = {}) => {
   const data = await post('/api/merchantFacade/sysFileDel', params);
   return data;
+};
+
+// 文件下载 fileKey-文件编号
+export const ApiDownloadFile = (fileKey) => {
+  return `${HTTP_CONFIG.baseUrl}/fileDownLoad/${fileKey}`;
 };

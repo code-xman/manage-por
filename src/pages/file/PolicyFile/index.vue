@@ -16,6 +16,7 @@
           :action="uploadAction"
           :headers="uploadHeaders"
           :show-file-list="false"
+          :accept="`${allowFiles.pdf},${allowFiles.doc},${allowFiles.ppt}`"
           :on-success="
             (response, file, fileList) =>
               uploadFn(row, response, file, fileList)
@@ -65,7 +66,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import FileSaver from 'file-saver';
 
 import BasePage from '@/components/BasePage/index';
-import { uploadAction, uploadHeaders } from '@/config/base';
+import { uploadAction, uploadHeaders, allowFiles, } from '@/config/base';
 import {
   ApiSysFilePage,
   ApiSysFileAdd,

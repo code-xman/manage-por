@@ -18,3 +18,15 @@ export const CACHE_PREFIX = '__manage_saas';
 
 // 敏感信息缓存，用户退出登录时，会被清除
 export const CACHE_AUTH_PREFIX = `${CACHE_PREFIX}_auth`;
+
+// 允许上传的文件格式
+export const allowFiles = {
+  image: '.jpg,.jpeg,.png,.gif,.webp,.svg',
+  pdf: '.pdf',
+  doc: '.doc,.docx',
+  ppt: '.ppt,.pptx',
+  excel: '.xls,.xlsx',
+  video: '.wav,.mp3,.acc,.ogg,.midi,.wma,.m4a',
+  audio: '.mp4,.avi,.mov,.rm,.rmvb,.swf',
+  rar: 'rar,.zip,.tar,.iso,.7z,.gz,.bz2'
+}

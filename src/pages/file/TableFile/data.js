@@ -22,9 +22,9 @@ export const columns = [
     minWidth: '140px',
     formatter(row) {
       if (row.fileType === '1')
-        return h(BTag, { type: 'success' }, () => '政策文件');
+        return h(BTag, { type: 'warning' }, () => '政策文件');
       if (row.fileType === '2')
-        return h(BTag, { type: 'warning' }, () => '表格文件');
+        return h(BTag, { type: 'success' }, () => '表格文件');
       return '-';
     },
   },

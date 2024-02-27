@@ -25,7 +25,7 @@
           link
           @click="() => editRecordFn(row)"
         >
-          编辑记录
+          编辑节点
         </el-button>
         <el-button
           v-allow="'d8a4a6ecca9e4dcb8f6c22766be4269f'"

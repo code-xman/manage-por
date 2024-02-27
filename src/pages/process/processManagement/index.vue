@@ -20,12 +20,13 @@
           编辑
         </el-button>
         <el-button
+          v-if="row.finish === '0'"
           v-allow="'9c3f6a07321747489f58afdcab2c262f'"
           type="primary"
           link
           @click="() => editRecordFn(row)"
         >
-          编辑记录
+          编辑节点
         </el-button>
         <!-- <el-button
           v-allow="'2d98942cbd074bdcab56459f2ff51148'"

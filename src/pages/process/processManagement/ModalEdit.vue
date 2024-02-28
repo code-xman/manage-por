@@ -128,11 +128,11 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="isEditRecord"
+              v-if="isEditRecord || isDetail"
               fixed="right"
               label="操作"
               align="center"
-              width="180"
+              :width="isDetail ? 100 : 180"
             >
               <template #default="{ row }">
                 <div v-if="isEditRecord" class="operate">
@@ -320,7 +320,7 @@ const handleActDefId = async (row) => {
     pending.value = true;
     FileSaver.saveAs(
       ApiDownloadActDefId(row.actDefId),
-      `${row.actDefName}附件${Date.now()}`
+      `${row.attachmentName}` || `附件${Date.now()}`
     );
   } catch (error) {
     if (error === 'cancel') return;

@@ -29,6 +29,10 @@ defineOptions({ name: 'OrganModalDetail' });
 const emit = defineEmits(['update:modelValue']);
 const props = defineProps({
   modelValue: Boolean,
+  type: {
+    type: String,
+    default: 'detail',
+  },
   row: {
     type: Object,
   },
@@ -41,7 +45,7 @@ const modalDetailContentRef = ref(null);
 const reportUrl = computed(() => {
   return `/#/contractDetailContent?contractNo=${props.row.contractNo}&oId=${
     props.row?.merchantId || user.orgId
-  }`;
+  }&type=${props.type}`;
 });
 
 // 监听弹框打开关闭

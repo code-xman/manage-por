@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column prop="annexesData" label="附件" minWidth="180">
             <template #default="{ row }">
-              <div class="filesCol">
+              <div v-if="type === 'detail'" class="filesCol">
                 <el-tag
                   v-for="file in row.annexesData"
                   :key="file.key"
@@ -63,6 +63,11 @@
                   {{ file.name }}
                 </el-tag>
               </div>
+              <div v-else-if="type === 'priview'" class="filesCol">
+                <div v-for="file in row.annexesData">
+                  {{ file.name }}
+                </div>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -70,12 +75,7 @@
         <div class="formAfterTitle">
           <span>合同支付记录</span>
         </div>
-        <el-table
-          :data="contractPayRecords"
-          style="width: 100%"
-          stripe
-          border
-        >
+        <el-table :data="contractPayRecords" style="width: 100%" stripe border>
           <el-table-column
             fixed
             type="index"
@@ -134,6 +134,7 @@ const contractNo = ref('');
 const formValue = ref({});
 const formItems = ref([...formItemsData]);
 const orgId = ref('');
+const type = ref(''); // detail-详情 priview-预览
 
 /** 责任部门选项 */
 const responsibleDepts = ref([]);
@@ -148,6 +149,7 @@ const base = async () => {
   const params = new URLSearchParams(paramsStr);
   contractNo.value = params.get('contractNo');
   orgId.value = params.get('oId');
+  type.value = params.get('type');
 
   // 合同所属部门
   const Item_deptIdsData = formItems.value.find(

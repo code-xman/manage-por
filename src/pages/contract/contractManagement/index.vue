@@ -7,7 +7,7 @@
       :btns="btns"
       :columns="columns"
       :list="ApiListContractPage"
-      :options-size="350"
+      :options-size="400"
     >
       <template #options="{ row }">
         <el-button
@@ -32,9 +32,17 @@
           v-allow="'ecffee4ca0d146c4863f71465ab5e06b'"
           type="primary"
           link
-          @click="() => detailFn(row)"
+          @click="() => detailFn(row, 'detail')"
         >
           详情
+        </el-button>
+        <el-button
+          v-allow="'fed33dba38bd4f6fa5ad940a35c02ca0'"
+          type="success"
+          link
+          @click="() => detailFn(row, 'priview')"
+        >
+          预览
         </el-button>
         <el-button
           v-allow="'9293c0ae670b4f29b3890c560594d52f'"
@@ -59,8 +67,15 @@
       :type="modalType"
       :row="showModelRow"
     ></ModalEdit>
-    <ModalDetail v-model="showDetail" :row="showModelRow"></ModalDetail>
-    <ModalOperation v-model="showOperation" :row="showModelRow"></ModalOperation>
+    <ModalDetail
+      v-model="showDetail"
+      :type="modalType"
+      :row="showModelRow"
+    ></ModalDetail>
+    <ModalOperation
+      v-model="showOperation"
+      :row="showModelRow"
+    ></ModalOperation>
   </div>
 </template>
 
@@ -133,8 +148,8 @@ const editRecordFn = (row) => {
   showModel.value = true;
 };
 
-const detailFn = (row) => {
-  modalType.value = 'detail';
+const detailFn = (row, type) => {
+  modalType.value = type;
   showModelRow.value = row;
   showDetail.value = true;
 };

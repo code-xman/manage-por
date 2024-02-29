@@ -14,7 +14,13 @@
     <template #footer>
       <div style="flex: auto">
         <el-button @click="onCloseFn">关闭</el-button>
-        <el-button type="primary" @click="onPrintFn">打印</el-button>
+        <el-button
+          v-if="props.type === 'priview'"
+          type="primary"
+          @click="onPrintFn"
+        >
+          打印
+        </el-button>
       </div>
     </template>
   </el-drawer>

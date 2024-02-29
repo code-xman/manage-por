@@ -118,8 +118,9 @@ export const searchFormItems = [
     },
   },
   {
-    name: 'deptName',
+    name: 'deptId',
     label: '部门',
+    type: 'select',
     style: {
       width: '220px',
     },

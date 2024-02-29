@@ -53,6 +53,7 @@ import { ElMessage } from 'element-plus';
 
 import BasePage from '@/components/BasePage/index';
 import { ApiListProjectPage } from '@/http/process/processManagement.js';
+import { ApiDeptList } from '@/http/setting/department.js';
 import ModalEdit from '@/pages/process/processManagement/ModalEdit';
 import { columns, searchFormItems } from './data.js';
 
@@ -115,6 +116,22 @@ watch(
   () => {
     if (!showModel.value) {
       BasePageRef.value?.refresh();
+    }
+  }
+);
+
+watch(
+  () => searchFormValue.value.merchantId,
+  async (value) => {
+    searchFormValue.value.deptId = '';
+    const item_deptId = searchFormItems.find((item) => item.name === 'deptId');
+    if (!item_deptId) return;
+
+    if (!value) {
+      item_deptId.options = [];
+    } else {
+      const res = await ApiDeptList({ orgId: value });
+      item_deptId.options = res || [];
     }
   }
 );

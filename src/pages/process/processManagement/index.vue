@@ -103,6 +103,7 @@ import { getAuthUser } from '@/utils/auth';
 
 import BasePage from '@/components/BasePage/index';
 import { exportExcel } from '@/utils/fn.js';
+import { ApiDeptList } from '@/http/setting/department.js';
 import {
   ApiListProjectPage,
   ApiListProject,
@@ -236,6 +237,22 @@ const downloadFn = async () => {
     ElMessage.error(`${error}`);
   }
 };
+
+watch(
+  () => searchFormValue.value.merchantId,
+  async (value) => {
+    searchFormValue.value.deptId = '';
+    const item_deptId = searchFormItems.find((item) => item.name === 'deptId');
+    if (!item_deptId) return;
+
+    if (!value) {
+      item_deptId.options = [];
+    } else {
+      const res = await ApiDeptList({ orgId: value });
+      item_deptId.options = res || [];
+    }
+  }
+);
 
 watch(
   () => showModel.value,

@@ -86,6 +86,7 @@ import FileSaver from 'file-saver';
 
 import BasePage from '@/components/BasePage/index';
 import { exportExcel } from '@/utils/fn.js';
+import { ApiDeptList } from '@/http/setting/department.js';
 import {
   ApiListContractPage,
   ApiDownloadContractNo,
@@ -189,6 +190,22 @@ const handleDownContractFile = async (row) => {
   } finally {
   }
 };
+
+watch(
+  () => searchFormValue.value.merchantId,
+  async (value) => {
+    searchFormValue.value.deptId = '';
+    const item_deptId = searchFormItems.find((item) => item.name === 'deptId');
+    if (!item_deptId) return;
+
+    if (!value) {
+      item_deptId.options = [];
+    } else {
+      const res = await ApiDeptList({ orgId: value });
+      item_deptId.options = res || [];
+    }
+  }
+);
 
 watch(
   () => showModel.value,

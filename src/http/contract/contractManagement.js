@@ -1,13 +1,21 @@
 import { post } from '@/http';
 import { HTTP_CONFIG } from '@/config/base';
+import { parseToDate } from '@/utils/string';
 
 // 合同列表-分页
 export const ApiListContractPage = async (params = {}) => {
-  const _params = {
+  let _params = {
     pageNum: 1,
     pageSize: 20,
     ...params,
   };
+
+  // 处理签订时间搜索区间
+  if (params.signDate?.length > 0) {
+    _params.startDate = parseToDate(params.signDate[0]);
+    _params.endDate = parseToDate(params.signDate[1]);
+    delete _params.signDate
+  }
 
   const data = await post('/api/contractFacade/listContractPage', _params);
 

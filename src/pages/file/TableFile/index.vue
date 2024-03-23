@@ -17,6 +17,8 @@
           :headers="uploadHeaders"
           :show-file-list="false"
           :accept="`${allowFiles.excel}`"
+          :on-progress="() => (loading = true)"
+          :on-error="() => (loading = false)"
           :on-success="
             (response, file, fileList) =>
               uploadFn(row, response, file, fileList)
@@ -25,6 +27,7 @@
           <el-button
             v-allow="'3e77d59b5f5144f784f699d66ac24314'"
             type="primary"
+            :disabled="loading"
           >
             上传
           </el-button>
@@ -66,7 +69,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import FileSaver from 'file-saver';
 
 import BasePage from '@/components/BasePage/index';
-import { uploadAction, uploadHeaders, allowFiles, } from '@/config/base';
+import { uploadAction, uploadHeaders, allowFiles } from '@/config/base';
 import {
   ApiSysFilePage,
   ApiSysFileAdd,

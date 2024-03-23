@@ -17,6 +17,8 @@
           :headers="uploadHeaders"
           :show-file-list="false"
           :accept="`${allowFiles.pdf},${allowFiles.doc},${allowFiles.ppt}`"
+          :on-progress="() => (loading = true)"
+          :on-error="() => (loading = false)"
           :on-success="
             (response, file, fileList) =>
               uploadFn(row, response, file, fileList)
@@ -25,6 +27,7 @@
           <el-button
             v-allow="'3e77d59b5f5144f784f699d66ac24314'"
             type="primary"
+            :disabled="loading"
           >
             上传
           </el-button>

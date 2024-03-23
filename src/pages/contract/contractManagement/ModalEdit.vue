@@ -145,9 +145,11 @@
                 <div class="operate">
                   <el-upload
                     class="upload"
+                    :disabled="uploading"
                     :action="uploadAction"
                     :headers="uploadHeaders"
                     :show-file-list="false"
+                    :on-progress="() => (uploading = true)"
                     :on-success="
                       (response, file, fileList) =>
                         handleSuccess(row, response, file, fileList)
@@ -430,7 +432,9 @@ const handleSuccess = (row, response, file, fileList) => {
     uploading.value = false;
   }
 };
-const handleError = (row, error, file, fileList) => {};
+const handleError = (row, error, file, fileList) => {
+  uploading.value = false;
+};
 const handleExceed = (row, file, fileList) => {};
 const handleRemove = (row, file, fileList) => {};
 /** 删除记录 */

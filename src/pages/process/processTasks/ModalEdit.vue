@@ -92,12 +92,19 @@
                     :action="uploadAction"
                     :headers="uploadHeaders"
                     :show-file-list="false"
+                    :on-progress="() => (uploading = true)"
+                    :on-error="() => (uploading = false)"
                     :on-success="
                       (response, file, fileList) =>
                         handleSuccess(row, response, file, fileList)
                     "
                   >
-                    <el-button link type="primary" size="small">
+                    <el-button
+                      :disabled="uploading"
+                      link
+                      type="primary"
+                      size="small"
+                    >
                       上传
                     </el-button>
                   </el-upload>

@@ -164,11 +164,21 @@ const formatFormItem = async () => {
 // 监听机构变化
 watch(
   () => formValue.value.orgId,
-  async (val) => {
+  async (val, oldVal) => {
     try {
+      if (oldVal) {
+        formValue.value.departmentId = '';
+        formValue.value.manageDeptIds = [];
+        formValue.value.roleIds = [];
+      }
+
       /** 职能部门 */
       const item_departmentId = formItems.value?.find(
         (item) => item.name === 'departmentId'
+      );
+      /** 分管部门 */
+      const item_manageDeptIds = formItems.value?.find(
+        (item) => item.name === 'manageDeptIds'
       );
       /** 岗位角色 */
       const item_roleIds = formItems.value?.find(
@@ -181,6 +191,9 @@ watch(
             orgId: formValue.value.orgId,
           });
           item_departmentId.attrs.disabled = false;
+
+          item_manageDeptIds.options = item_departmentId.options;
+          item_manageDeptIds.attrs.disabled = false;
         }
 
         if (item_roleIds) {
@@ -190,8 +203,8 @@ watch(
         }
       } else {
         if (item_departmentId) {
-          formValue.value.departmentId = '';
           item_departmentId.attrs.disabled = true;
+          item_manageDeptIds.attrs.disabled = true;
         }
       }
     } catch (error) {
@@ -219,6 +232,7 @@ watch(
             ...defaultFormValue,
             orgId: detail?.orgId || '',
             departmentId: detail?.znDeptId || '',
+            manageDeptIds: detail?.manageDeptIds || [],
             loginId: detail?.loginId || '',
             userName: detail?.userName || '',
             workStatus: detail?.workStatus?.value || '',

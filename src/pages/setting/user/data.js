@@ -1,7 +1,7 @@
 import { h } from 'vue';
 import BTag from '@/components/baseCommon/BTag.vue';
 import { ApiQueryAllChildMerchantMini } from '@/http/setting/organ';
-import { WHETHER_ENUM, WORK_STATUS_ENUM, } from '@/data/common';
+import { WHETHER_ENUM, WORK_STATUS_ENUM } from '@/data/common';
 import { getAuthUser } from '@/utils/auth';
 
 const user = getAuthUser();
@@ -195,6 +195,16 @@ export const formItems = [
   {
     name: 'roleIds',
     label: '岗位角色',
+    type: 'select',
+    options: [],
+    attrs: {
+      clearable: true,
+      multiple: true,
+    },
+  },
+  {
+    name: 'manageDeptIds',
+    label: '分管部门',
     type: 'select',
     options: [],
     attrs: {

@@ -159,6 +159,17 @@ export const searchFormItems = [
     },
   },
   {
+    name: 'deptId',
+    label: '部门',
+    type: 'select',
+    style: {
+      width: '220px',
+    },
+    attrs: {
+      clearable: true,
+    },
+  },
+  {
     name: 'projectId',
     label: '项目名称',
     type: 'select',
@@ -169,17 +180,6 @@ export const searchFormItems = [
     attrs: {
       clearable: true,
       filterable: true,
-    },
-  },
-  {
-    name: 'deptId',
-    label: '部门',
-    type: 'select',
-    style: {
-      width: '220px',
-    },
-    attrs: {
-      clearable: true,
     },
   },
   {

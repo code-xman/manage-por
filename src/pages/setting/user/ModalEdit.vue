@@ -232,7 +232,7 @@ watch(
             ...defaultFormValue,
             orgId: detail?.orgId || '',
             departmentId: detail?.znDeptId || '',
-            manageDeptIds: detail?.manageDeptIds || [],
+            manageDeptIds: detail?.manageDeptIds?.map(e => e.value) || [],
             loginId: detail?.loginId || '',
             userName: detail?.userName || '',
             workStatus: detail?.workStatus?.value || '',

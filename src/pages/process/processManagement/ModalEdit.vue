@@ -297,7 +297,7 @@ const handleProjectId = async () => {
     // window.open(ApiDownloadProjectId(props.row.projectId));
     FileSaver.saveAs(
       ApiDownloadProjectId(props.row.projectId),
-      `${formValue.value.projectName}附件${Date.now()}`
+      `${formValue.value.projectName}附件`
     );
   } catch (error) {
     if (error === 'cancel') return;
@@ -320,7 +320,7 @@ const handleActDefId = async (row) => {
     pending.value = true;
     FileSaver.saveAs(
       ApiDownloadActDefId(row.actDefId),
-      `${row.attachmentName}` || `附件${Date.now()}`
+      `${row.attachmentName}` || `附件`
     );
   } catch (error) {
     if (error === 'cancel') return;

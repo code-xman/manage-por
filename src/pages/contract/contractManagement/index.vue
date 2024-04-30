@@ -182,7 +182,7 @@ const handleDownContractFile = async (row) => {
     });
     FileSaver.saveAs(
       ApiDownloadContractNo(row.contractNo),
-      `${row.contractName}附件${Date.now()}`
+      `${row.contractName}附件`
     );
   } catch (error) {
     if (error === 'cancel') return;

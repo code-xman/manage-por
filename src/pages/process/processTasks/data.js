@@ -37,8 +37,57 @@ export const fileTypes = [
   },
 ];
 
-/** 列表字段 */
-export const columns = [
+/** 项目-列表字段 */
+export const projectCols = [
+  {
+    type: 'index',
+    label: '#',
+    fixed: 'left',
+  },
+  {
+    prop: 'projectName',
+    label: '项目名称',
+    minWidth: '160px',
+    formatter(row) {
+      return row.projectName || '-';
+    },
+  },
+  {
+    prop: 'taskNum',
+    label: '任务数量',
+    width: '140px',
+    formatter(row) {
+      return row.taskNum || '-';
+    },
+  },
+  {
+    prop: 'incomplete',
+    label: '未完成任务',
+    width: '160px',
+    formatter(row) {
+      return row.incomplete || '-';
+    },
+  },
+  {
+    prop: 'completed',
+    label: '已完成任务',
+    width: '160px',
+    formatter(row) {
+      return row.completed || '-';
+    },
+  },
+  {
+    prop: 'completeTime',
+    label: '更新时间',
+    width: '160px',
+    formatter(row) {
+      return parseToDatetime(row.completeTime) || '-';
+    },
+  },
+];
+
+/** 任务-列表字段 */
+export const taskCols = [
   {
     type: 'index',
     label: '#',
@@ -116,17 +165,8 @@ export const columns = [
   },
 ];
 
-/** 搜索字段 */
-export const searchFormItems = [
-  {
-    name: 'taskStatus',
-    label: '任务类型',
-    type: 'select',
-    options: taskStatus,
-    attrs: {
-      // clearable: true,
-    },
-  },
+/** 项目-搜索字段 */
+export const projectSearchFormItems = [
   {
     name: 'projectName',
     label: '项目名称',
@@ -137,6 +177,29 @@ export const searchFormItems = [
       clearable: true,
     },
   },
+];
+
+/** 任务-搜索字段 */
+export const searchFormItems = [
+  {
+    name: 'taskStatus',
+    label: '任务类型',
+    type: 'select',
+    options: taskStatus,
+    attrs: {
+      // clearable: true,
+    },
+  },
+  // {
+  //   name: 'projectName',
+  //   label: '项目名称',
+  //   style: {
+  //     width: '280px',
+  //   },
+  //   attrs: {
+  //     clearable: true,
+  //   },
+  // },
   {
     name: 'startTime',
     label: '开始时间',

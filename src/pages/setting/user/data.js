@@ -37,14 +37,15 @@ export const columns = [
       return row.orgName || '-';
     },
   },
-  // {
-  //   prop: 'departmentName',
-  //   label: '所属部门',
-  //   width: '160px',
-  //   formatter(row) {
-  //     return row.departmentName || '-';
-  //   },
-  // },
+  // TODO: ⽤户管理-字段联调
+  {
+    prop: 'departmentName',
+    label: '所属部门',
+    width: '160px',
+    formatter(row) {
+      return row.departmentName || '-';
+    },
+  },
   {
     prop: 'mobile',
     label: '联系电话',

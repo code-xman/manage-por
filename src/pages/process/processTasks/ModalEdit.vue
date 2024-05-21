@@ -2,7 +2,7 @@
   <el-drawer
     v-model="modal"
     :title="modalTitle"
-    size="90%"
+    size="80%"
     append-to-body
     destroy-on-close
     class="my-drawer"

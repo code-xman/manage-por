@@ -2,37 +2,19 @@
   <div class="process full">
     <BasePage
       ref="BasePageRef"
-      :searchFormItems="searchFormItems"
+      :searchFormItems="projectSearchFormItems"
       v-model:searchFormValue="searchFormValue"
-      :columns="columns"
+      :columns="projectCols"
       :list="ApiListTodo"
       :options-size="120"
     >
       <template #options="{ row }">
-        <el-button
-          v-allow="'e9f451e2df1f4e4eb5ecb98c9270ddd7'"
-          type="primary"
-          link
-          @click="() => editFn(row)"
-        >
-          {{ !row.completeTime ? '处理' : '修改'}}
-        </el-button>
-        <el-button
-          v-if="row.completeTime"
-          v-allow="'44d370f6cb0e442da8147d113529e1ee'"
-          type="primary"
-          link
-          @click="() => detailFn(row)"
-        >
-          详情
+        <el-button type="primary" link @click="() => detailFn(row)">
+          查看任务
         </el-button>
       </template>
     </BasePage>
-    <ModalEdit
-      v-model="showModel"
-      :type="modalType"
-      :row="showModelRow"
-    ></ModalEdit>
+    <ModalTask v-model="showModel" :row="showModelRow"></ModalTask>
   </div>
 </template>
 
@@ -42,12 +24,13 @@ import { ElMessage } from 'element-plus';
 
 import { getAuthUser } from '@/utils/auth';
 import BasePage from '@/components/BasePage/index';
+// TODO: 更换查询任务项目的接口
 import { ApiListTodo } from '@/http/process/processManagement.js';
-import ModalEdit from './ModalEdit.vue';
-import { columns, searchFormItems } from './data';
+import ModalTask from './ModalTask.vue';
+import { projectCols, projectSearchFormItems } from './data';
 
 defineOptions({
-  name: 'ShowBasePage',
+  name: 'ProcessTasks',
 });
 
 const user = getAuthUser();
@@ -61,17 +44,6 @@ const searchFormValue = ref({
 const modalType = ref('');
 const showModel = ref(false);
 const showModelRow = ref();
-
-const addFn = () => {
-  modalType.value = 'add';
-  showModel.value = true;
-};
-
-const editFn = (row) => {
-  modalType.value = 'edit';
-  showModelRow.value = row;
-  showModel.value = true;
-};
 
 const detailFn = (row) => {
   modalType.value = 'detail';

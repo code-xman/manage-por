@@ -5,7 +5,7 @@
         <div
           :class="[
             'item',
-            index >= colLength ? 'margin-top' : '',
+            index >= colLength ? 'mt-10' : '',
             !!row.route ? 'item-handle' : '',
           ]"
           @click="handleItemClick(row)"
@@ -58,7 +58,7 @@ const colLength = computed(() => {
 // 样式计算
 const wrapStyle = computed(() => {
   if (!props.count) return {};
-  const _size = (props.count / 2) * 34 + (props.count - 1) * 10;
+  const _size = (props.count / 2) * 60 + (props.count - 1) * 10;
   return {
     height: `${_size}px`,
   };

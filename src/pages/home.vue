@@ -1,8 +1,8 @@
 <template>
   <div class="home flex-1">
-    <div class="content" >
+    <div class="content flex column " >
       <div>{{ user.userName }}，你好！</div>
-      <div class="items">
+      <div class="items flex-1">
         <ItemCountCard :data="list" />
       </div>
     </div>
@@ -26,6 +26,12 @@ const list = ref([
     route: 'ProcessTasks', // 路由 name
   },
   {
+    icon: '.icon-xiangmupingshen',
+    name: '项目退回任务量',
+    value: 0,
+    route: 'ProcessBackTasks', // 路由 name
+  },
+  {
     icon: 'icon-xiangmuguidang',
     name: '合同待办任务量',
     value: 0,
@@ -41,11 +47,13 @@ onMounted(async () => {
   });
   list.value[0].value = processRes?.total || 0;
 
+  // TODO: 退回任务数量请求
+
   const contractRes = await ApiListContractPage({
     pageSize: 1e5,
     needSupply: '1',
   });
-  list.value[1].value = contractRes?.total || 0;
+  list.value[2].value = contractRes?.total || 0;
 });
 </script>
 
@@ -57,6 +65,7 @@ onMounted(async () => {
   font-weight: bold;
   .content {
     padding: 10px;
+    height: 100%;
   }
   .items {
     margin-top: 20px;

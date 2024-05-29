@@ -196,9 +196,9 @@ defineExpose({
       height: 100%;
 
       // 为了使高度 100% 撑满
-      position: absolute;
-      top: 0;
-      left: 0;
+      // position: absolute;
+      // top: 0;
+      // left: 0;
     }
   }
 }

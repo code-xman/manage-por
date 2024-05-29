@@ -23,11 +23,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 .cell {
   position: relative;
-  width: 100%;
-  height: 100%;
+  margin: 5px 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 10px);
   line-height: 32px;
-  padding-left: 20px;
-  padding-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   overflow: hidden;
   vertical-align: middle;
   background-color: var(--el-fill-color-lighter);
@@ -41,7 +42,7 @@ export default defineComponent({
     display: inline-block;
     font-style: normal;
     overflow: hidden;
-    max-width: 128px;
+    max-width: 100%;
     text-overflow: ellipsis;
     vertical-align: top;
     white-space: nowrap;
@@ -56,23 +57,23 @@ export default defineComponent({
   }
 
   &__danger {
-    background-color: #ff4040;
+    background-color: #ff4040DD;
   }
 
   &__warning {
-    background-color: #ff8c40;
+    background-color: #ff8c40DD;
   }
 
   &__info {
-    background-color: #409EFF;
+    background-color: #409EFFDD;
   }
 
   &__yellow {
-    background-color: #ffc400;
+    background-color: #ffc400DD;
   }
 
   &__purple {
-    background-color: #c23ce6;
+    background-color: #c23ce6DD;
   }
 }
 </style>

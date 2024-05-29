@@ -59,7 +59,7 @@ export const columns = [
   {
     prop: 'contractName',
     label: '合同名称',
-    width: '180px',
+    width: '220px',
     className: 'cell-full',
     formatter(row) {
       const inner = () => row.contractName || '-';

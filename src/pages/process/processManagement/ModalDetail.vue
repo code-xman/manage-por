@@ -39,7 +39,7 @@ const modal = ref(false);
 const modalDetailContentRef = ref(null);
 
 const reportUrl = computed(() => {
-  return `/#/processDetailContent?projectId=${props.row.projectId}`;
+  return `/#/processDetailContent?projectId=${props.row.projectId}&merchantId=${props.row?.merchantId}`;
 });
 
 // 监听弹框打开关闭

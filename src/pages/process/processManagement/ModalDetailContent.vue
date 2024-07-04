@@ -106,6 +106,7 @@ const user = getAuthUser();
 
 const pending = ref(false);
 const projectId = ref('');
+const merchantId = ref('');
 /** 责任部门选项 */
 const responsibleDepts = ref([]);
 /** 合同管理人选项 */
@@ -123,13 +124,14 @@ const base = async () => {
     const paramsStr = window.location.href.split('?')[1];
     const params = new URLSearchParams(paramsStr);
     projectId.value = params.get('projectId');
+    merchantId.value = params.get('merchantId');
 
     // 项目责任部门
     const Item_responsibleDeptId = formItems.value.find(
       (item) => item.name === 'responsibleDeptIds'
     );
     responsibleDepts.value = await ApiDeptList({
-      orgId: user.orgId,
+      orgId: merchantId.value || user.orgId,
     });
     Item_responsibleDeptId.options = responsibleDepts.value;
 
@@ -138,7 +140,7 @@ const base = async () => {
       (item) => item.name === 'contractAdminIds'
     );
     const res = await ApiListUser({
-      orgId: user.orgId,
+      orgId: merchantId.value || user.orgId,
       // deptId: value,
     });
 

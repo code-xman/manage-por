@@ -508,6 +508,34 @@ const onCloseFn = () => {
 const init = async () => {
   try {
     pending.value = true;
+
+    // 项目责任部门
+    const Item_responsibleDeptId = formItems.value.find(
+      (item) => item.name === 'responsibleDeptIds'
+    );
+    responsibleDepts.value = await ApiDeptList({
+      orgId: props.row?.merchantId || user.orgId,
+    });
+    Item_responsibleDeptId.options = responsibleDepts.value;
+
+    // 项目管理人
+    const item_contractAdminId = formItems.value.find(
+      (item) => item.name === 'contractAdminIds'
+    );
+    const users = await ApiListUser({
+      orgId: props.row?.merchantId || user.orgId,
+      // deptId: value,
+    });
+
+    listUser.value =
+      users?.map((item) => ({
+        label: item.userName,
+        value: item.userId,
+        text: item.mobile,
+      })) || [];
+
+    item_contractAdminId.options = listUser.value;
+
     const res = await ApiDetailProject({ projectId: props.row.projectId });
     formValue.value = {
       ...res.projectInfo,
@@ -551,39 +579,6 @@ watch(
     }
   }
 );
-
-onMounted(async () => {
-  try {
-    // 项目责任部门
-    const Item_responsibleDeptId = formItems.value.find(
-      (item) => item.name === 'responsibleDeptIds'
-    );
-    responsibleDepts.value = await ApiDeptList({
-      orgId: user.orgId,
-    });
-    Item_responsibleDeptId.options = responsibleDepts.value;
-
-    // 项目管理人
-    const item_contractAdminId = formItems.value.find(
-      (item) => item.name === 'contractAdminIds'
-    );
-    const res = await ApiListUser({
-      orgId: user.orgId,
-      // deptId: value,
-    });
-
-    listUser.value =
-      res?.map((item) => ({
-        label: item.userName,
-        value: item.userId,
-        text: item.mobile,
-      })) || [];
-
-    item_contractAdminId.options = listUser.value;
-  } catch (error) {
-    ElMessage.error(`${error}`);
-  }
-});
 </script>
 
 <style lang="scss" scoped>

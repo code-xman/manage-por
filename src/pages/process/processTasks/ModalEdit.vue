@@ -220,7 +220,7 @@ import {
 
 defineOptions({ name: 'ProcessTasksEdit' });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'handleSuccess']);
 
 const props = defineProps({
   modelValue: Boolean,
@@ -346,6 +346,7 @@ const confirmClick = async () => {
     });
 
     ElMessage.success('保存成功');
+    emit('handleSuccess');
     emit('update:modelValue', false);
   } catch (error) {
     if (error === 'cancel') return;

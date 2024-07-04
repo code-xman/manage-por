@@ -36,15 +36,15 @@ export default [
         },
         component: () => import('@/pages/process/processTasks/index.vue'),
       },
-      {
-        path: '/processBackTasks',
-        name: 'ProcessBackTasks',
-        meta: {
-          id: '128bb5186bdd473ca746e47c9fac5eb1',
-          title: '项目退回任务',
-        },
-        component: () => import('@/pages/process/processBackTasks/index.vue'),
-      },
+      // {
+      //   path: '/processBackTasks',
+      //   name: 'ProcessBackTasks',
+      //   meta: {
+      //     id: '',
+      //     title: '项目退回任务',
+      //   },
+      //   component: () => import('@/pages/process/processBackTasks/index.vue'),
+      // },
     ],
   },
   {

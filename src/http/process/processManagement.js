@@ -1,6 +1,7 @@
 import { post } from '@/http';
 import { HTTP_CONFIG } from '@/config/base';
 import { projectStatusObj } from '@/pages/process/processManagement/data.js';
+import { parseToDate, parseToDatetime } from '@/utils/string';
 
 // 	项目-分页
 export const ApiListProjectPage = async (params = {}) => {
@@ -74,6 +75,36 @@ export const ApiActConfigOrder = async (params = {}) => {
   return data;
 };
 
+// 	项目任务分组-分页
+export const ApiListGroup = async (params = {}) => {
+  const _params = {
+    pageNum: 1,
+    pageSize: 20,
+    ...params,
+  };
+
+  // if (!_params.taskStatus) {
+  //   _params.taskStatus = undefined;
+  // }
+  // if (_params.endTime) {
+  //   _params.endTime = new Date(
+  //     new Date(_params.endTime).getTime() + 24 * 60 * 60 * 1000 - 1
+  //   );
+  // }
+
+  const data = await post('/api/projectFacade/listGroup', _params);
+
+  if (data?.list) {
+    data.list = data.list?.map((row) => {
+      return {
+        ...row,
+      };
+    });
+  }
+
+  return data || { list: [], total: 0 };
+};
+
 // 	项目任务-分页
 export const ApiListTodo = async (params = {}) => {
   const _params = {
@@ -85,10 +116,10 @@ export const ApiListTodo = async (params = {}) => {
   if (!_params.taskStatus) {
     _params.taskStatus = undefined;
   }
-  if (_params.endTime) {
-    _params.endTime = new Date(
-      new Date(_params.endTime).getTime() + 24 * 60 * 60 * 1000 - 1
-    );
+
+  if (_params.taskTime?.length) {
+    _params.startTime = parseToDatetime(_params.taskTime[0]);
+    _params.endTime = parseToDate(_params.taskTime[1]) + ' 23:59:59';
   }
 
   const data = await post('/api/projectFacade/listTodo', _params);
@@ -107,6 +138,24 @@ export const ApiListTodo = async (params = {}) => {
 // 项目任务-处理提交
 export const ApiComplete = async (params = {}) => {
   const data = await post('/api/projectFacade/complete', params);
+  return data;
+};
+
+// 	项目任务-退回申请
+export const ApiGoBack = async (params = {}) => {
+  const data = await post('/api/projectFacade/goBack', params);
+  return data;
+};
+
+// 	项目任务-退回申请通过
+export const ApiGoBackPass = async (params = {}) => {
+  const data = await post('/api/projectFacade/goBackPass', params);
+  return data;
+};
+
+// 	项目任务-退回申请拒绝
+export const ApiGoBackReject = async (params = {}) => {
+  const data = await post('/api/projectFacade/goBackReject', params);
   return data;
 };
 

@@ -5,16 +5,32 @@
       :searchFormItems="projectSearchFormItems"
       v-model:searchFormValue="searchFormValue"
       :columns="projectCols"
-      :list="ApiListTodo"
+      :list="ApiListGroup"
       :options-size="120"
     >
       <template #options="{ row }">
-        <el-button type="primary" link @click="() => detailFn(row)">
+        <el-button
+          v-if="row.taskStatus"
+          type="primary"
+          link
+          @click="() => detailFn(row)"
+        >
           查看任务
         </el-button>
       </template>
     </BasePage>
-    <ModalTask v-model="showModel" :row="showModelRow"></ModalTask>
+    
+    <ModalTask
+      v-model="showModel"
+      :row="showModelRow"
+      @handleRefresh="handleRefresh"
+    ></ModalTask>
+
+    <ModalBackTask
+      v-model="showBackModel"
+      :row="showModelRow"
+      @handleRefresh="handleRefresh"
+    ></ModalBackTask>
   </div>
 </template>
 
@@ -24,9 +40,9 @@ import { ElMessage } from 'element-plus';
 
 import { getAuthUser } from '@/utils/auth';
 import BasePage from '@/components/BasePage/index';
-// TODO: 更换查询任务项目的接口
-import { ApiListTodo } from '@/http/process/processManagement.js';
+import { ApiListGroup } from '@/http/process/processManagement.js';
 import ModalTask from './ModalTask.vue';
+import ModalBackTask from './processBackTasks/index.vue';
 import { projectCols, projectSearchFormItems } from './data';
 
 defineOptions({
@@ -43,22 +59,23 @@ const searchFormValue = ref({
 
 const modalType = ref('');
 const showModel = ref(false);
+const showBackModel = ref(false);
 const showModelRow = ref();
 
 const detailFn = (row) => {
   modalType.value = 'detail';
   showModelRow.value = row;
-  showModel.value = true;
+  if (['WAIT', 'DONE'].includes(row.taskStatus)) {
+    showModel.value = true;
+  }
+  if (row.taskStatus === 'BACK') {
+    showBackModel.value = true;
+  }
 };
 
-watch(
-  () => showModel.value,
-  () => {
-    if (!showModel.value) {
-      BasePageRef.value?.refresh();
-    }
-  }
-);
+const handleRefresh = () => {
+  BasePageRef.value?.refresh();
+};
 </script>
 
 <style lang="scss" scoped></style>

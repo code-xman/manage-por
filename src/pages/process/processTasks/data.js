@@ -23,6 +23,11 @@ const taskStatus = [
     label: '已完成',
     value: 'DONE',
   },
+  {
+    label: '退回',
+    value: 'BACK',
+  },
+
 ];
 
 /** 文件类型 */
@@ -53,37 +58,37 @@ export const projectCols = [
     },
   },
   {
-    prop: 'taskNum',
+    prop: 'taskSize',
     label: '任务数量',
-    width: '140px',
+    width: '200px',
     formatter(row) {
-      return row.taskNum || '-';
+      return row.taskSize || '-';
     },
   },
-  {
-    prop: 'incomplete',
-    label: '未完成任务',
-    width: '160px',
-    formatter(row) {
-      return row.incomplete || '-';
-    },
-  },
-  {
-    prop: 'completed',
-    label: '已完成任务',
-    width: '160px',
-    formatter(row) {
-      return row.completed || '-';
-    },
-  },
-  {
-    prop: 'completeTime',
-    label: '更新时间',
-    width: '160px',
-    formatter(row) {
-      return parseToDatetime(row.completeTime) || '-';
-    },
-  },
+  // {
+  //   prop: 'incomplete',
+  //   label: '未完成任务',
+  //   width: '160px',
+  //   formatter(row) {
+  //     return row.incomplete || '-';
+  //   },
+  // },
+  // {
+  //   prop: 'completed',
+  //   label: '已完成任务',
+  //   width: '160px',
+  //   formatter(row) {
+  //     return row.completed || '-';
+  //   },
+  // },
+  // {
+  //   prop: 'completeTime',
+  //   label: '更新时间',
+  //   width: '160px',
+  //   formatter(row) {
+  //     return parseToDatetime(row.completeTime) || '-';
+  //   },
+  // },
 ];
 
 /** 任务-列表字段 */
@@ -168,6 +173,15 @@ export const taskCols = [
 /** 项目-搜索字段 */
 export const projectSearchFormItems = [
   {
+    name: 'taskStatus',
+    label: '任务类型',
+    type: 'select',
+    options: taskStatus,
+    attrs: {
+      // clearable: true,
+    },
+  },
+  {
     name: 'projectName',
     label: '项目名称',
     style: {
@@ -181,15 +195,15 @@ export const projectSearchFormItems = [
 
 /** 任务-搜索字段 */
 export const searchFormItems = [
-  {
-    name: 'taskStatus',
-    label: '任务类型',
-    type: 'select',
-    options: taskStatus,
-    attrs: {
-      // clearable: true,
-    },
-  },
+  // {
+  //   name: 'taskStatus',
+  //   label: '任务类型',
+  //   type: 'select',
+  //   options: taskStatus,
+  //   attrs: {
+  //     // clearable: true,
+  //   },
+  // },
   // {
   //   name: 'projectName',
   //   label: '项目名称',
@@ -201,19 +215,18 @@ export const searchFormItems = [
   //   },
   // },
   {
-    name: 'startTime',
-    label: '开始时间',
+    name: 'taskTime',
+    label: '任务到达时间',
     type: 'dateTime',
-    attrs: {
-      clearable: true,
+    style: {
+      width: '400px',
     },
-  },
-  {
-    name: 'endTime',
-    label: '结束时间',
-    type: 'dateTime',
     attrs: {
       clearable: true,
+      type: 'daterange',
+      'range-separator': '至',
+      'start-placeholder': '开始日期',
+      'end-placeholder': '结束日期',
     },
   },
 ];

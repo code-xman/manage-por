@@ -26,7 +26,7 @@ const list = ref([
     route: 'ProcessTasks', // 路由 name
   },
   {
-    icon: '.icon-xiangmupingshen',
+    icon: 'icon-xiangmupingshen',
     name: '项目退回任务量',
     value: 0,
     route: 'ProcessBackTasks', // 路由 name
@@ -47,7 +47,13 @@ onMounted(async () => {
   });
   list.value[0].value = processRes?.total || 0;
 
-  // TODO: 退回任务数量请求
+  // 退回任务数量请求
+  const backRes = await ApiListTodo({
+    pageSize: 1e5,
+    taskStatus: 'BACK',
+    userId: user.userId,
+  });
+  list.value[1].value = backRes?.total || 0;
 
   const contractRes = await ApiListContractPage({
     pageSize: 1e5,

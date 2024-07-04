@@ -18,6 +18,7 @@
         v-model:searchFormValue="searchFormValue"
         :columns="taskCols"
         :list="ApiListTodo"
+        :defaultParams="defaultParams"
         :options-size="160"
       >
         <template #options="{ row }">
@@ -52,6 +53,7 @@
         v-model="showModel"
         :type="modalType"
         :row="showModelRow"
+        @handleSuccess="handleSuccess"
       ></ModalEdit>
     </div>
 
@@ -64,18 +66,19 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { ElMessage, ElMessageBox, } from 'element-plus';
+import { ref, watch, computed } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 import { getAuthUser } from '@/utils/auth';
+import { useReasonConfirm } from '@/utils/hooks.js';
 import BasePage from '@/components/BasePage/index';
-import { ApiListTodo } from '@/http/process/processManagement.js';
+import { ApiListTodo, ApiGoBack } from '@/http/process/processManagement.js';
 import ModalEdit from './ModalEdit.vue';
 import { taskCols, searchFormItems } from './data';
 
 defineOptions({ name: 'ModalTask' });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'handleRefresh']);
 
 const props = defineProps({
   modelValue: Boolean,
@@ -89,10 +92,14 @@ const user = getAuthUser();
 const modal = ref(false);
 const pending = ref(false);
 const BasePageRef = ref(null);
-const searchFormValue = ref({
+const searchFormValue = computed(() => ({
   userId: user.userId,
-  taskStatus: 'WAIT',
-});
+  taskStatus: props.row?.taskStatus,
+}));
+
+const defaultParams = computed(() => ({
+  projectId: props.row?.projectId,
+}));
 
 const modalType = ref('');
 const showModel = ref(false);
@@ -112,14 +119,16 @@ const editFn = (row) => {
 /** 退回 */
 const backFn = async (row) => {
   try {
+    const reasonObj = await useReasonConfirm('退回'); // 二次确认
 
-    await ElMessageBox.confirm('确定退回此任务？', '操作提示', {
-      type: 'warning',
+    // 调用退回接口
+    await ApiGoBack({
+      actDefId: row.actDefId,
+      backReason: reasonObj.value,
     });
 
-    // TODO: 调用退回接口
-    // await
-    onCloseFn();
+    ElMessage.success('退回成功');
+    handleSuccess();
   } catch (error) {
     if (error === 'cancel') return;
     ElMessage.error(`${error}`);
@@ -132,18 +141,22 @@ const detailFn = (row) => {
   showModel.value = true;
 };
 
+// 关闭弹框
 const onCloseFn = () => {
   emit('update:modelValue', false);
 };
 
-watch(
-  () => showModel.value,
-  () => {
-    if (!showModel.value) {
-      BasePageRef.value?.refresh();
-    }
-  }
-);
+// 操作成功后刷新
+const handleSuccess = () => {
+  handleRefresh();
+  emit('handleRefresh');
+  onCloseFn();
+};
+
+// 刷新
+const handleRefresh = () => {
+  BasePageRef.value?.refresh();
+};
 
 // 监听弹框打开关闭
 watch(

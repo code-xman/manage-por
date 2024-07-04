@@ -36,7 +36,7 @@
       />
 
       <el-table-column
-        v-if="$slots.options"
+        v-if="$slots.options && optionsSize"
         label="操作"
         align="center"
         fixed="right"

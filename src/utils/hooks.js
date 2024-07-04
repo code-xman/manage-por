@@ -1,8 +1,8 @@
 import { ElMessageBox } from 'element-plus';
 
-export const useReasonConfirm = async () => {
+export const useReasonConfirm = async (text='修改') => {
   return await ElMessageBox.prompt(
-    `请输入修改原因并确认是否继续修改？`,
+    `请输入${text}原因并确认是否继续操作？`,
     {
       title: '提示',
       type: 'warning',
@@ -11,13 +11,13 @@ export const useReasonConfirm = async () => {
       showInput: true,
       inputType: 'textarea',
       customClass: 'set-msg-textarea',
-      inputPlaceholder: '请输入修改原因',
+      inputPlaceholder: `请输入${text}原因`,
       inputValidator: (value) => {
         if (!value) {
-          return '请输入修改原因';
+          return `请输入${text}原因`;
         }
         if (value.length > 200) {
-          return '修改原因最多可输入200个字符';
+          return `${text}原因最多可输入200个字符`;
         }
         return true;
       },

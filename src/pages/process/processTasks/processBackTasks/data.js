@@ -43,6 +43,14 @@ export const taskCols = [
     },
   },
   {
+    prop: 'backReason',
+    label: '退回原因',
+    minWidth: '200px',
+    formatter(row) {
+      return row.backReason || '-';
+    },
+  },
+  {
     prop: 'completionDeadline',
     label: '完成时限',
     minWidth: '140px',

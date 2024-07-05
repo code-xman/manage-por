@@ -68,7 +68,7 @@ const wrapStyle = computed(() => {
 const handleItemClick = (row) => {
   if (!!row.route) {
     // 路由跳转
-    router.push({ name: row.route });
+    router.push({ name: row.route, query: { pageType: row.type } });
   } else {
     // 事件触发
     emit('on-click', row);

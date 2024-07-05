@@ -19,7 +19,7 @@
         </el-button>
       </template>
     </BasePage>
-    
+
     <ModalTask
       v-model="showModel"
       :row="showModelRow"
@@ -36,6 +36,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
 import { getAuthUser } from '@/utils/auth';
@@ -49,12 +50,13 @@ defineOptions({
   name: 'ProcessTasks',
 });
 
+const route = useRoute();
 const user = getAuthUser();
 
 const BasePageRef = ref(null);
 const searchFormValue = ref({
   userId: user.userId,
-  taskStatus: 'WAIT',
+  taskStatus: route.query?.pageType || 'WAIT',
 });
 
 const modalType = ref('');

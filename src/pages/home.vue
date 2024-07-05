@@ -15,6 +15,7 @@ import { ref, onMounted } from 'vue';
 import { ApiListTodo } from '@/http/process/processManagement.js';
 import { ApiListContractPage } from '@/http/contract/contractManagement';
 import { getAuthUser } from '@/utils/auth';
+import ItemCountCard from '@/components/ItemCountCard.vue';
 
 const user = getAuthUser();
 
@@ -22,18 +23,21 @@ const list = ref([
   {
     icon: 'icon-gongzuoliu',
     name: '项目待办任务量',
+    type: 'WAIT',
     value: 0,
     route: 'ProcessTasks', // 路由 name
   },
   {
     icon: 'icon-xiangmupingshen',
     name: '项目退回任务量',
+    type: 'BACK',
     value: 0,
-    route: 'ProcessBackTasks', // 路由 name
+    route: 'ProcessTasks', // 路由 name
   },
   {
     icon: 'icon-xiangmuguidang',
     name: '合同待办任务量',
+    type: 'Contract',
     value: 0,
     route: 'ContractManagement', // 路由 name
   },
